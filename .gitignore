@@ -1,3 +1,5 @@
 no/
 tkn
-
+.env
+node_modules
+dist
