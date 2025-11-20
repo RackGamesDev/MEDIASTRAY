@@ -1,0 +1,163 @@
+#version: '3.8'
+
+services:
+  frontend:
+    #image: node:trixie
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "8080:80"
+    #environment:
+      #NODE_ENV: ${NODE_ENV}
+    #  NODE_ENV=PRODUCTION
+    networks:
+      - myapp-network
+    volumes:
+      - ./public:/var/www/public
+      - ./games:/var/www/games
+    depends_on:
+      backend:
+        condition: service_started
+    restart: always
+    #healthcheck:
+    #    test: ["CMD", "curl", "-f", "http://localhost:8081"]
+    #    interval: 10s
+    #    timeout: 5s
+    #    retries: 5
+    #start_period: 10s 
+
+  backend:
+    image: node:trixie
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: ${NODE_ENV}
+      DATABASE_URL: ${DATABASE_URL}
+      MONGODB_URI: ${MONGODB_URI}
+      REDIS_HOST: ${REDIS_HOST}
+      SMTP_HOST: ${SMTP_HOST}
+      SMTP_USER: ${SMTP_USER}
+      SMTP_PASS: ${SMTP_PASS}
+    networks:
+      - myapp-network
+    depends_on:
+      - postgresql
+      - mongodb
+      - redis-sql
+
+  postgresql:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - ./.docker/database/postgresql:/var/lib/postgresql/data
+    networks:
+      - myapp-network
+
+  mongodb:
+    image: mongo:4.4
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+    volumes:
+      - ./.docker/database/mongodb:/data/db
+    networks:
+      - myapp-network
+
+  redis-sql:
+    image: redis:6.2
+    networks:
+      - myapp-network
+  
+  redis-mongodb:
+    image: redis:6.2
+    networks:
+      - myapp-network
+
+  redis-backend:
+    image: redis:6.2
+    networks:
+      - myapp-network
+
+  #postfix:
+  #  image: catatnight/postfix-relay-only
+  #  environment:
+  #    MYHOSTNAME: ${MYHOSTNAME}
+  #    RELAYHOST: ${SMTP_RELAY_HOST}:587
+  #    SMTP_USERNAME: ${SMTP_USER}
+  #    SMTP_PASSWORD: ${SMTP_PASS}
+  #  networks:
+  #    - myapp-network
+
+  postfix:
+    image: tozd/postfix:ubuntu-noble
+    environment:
+      POSTFIX_MYHOSTNAME: ${MYHOSTNAME}
+      POSTFIX_RELAYHOST: ${SMTP_RELAY_HOST}:587
+      POSTFIX_SMTP_USERNAME: ${SMTP_USER}
+      POSTFIX_SMTP_PASSWORD: ${SMTP_PASS}
+    ports:
+      - "25:25"  # SMTP port
+    networks:
+      - myapp-network
+
+#  grafana:
+#    image: grafana/grafana-oss
+#    ports:
+#      - "3002:3000"
+#    environment:
+#      GF_SECURITY_ADMIN_USER: admin
+#      GF_SECURITY_ADMIN_PASSWORD: admin
+#    networks:
+#      - myapp-network
+
+#  prometheus:
+#    image: prom/prometheus:v2.30.3
+#    volumes:
+#      - ./.docker/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+#    ports:
+#      - "9090:9090"
+#    networks:
+#      - myapp-network
+
+#  elasticsearch:
+#    image: docker.elastic.co/elasticsearch/elasticsearch:7.10.2
+#    container_name: elasticsearch
+#    environment:
+#      - discovery.type=single-node
+#    networks:
+#      - esnet
+
+
+#  logstash:
+#    image: docker.elastic.co/logstash/logstash:7.10.1
+#    volumes:
+#      - ./.docker/logstash/logstash.conf:/usr/share/logstash/pipeline/logstash.conf
+#    ports:
+#      - "5044:5044"
+#    networks:
+#      - esnet
+
+#  kibana:
+#    image: docker.elastic.co/kibana/kibana:7.10.2
+#    container_name: kibana
+#    depends_on:
+#      - elasticsearch
+#    ports:
+#      - "5601:5601"
+#    environment:
+#      - ELASTICSEARCH_URL=http://elasticsearch:9200
+#    networks:
+#      - esnet
+
+
+networks:
+  myapp-network:
+  esnet:
+    driver: bridge
