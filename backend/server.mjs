@@ -1,13 +1,17 @@
-// backend/server.mjs
-
 import express from 'express';
+import dotenv from 'dotenv';
+import {abrirServidorMetricas} from './servidorMetricas.js';
+dotenv.config();
+const APP_PORT = process.env.BACKEND_PORT ?? 4000;
 const app = express();
-const port = process.env.PORT || 3000;
 
-app.get('/api/greet', (req, res) => {
-    res.json({ message: 'Hello, World!' });
+
+app.get('/api/greet', async (req, res) => {
+    res.json({ message: `Hello, World! Processed` });
 });
 
-app.listen(port, () => {
-    console.log(`Server is running on http://localhost:${port}`);
+abrirServidorMetricas(app);
+app.listen(APP_PORT, () => {
+    console.log(`Ejecutandose en ${APP_PORT}`);
 });
+

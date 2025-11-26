@@ -1,0 +1,38 @@
+services:
+  prometheus:
+    image: prom/prometheus:v2.47.1
+    container_name: prometheus
+    volumes:
+      - ./.docker/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--storage.tsdb.retention.time=120d'
+    networks:
+      - mediastray_mediastray-network
+    ports:
+      - "9090:9090"
+    restart: unless-stopped
+
+  grafana:
+    image: grafana/grafana:10.1.5
+    container_name: grafana
+    volumes:
+      - grafana_data:/var/lib/grafana
+    networks:
+      - mediastray_mediastray-network
+    restart: unless-stopped
+    depends_on:
+      - prometheus
+    ports:
+      - "3000:3000"
+
+
+networks:
+  mediastray_mediastray-network:
+    external: true
+
+volumes:
+  prometheus_data:
+  grafana_data:

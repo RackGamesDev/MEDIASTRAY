@@ -1,7 +1,24 @@
 global:
-  scrape_interval: 15s
+  scrape_interval: 15s # Scrape targets every 15 seconds.
+  evaluation_interval: 15s # Evaluate rules every 15 seconds.
 
 scrape_configs:
-  - job_name: 'node'
+  # Job 1: Scrape the Prometheus server itself
+  - job_name: 'prometheus'
     static_configs:
-      - targets: ['backend']
+      - targets: ['localhost:9090']
+
+  # Job 2: Scrape the Node.js Backend API
+  - job_name: 'backend-app'
+    metrics_path: /metrics # Assuming your backend exposes default node metrics here
+    static_configs:
+      # The backend service exposes its metrics on port 9100 internally
+      - targets: ['backend:9100']
+
+  # Job 3: Scrape the Nginx Exporter
+  # This targets the new exporter service, which translates the frontend's metrics.
+  - job_name: 'nginx-exporter'
+    scrape_interval: 5s # Check Nginx status more frequently
+    static_configs:
+      # The nginx-exporter exposes its metrics on port 9113 internally
+      - targets: ['nginx-exporter:9113']
