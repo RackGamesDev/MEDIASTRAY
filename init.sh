@@ -11,7 +11,7 @@ mkdir .docker/database/postgresql
 #npm install
 #cd ..
 docker compose -f docker-compose-dev.yml up --build -d #docker compose -f ./docker-compose-dev.yml down
-docker compose -f docker-compose-prod.yml up --build -d #docker compose -f ./docker-compose-prod.yml down
+docker compose -f docker-compose.yml up --build -d #docker compose -f ./docker-compose.yml down
 docker compose -f docker-compose-monitorize.yml up --build -d #docker compose -f ./docker-compose-monitorize.yml down
 
 
