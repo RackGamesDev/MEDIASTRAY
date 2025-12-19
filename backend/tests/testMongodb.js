@@ -9,7 +9,7 @@ import mongoose from 'mongoose';
 // If your .env file defines MONGO_INITDB_ROOT_USERNAME and MONGO_INITDB_ROOT_PASSWORD,
 // use those credentials here.
 
-const testMongodb = () => {
+const testMongodb = async () => {
 
 const DB_HOST = 'mongodb';
 const DB_PORT = 27017;
@@ -17,9 +17,9 @@ const DB_PORT = 27017;
 // if you configured authentication in your Docker setup. Otherwise, the default is no auth.
 const DB_AUTH = `${process.env.MONGO_INITDB_ROOT_USERNAME}:${process.env.MONGO_INITDB_ROOT_PASSWORD}@`; 
 //const DB_AUTH = ''; // Using empty string if you are running without auth (common for local dev)
-const DB_NAME = 'testdb'; 
+const DB_NAME = "";//'testdb'; 
 
-const MONGO_URI = `mongodb://${DB_AUTH}${DB_HOST}:${DB_PORT}/${DB_NAME}`;
+const MONGO_URI = process.env.MONGODB_URI;//`mongodb://${DB_AUTH}${DB_HOST}:${DB_PORT}/${DB_NAME}`;
 
 // --- 1. Define a Schema and Model ---
 const TestSchema = new mongoose.Schema({
