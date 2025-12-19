@@ -16,6 +16,7 @@ services:
     volumes:
       - ./public:/var/www/public
       - ./games:/var/www/games
+      - ./frontend:/usr/share/nginx/html/frontend/app
     depends_on:
       backend:
         condition: service_started
@@ -36,16 +37,18 @@ services:
       #- "4000:4000"
       - "${BACKEND_PORT}:4000"
     environment:
-      NODE_ENV: ${NODE_ENV}
+      #NODE_ENV: ${NODE_ENV}
+      NODE_ENV: DEVELOPMENT
       DATABASE_URL: ${DATABASE_URL}
       MONGODB_URI: ${MONGODB_URI}
       REDIS_HOST: ${REDIS_HOST}
-      SMTP_HOST: ${SMTP_HOST}
-      SMTP_USER: ${SMTP_USER}
-      SMTP_PASS: ${SMTP_PASS}
+      FREE_CORS: s
+      PUBLIC_FILES_DIR: /public
+      GAMES_FILES_DIR: /games
     volumes:
       - ./public:/var/www/public
       - ./games:/var/www/games
+      - ./backend:/usr/src/app
     networks:
       - mediastray-network
     depends_on:
@@ -82,18 +85,6 @@ services:
 
   redis:
     image: redis:6.2
-    networks:
-      - mediastray-network
-
-  postfix:
-    image: tozd/postfix:ubuntu-noble
-    environment:
-      POSTFIX_MYHOSTNAME: ${MYHOSTNAME}
-      POSTFIX_RELAYHOST: ${SMTP_RELAY_HOST}:587
-      POSTFIX_SMTP_USERNAME: ${SMTP_USER}
-      POSTFIX_SMTP_PASSWORD: ${SMTP_PASS}
-    ports:
-      - "25:25"
     networks:
       - mediastray-network
 

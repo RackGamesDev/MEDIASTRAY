@@ -8,8 +8,9 @@ WORKDIR /usr/src/app
 
 #RUN npm install --only=production
 
-COPY . .
+#COPY . .
 
 EXPOSE 4000
 
-CMD ["node", "server.mjs"]
+#CMD ["node", "server.mjs"]
+CMD ["npm", "run", "dev"]

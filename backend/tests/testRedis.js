@@ -7,7 +7,7 @@ const testRedis = async () => {
     await client.connect();
     await client.set('key', 'value');
     const value = await client.get('key');
-    console.log("Valor de redis: " + value);
+    console.log("REDIS PERFECTO Valor de redis: " + value);
 
 }
 export { testRedis }

@@ -1,36 +1,46 @@
 import express from 'express';
 import dotenv from 'dotenv';
-import {abrirServidorMetricas} from './servidorMetricas.js';
+import { abrirServidorMetricas } from './servidorMetricas.js';
 
 import { testMongodb } from './tests/testMongodb.js';
 import { testRedis } from './tests/testRedis.js';
 import { testSql } from './tests/testPostgresql.js';
+import { testFs } from './tests/testFs.js';
+import cors from 'cors';
 
 dotenv.config();
 const APP_PORT = process.env.BACKEND_PORT ?? 4000;
 const app = express();
 
-
-app.get('/api/greet', async (req, res) => {
-    console.log("fdfsdwfs");
-    testRedis();
-    res.json({ message: `Hello, World! Processed` });
-});
-
-app.get('/api/test', async (req, res) => {
+if (process.env.NODE_ENV === "DEVELOPMENT") {
+    console.log("ACTUALMENTE EN DEV");
+    app.use(cors({
+        origin: process.env.FREE_CORS ?? "n" === "s" ? true : 'http://localhost:5174',
+        credentials: true,
+    }));
+    app.get('/api/test', async (req, res) => {
     try {
         testRedis();
         testSql();
         testMongodb();
-        
-        res.json({ message: `Hello, World! Processedfasdfasdf` });
+        testFs();
+        res.json({ message: `Hello, World! Processed` });
     } catch (error) {
         console.log(error);
         res.json({ message: `error` });
     }
+    });
+}
+
+
+app.get('/api/greet', async (req, res) => {
+    testRedis();
+    res.json({ message: `Hello, World! Processed` });
 });
 
-abrirServidorMetricas(app);
+
+
+try {abrirServidorMetricas(app);} catch (e) {console.log("No se han habierto los servicios de métricas");}
 app.listen(APP_PORT, () => {
     console.log(`Ejecutandose en ${APP_PORT}`);
 });

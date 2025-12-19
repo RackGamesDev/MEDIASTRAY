@@ -1,5 +1,7 @@
 #!/bin/bash
+cat .env.example > .env
 cd frontend
+cat .env.example > .env
 npm install
 cd ../backend
 npm install

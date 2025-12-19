@@ -6,9 +6,12 @@ import './App.css'
 function App() {
   const [count, setCount] = useState(0);
 
+  const API_URL = import.meta.env.VITE_API_URL ?? process.env.REACT_APP_API_URL;// "http://localhost:8080/api"; //locatoin.host + "api"
+
   useEffect(() => {
+    console.log(API_URL);
     (async()=>{
-      let datos = await fetch(location.host + "/api/greet");
+      let datos = await fetch(API_URL + "/greet");
       datos = await datos.json();
       console.log(await datos);
     })();
