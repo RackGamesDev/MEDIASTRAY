@@ -45,6 +45,9 @@ services:
       DATABASE_URL: ${DATABASE_URL}
       MONGODB_URI: ${MONGODB_URI}
       REDIS_HOST: ${REDIS_HOST}
+      MAILGUN_API_KEY: ${MAILGUN_API_KEY}
+      MAILGUN_DOMAIN: ${MAILGUN_DOMAIN}
+      MAILGUN_SENDER: ${MAILGUN_SENDER}
     volumes:
       - ./public:/var/www/public
       - ./games:/var/www/games

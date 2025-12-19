@@ -45,6 +45,10 @@ services:
       FREE_CORS: s
       PUBLIC_FILES_DIR: /public
       GAMES_FILES_DIR: /games
+      MAILGUN_API_KEY: ${MAILGUN_API_KEY}
+      MAILGUN_DOMAIN: ${MAILGUN_DOMAIN}
+      MAILGUN_SENDER: ${MAILGUN_SENDER}
+      MAILGUN_TEST_EMAIL: ${MAILGUN_TEST_EMAIL}
     volumes:
       - ./public:/var/www/public
       - ./games:/var/www/games

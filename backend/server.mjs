@@ -6,6 +6,7 @@ import { testMongodb } from './tests/testMongodb.js';
 import { testRedis } from './tests/testRedis.js';
 import { testSql } from './tests/testPostgresql.js';
 import { testFs } from './tests/testFs.js';
+import { testMail } from './tests/testMail.js';
 import cors from 'cors';
 
 dotenv.config();
@@ -20,10 +21,11 @@ if (process.env.NODE_ENV === "DEVELOPMENT") {
     }));
     app.get('/api/test', async (req, res) => {
     try {
-        testRedis();
+        /*testRedis();
         testSql();
         testMongodb();
-        testFs();
+        testFs();*/
+        testMail();
         res.json({ message: `Hello, World! Processed` });
     } catch (error) {
         console.log(error);
