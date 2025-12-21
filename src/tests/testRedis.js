@@ -1,6 +1,6 @@
 import { createClient } from 'redis';
 const testRedis = async () => {
-    const client = createClient({ url: `redis://${process.env.REDIS_HOST}:6379` });
+    const client = createClient({ url: `redis://${process.env.REDIS_HOST}` });
 
     client.on('error', err => console.log('Redis Client Error', err));
 

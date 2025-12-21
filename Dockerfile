@@ -10,6 +10,6 @@ RUN npm install --only=production
 
 COPY . .
 
-EXPOSE 4000
+EXPOSE 8510
 
 CMD ["node", "server.mjs"]

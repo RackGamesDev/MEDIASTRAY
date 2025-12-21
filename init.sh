@@ -1,4 +1,7 @@
 #!/bin/bash
+
+#SOLO UNA GUIA
+
 docker compose -f docker-compose.yml down
 docker compose -f docker-compose-monitorize.yml down
 mkdir .docker/database/mongodb

@@ -5,7 +5,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.mjs",
-    "dev": "nodemon server.mjs"
+    "dev": "nodemon server.mjs",
+    "dockerprod": "sh prod.sh",
+    "dockerdev": "sh dev.sh"
   },
   "keywords": [],
   "author": "",

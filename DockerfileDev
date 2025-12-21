@@ -10,7 +10,7 @@ WORKDIR /usr/src/app
 
 #COPY . .
 
-EXPOSE 4000
+EXPOSE 8510
 
 #CMD ["node", "server.mjs"]
 CMD ["npm", "run", "dev"]

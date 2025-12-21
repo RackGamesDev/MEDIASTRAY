@@ -1,0 +1,52 @@
+import express from 'express';
+import dotenv from 'dotenv';
+import { abrirServidorMetricas } from './src/servidorMetricas.js';
+import apiRoutes from "./src/routes/apiRoutes.js";
+import path from 'path';
+
+import cors from 'cors';
+import { hacerTestsConexiones } from './src/tests/tests.js';
+
+//dotenv.config();
+dotenv.config({path: new URL("./.env", import.meta.url).pathname});
+const APP_PORT = process.env.BACKEND_PORT ?? 8510;
+const app = express();
+
+process.env.INIT_TESTS && hacerTestsConexiones();
+if (process.env.NODE_ENV === "DEVELOPMENT") {
+    console.log("ACTUALMENTE EN DEV");
+    app.use(cors({
+        origin: process.env.FREE_CORS ?? "n" === "s" ? true : 'http://localhost:8520',
+        credentials: true,
+    }));
+    app.get('/api/test', async (req, res) => {
+        await hacerTestsConexiones();
+        res.json({ message: `Hello, World! Test Processed` });
+    });
+}
+
+app.use("/public", express.static(process.env.PUBLIC_FILES_PATH));
+app.use("/games", express.static(process.env.GAMES_FILES_PATH));
+app.use("/api", apiRoutes);
+
+app.use(express.static(path.join(process.cwd(), process.env.FRONTEND_DIST_PATH)));
+
+
+
+app.use((req, res) => {
+    if (req.path.startsWith("/public")) {
+        res.status(404).redirect('/public/err404.html');
+    } else if (req.path.startsWith("/games")) {
+        res.status(404).redirect('/games/err404.html');
+    } else if (req.path.startsWith("/api")) {
+        res.status(404).json({message: "404 Not found", code: 404});
+    } else {
+        res.sendFile(path.join(process.cwd(), process.env.FRONTEND_DIST_PATH, "index.html"));
+    }
+});
+
+try {abrirServidorMetricas(app);} catch (e) {console.log("No se han habierto los servicios de métricas");}
+app.listen(APP_PORT, () => {
+    console.log(`Ejecutandose en ${APP_PORT}`);
+});
+

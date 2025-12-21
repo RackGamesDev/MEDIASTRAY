@@ -1,41 +1,41 @@
 services:
-  frontend:
-    #image: node:trixie
-    build:
-      context: ./frontend
-      dockerfile: DockerfileDev
-    ports:
-      #- "8080:80"
-      - "${OUTPUT_PORT}:80"
-      - 5173:5173
-    environment:
-      #NODE_ENV: ${NODE_ENV}
-      NODE_ENV: PRODUCTION
-    networks:
-      - mediastray-network
-    volumes:
-      - ./public:/var/www/public
-      - ./games:/var/www/games
-      - ./frontend:/usr/share/nginx/html/frontend/app
-    depends_on:
-      backend:
-        condition: service_started
-    restart: always
-    #healthcheck:
-    #    test: ["CMD", "curl", "-f", "http://localhost:8081"]
-    #    interval: 10s
-    #    timeout: 5s
-    #    retries: 5
-    #start_period: 10s 
+  #frontend:
+  #  #image: node:trixie
+  #  build:
+  #    context: ./frontend
+  #    dockerfile: DockerfileDev
+  #  ports:
+  #    #- "8080:80"
+  #    - "${OUTPUT_PORT}:80"
+  #    - 5173:5173
+  #  environment:
+  #    #NODE_ENV: ${NODE_ENV}
+  #    NODE_ENV: PRODUCTION
+  #  networks:
+  #    - mediastray-network
+  #  volumes:
+  #    - ./public:/var/www/public
+  #    - ./games:/var/www/games
+  #    - ./frontend:/usr/share/nginx/html/frontend/app
+  #  depends_on:
+  #    backend:
+  #      condition: service_started
+  #  restart: always
+  #  #healthcheck:
+  #  #    test: ["CMD", "curl", "-f", "http://localhost:8081"]
+  #  #    interval: 10s
+  #  #    timeout: 5s
+  #  #    retries: 5
+  #  #start_period: 10s 
 
   backend:
     image: node:trixie
     build:
-      context: ./backend
+      context: ./
       dockerfile: DockerfileDev
     ports:
-      #- "4000:4000"
-      - "${BACKEND_PORT}:4000"
+      #- "8510:8510"
+      - "${BACKEND_PORT}:8510"
     environment:
       #NODE_ENV: ${NODE_ENV}
       NODE_ENV: DEVELOPMENT
@@ -50,10 +50,13 @@ services:
       PUBLIC_FILES_PATH: ${PUBLIC_FILES_PATH}
       GAMES_FILES_PATH: ${GAMES_FILES_PATH}
       FRONTEND_DIST_PATH: ${FRONTEND_DIST_PATH}
+      SQL_INIT_PATH: ${SQL_INIT_PATH}
+      SQL_INIT_PATH_FAKES: ${SQL_INIT_PATH_FAKES}
+      INIT_TESTS: ${INIT_TESTS}
     volumes:
       - ./public:/var/www/public
       - ./games:/var/www/games
-      - ./backend:/usr/src/app
+      - ./:/usr/src/app
     networks:
       - mediastray-network
     depends_on:
@@ -73,6 +76,8 @@ services:
       - ./.docker/database/postgresql:/var/lib/postgresql/data
     networks:
       - mediastray-network
+    #depends_on:
+    #  - redis
 
   mongodb:
     image: mongo:4.4
@@ -83,6 +88,8 @@ services:
       nofile:
         soft: 64000
         hard: 64000
+    logging:
+      driver: none
     volumes:
       - ./.docker/database/mongodb:/data/db
     networks:

@@ -1,14 +1,5 @@
 import { Client } from 'pg';
 const testSql = async () => {
-    const config = {
-    host: 'your-custom-ip',           // e.g., '192.168.1.100'
-    port: 5432,                       // default PostgreSQL port
-    database: 'your-database-name',   // e.g., 'myapp_db'
-    user: 'your-username',            // e.g., 'postgres'
-    password: 'your-password',        // e.g., 'secret123'
-    // Optional: specify SSL if needed
-    // ssl: true,
-  };
 
   const client = new Client(process.env.DATABASE_URL);
 
