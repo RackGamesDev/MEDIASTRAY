@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 
 async function testFileReadWrite() {
-  const TEST_DIR = process.env.PUBLIC_FILES_DIR;
+  const TEST_DIR = process.env.PUBLIC_FILES_PATH;
   const FILE_NAME = 'test-file.txt';
   const FILE_PATH = path.join(TEST_DIR, FILE_NAME);
   const CONTENT_TO_WRITE = 'Hello, this is a test file created by Node.js!';

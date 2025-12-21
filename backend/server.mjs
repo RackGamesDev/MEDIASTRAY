@@ -21,11 +21,11 @@ if (process.env.NODE_ENV === "DEVELOPMENT") {
     }));
     app.get('/api/test', async (req, res) => {
     try {
-        /*testRedis();
+        testRedis();
         testSql();
         testMongodb();
-        testFs();*/
-        testMail();
+        testFs();
+        //testMail();
         res.json({ message: `Hello, World! Processed` });
     } catch (error) {
         console.log(error);
