@@ -7,7 +7,7 @@ npm install
 cd frontend
 cat .env.example > .env
 npm install
-#npm run build
+npm run build
 npm run dev -- --port 8520 &
 cd ..
 docker compose -f ./docker-compose-dev.yml down
