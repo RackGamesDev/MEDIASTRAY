@@ -1,4 +1,4 @@
--- Generate 30 example rows for the USUARIOS table
+-- Inserción de datos falsos para el modo development
 
 INSERT INTO USUARIOS (username, email, password_hash, first_name, last_name) VALUES
 ('john.doe', 'john.doe@example.com', '$2a$10$examplehashedpassword1', 'John', 'Doe'),

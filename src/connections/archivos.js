@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 
+//Escribe un archivo con x contenido, en una ruta, con un nombre. Se debe saber si es de texto o no. Si ya existe lo reemplaza, y crea las carpetas necesarias para la ruta
 const escribirArchivo = async (contenido, ruta, nombre, esTexto) => {
     try {
         await fs.promises.mkdir(ruta, {recursive:true});
@@ -16,6 +17,7 @@ const escribirArchivo = async (contenido, ruta, nombre, esTexto) => {
     }
 }
 
+//Devuelve el contenido de un archivo a partir de la ruta. Se debe saber si es de texto o no. Si no existe o no es legible no devuelve nada
 const leerArchivo = async (rutaMasNombre, esTexto) => {
     try {
         let contenido = "";
@@ -31,6 +33,7 @@ const leerArchivo = async (rutaMasNombre, esTexto) => {
     }
 }
 
+//Borra un archivo a partir de una ruta si existe
 const borrarArchivo = async (rutaMasNombre) => {
     try {
         const esCarpeta = await fs.promises.stat(rutaMasNombre).then(stats => stats.isDirectory());

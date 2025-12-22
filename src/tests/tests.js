@@ -9,6 +9,7 @@ import { testSql } from './testPostgresql.js';
 import { testFs } from './testFs.js';
 //import { testMail } from './testMail.js';
 
+//Hace tests por cuenta propia y de la manera normal usando las conexiones normales de las bases de datos
 const hacerTestsConexiones = async () => {
     try {
         await testRedis();
@@ -28,11 +29,10 @@ const hacerTestsConexiones = async () => {
         console.log(await leerArchivo("./src/files/prueba/prueba.txt", true));
         await borrarArchivo("./src/files/prueba");
         console.log("----------- POSTGRESQL");
-        const sql1 = await consulta("SELECT * FROM USUARIOS WHERE first_name = 'Kevin';");
+        const sql1 = await consulta("SELECT * FROM USUARIOS");
         console.log("primero", sql1);
         const sql2 = await consulta("SELECT * FROM USUARIOS WHERE id > $1 AND first_name = $2;", ["2", "Kevin"])
-        console.log("segundo1", sql2);
-        
+        console.log("segundo", sql2);
         console.log("------------");
 
     } catch (error) {

@@ -1,26 +1,28 @@
 import { createClient } from 'redis';
 
-let clienteActual = null;
+let cliente = null; //Conexión reusable a Redis
 
+//Establecer la conexión a Redis
 const getConexion = async () => {
-    if (!clienteActual) {
+    if (!cliente) {
         try {
             const client = createClient({ url: `redis://${process.env.REDIS_HOST}` });
             client.on('error', err => console.log('Redis Client Error', err));
             await client.connect();
-            clienteActual = client;
+            cliente = client;
         } catch (error) {
             console.log(error);
             return null;
         }
     }
-    return clienteActual;
+    return cliente;
 }
 
+//Establecer un valor en Redis
 const redisSet = async (clave, valor) => {
-    if (!clienteActual) getConexion();
+    if (!cliente) await getConexion();
     try {
-        await clienteActual.set(clave, valor);
+        await cliente.set(clave, valor);
         return true;
     } catch (error) {
         console.log(error);
@@ -28,16 +30,28 @@ const redisSet = async (clave, valor) => {
     }
 }
 
+//Leer un valor de Redis
 const redisGet = async (clave) => {
-    if (!clienteActual) getConexion();
+    if (!cliente) await getConexion();
     try {
-        return await clienteActual.get(clave);
+        return await cliente.get(clave);
     } catch (error) {
         console.log(error);
         return null;
     }
 }
 
-getConexion();
+//getConexion();
 
-export { getConexion, redisGet, redisSet }
+//Devuelve la conexión para hacer operaciones personalizadas
+const getCliente = async () => {
+    if (!cliente) await getConexion();
+    try {
+        return cliente;
+    } catch (error) {
+        console.error(error);
+        return null;
+    }
+}
+
+export { getConexion, redisGet, redisSet, getCliente }

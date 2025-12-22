@@ -31,7 +31,7 @@ services:
   #  #    retries: 5
   #  #start_period: 10s 
 
-  backend:
+  backend: #Frontend y backend en el mismo contenedor (Nodejs sirve los archivos de la build de React)
     image: node:trixie
     build:
       context: ./

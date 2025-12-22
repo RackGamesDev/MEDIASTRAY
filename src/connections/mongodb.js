@@ -1,15 +1,15 @@
 import { MongoClient } from 'mongodb';
 import { inicializarMongo } from './base/init.js';
 
-let cliente = null;
+let cliente = null; //Conexión reusable a Mongodb
 
+//Recibe la conexión de Mongodb
 const getConexion = async () => {
     if (!cliente) {
         try {
             cliente = new MongoClient(process.env.MONGODB_URI);
             await cliente.connect();
             inicializarMongo(cliente);
-            //console.log(cliente);
             return cliente;
         } catch (error) {
             console.error(error);
@@ -19,8 +19,9 @@ const getConexion = async () => {
     return cliente;
 }
 
+//Inserta un json en Mongodb en una colección
 const mongoSet = async (collectionNombre, data) => {
-    if (!cliente) getConexion();
+    if (!cliente) await getConexion();
     try {
         const db = cliente.db(process.env.MONGODB_DATABASE ?? 'base');
         const collection = db.collection(collectionNombre);
@@ -32,8 +33,9 @@ const mongoSet = async (collectionNombre, data) => {
     }
 }
 
+//Devuelve los elementos que coincidan con el json en la colección
 const mongoGet = async (collectionNombre, consulta) => {
-    if (!cliente) getConexion();
+    if (!cliente) await getConexion();
     try {
         const db = cliente.db(process.env.MONGODB_DATABASE ?? 'base')//.toArray();
         const collection = db.collection(collectionNombre);
@@ -45,4 +47,15 @@ const mongoGet = async (collectionNombre, consulta) => {
     }
 }
 
-export { getConexion, mongoGet, mongoSet }
+//Devuelve la conexión para hacer operaciones personalizadas
+const getCliente = async () => {
+    if (!cliente) await getConexion();
+    try {
+        return cliente;
+    } catch (error) {
+        console.error(error);
+        return null;
+    }
+}
+
+export { getConexion, mongoGet, mongoSet, getCliente }

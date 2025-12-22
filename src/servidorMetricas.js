@@ -2,6 +2,7 @@ import express from 'express';
 import * as promClient from 'prom-client'; 
 import { createServer } from 'http'; 
 
+//Abrir servidores de datos para los conteneodres de métricas
 const abrirServidorMetricas = (app) => {
     const METRICS_PORT = 9100;
     const metricsApp = express();
