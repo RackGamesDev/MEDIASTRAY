@@ -12,21 +12,21 @@ import { testFs } from './testFs.js';
 //Hace tests por cuenta propia y de la manera normal usando las conexiones normales de las bases de datos
 const hacerTestsConexiones = async () => {
     try {
-        await testRedis();
+        /*await testRedis();
         await testSql(); 
         await testMongodb();
-        await testFs();
+        await testFs();*/
         //await testMail();
 
         console.log("----------- REDIS");
-        await redisSet("test-init", "12345");
-        console.log(await redisGet("test-init"));
+        //await redisSet("test-init", "12345");
+        //console.log(await redisGet("test-init"));
         console.log("----------- MONGODB");
-        await mongoSet("test-init", {hola: "hello", numero: 12345});
-        console.log(await mongoGet("test-init", {numero: 12345}));
+        //await mongoSet("test-init", {hola: "hello", numero: 12345});
+        //console.log(await mongoGet("test-init", {numero: 12345}));
         console.log("----------- ARCHIVOS");
         await escribirArchivo("hola 1234", "./src/files/prueba", "prueba.txt", true);
-        console.log(await leerArchivo("./src/files/prueba/prueba.txt", true));
+        //console.log(await leerArchivo("./src/files/prueba/prueba.txt", true));
         await borrarArchivo("./src/files/prueba");
         console.log("----------- POSTGRESQL");
         const sql1 = await consulta("SELECT * FROM USUARIOS");

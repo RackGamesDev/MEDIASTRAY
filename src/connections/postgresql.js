@@ -7,6 +7,7 @@ let cliente = null; //Conexión reusable a Postgresql (para su correcto funciona
 const getConexion = async () => {
     if (!cliente) {
         try {
+            console.log(process.env.DATABASE_URL);
             cliente = new Client({connectionString: process.env.DATABASE_URL,clientVersion: '8.16.3'});
             await cliente.connect();
             //Ejecutar las consultas iniciales para crear las tablas
