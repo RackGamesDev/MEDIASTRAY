@@ -35,7 +35,7 @@ const mongoSet = async (collectionNombre, data) => {
 const mongoGet = async (collectionNombre, consulta) => {
     if (!cliente) getConexion();
     try {
-        const db = cliente.db(process.env.MONGODB_DATABASE ?? 'base');
+        const db = cliente.db(process.env.MONGODB_DATABASE ?? 'base')//.toArray();
         const collection = db.collection(collectionNombre);
         const result = await collection.findOne(consulta);
         return result;

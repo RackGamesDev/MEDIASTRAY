@@ -12,7 +12,11 @@ dotenv.config({path: new URL("./.env", import.meta.url).pathname});
 const APP_PORT = process.env.BACKEND_PORT ?? 8510;
 const app = express();
 
-process.env.INIT_TESTS && hacerTestsConexiones();
+if (process.env.INIT_TESTS) {
+    hacerTestsConexiones();
+    hacerTestsConexiones();
+    hacerTestsConexiones();
+}
 if (process.env.NODE_ENV === "DEVELOPMENT") {
     console.log("ACTUALMENTE EN DEV");
     app.use(cors({
