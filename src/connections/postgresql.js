@@ -31,7 +31,7 @@ const getConexion = async () => {
 
 //Ejecuta una consulta sql sanitizándola y devuelve el posible resultado (parametros para el prepare y evitar inyección sql)
 const consulta = async (consulta, parametros = []) => {
-    if (!cliente) await getConexion();
+    if (!cliente || !sigueConectado()) await getConexion();
     try {
         const resultado = await cliente.query(consulta, parametros);
         //await cliente.end();
@@ -50,6 +50,20 @@ const getCliente = async () => {
     } catch (error) {
         console.error(error);
         return null;
+    }
+}
+
+//Devuelve false si falla hacer el ping a la base de datos.
+const sigueConectado = async () => {
+    if (!cliente) await getConexion();
+    try {
+        await cliente.query("SELECT 1;");
+        return true;
+    } catch (error) {
+        console.log(error);
+        cliente = null;
+        getConexion();
+        return false;
     }
 }
 

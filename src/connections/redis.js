@@ -10,6 +10,10 @@ const getConexion = async () => {
             client.on('error', err => console.log('Redis Client Error', err));
             await client.connect();
             cliente = client;
+            cliente.on("end", () => {
+                cliente = null;
+                console.log("DESCONECTADO redis");
+            });
         } catch (error) {
             console.log(error);
             return null;

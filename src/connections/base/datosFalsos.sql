@@ -1,5 +1,7 @@
 -- Inserción de datos falsos para el modo development
 
+DELETE FROM USUARIOS; --CUIDADO solo para el testing
+
 INSERT INTO USUARIOS (username, email, password_hash, first_name, last_name) VALUES
 ('john.doe', 'john.doe@example.com', '$2a$10$examplehashedpassword1', 'John', 'Doe'),
 ('jane.smith', 'jane.smith@example.com', '$2a$10$anotherhashedpassword2', 'Jane', 'Smith'),

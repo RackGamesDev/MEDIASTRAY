@@ -19,17 +19,17 @@ const hacerTestsConexiones = async () => {
         //await testMail();
 
         console.log("----------- REDIS");
-        //await redisSet("test-init", "12345");
-        //console.log(await redisGet("test-init"));
+        await redisSet("test-init", "12345");
+        console.log(await redisGet("test-init"));
         console.log("----------- MONGODB");
-        //await mongoSet("test-init", {hola: "hello", numero: 12345});
-        //console.log(await mongoGet("test-init", {numero: 12345}));
+        await mongoSet("test-init", {hola: "hello", numero: 12345});
+        console.log(await mongoGet("test-init", {numero: 12345}));
         console.log("----------- ARCHIVOS");
         await escribirArchivo("hola 1234", "./src/files/prueba", "prueba.txt", true);
-        //console.log(await leerArchivo("./src/files/prueba/prueba.txt", true));
+        console.log(await leerArchivo("./src/files/prueba/prueba.txt", true));
         await borrarArchivo("./src/files/prueba");
         console.log("----------- POSTGRESQL");
-        const sql1 = await consulta("SELECT * FROM USUARIOS");
+        const sql1 = await consulta("SELECT * FROM USUARIOS LIMIT 4;");
         console.log("primero", sql1);
         const sql2 = await consulta("SELECT * FROM USUARIOS WHERE id > $1 AND first_name = $2;", ["2", "Kevin"])
         console.log("segundo", sql2);
@@ -37,7 +37,7 @@ const hacerTestsConexiones = async () => {
 
     } catch (error) {
         console.log(error);
-        res.json({ message: `error` });
+        //if (res) res.json({ message: `error` });
     }
 }
 

@@ -1,4 +1,5 @@
 #!/bin/bash
+clear
 cat .env.example > .env
 #cat .docker/postgresql-extra.conf > .docker/database/postgresql/postgresql.conf
 #rm -rf .docker/database/postgresql

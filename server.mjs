@@ -12,7 +12,7 @@ dotenv.config({path: new URL("./.env", import.meta.url).pathname});
 const APP_PORT = process.env.BACKEND_PORT ?? 8510;
 const app = express();
 
-if (process.env.INIT_TESTS) {
+if (process.env.INIT_TESTS === "true") {
     //Iniciar los tests para establecer las conexiones permanentes. Se hacen varias veces para asegurarse de que las bases de datos estan realmente preparadas
     hacerTestsConexiones();
     hacerTestsConexiones();
@@ -51,7 +51,7 @@ app.use((req, res) => {
     }
 });
 
-try {abrirServidorMetricas(app);} catch (e) {console.log("No se han habierto los servicios de métricas");} //Abrir el servidor de métricas
+if (process.env.INIT_METRICS === "true") try {abrirServidorMetricas(app);} catch (e) {console.log("No se han habierto los servicios de métricas");} //Abrir el servidor de métricas
 
 app.listen(APP_PORT, () => {
     console.log(`Ejecutandose en ${APP_PORT}`);

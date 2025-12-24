@@ -10,8 +10,13 @@ const getConexion = async () => {
             cliente = new MongoClient(process.env.MONGODB_URI);
             await cliente.connect();
             inicializarMongo(cliente);
+            cliente.on("close", () => {
+                cliente = null;
+                console.log("DESCONECTADO mongodb");
+            });
             return cliente;
         } catch (error) {
+            //cliente = null; getConexion();
             console.error(error);
             return null;
         }
@@ -28,6 +33,7 @@ const mongoSet = async (collectionNombre, data) => {
         const result = await collection.insertOne(data);
         return result ?? true;
     } catch (error) {
+        //cliente = null; getConexion();
         console.error(error);
         return false;
     }
@@ -42,6 +48,7 @@ const mongoGet = async (collectionNombre, consulta) => {
         const result = await collection.findOne(consulta);
         return result;
     } catch (error) {
+        //cliente = null; getConexion();
         console.error(error);
         return null;
     }
