@@ -13,7 +13,7 @@ const getConexion = async () => {
             //Ejecutar las consultas iniciales para crear las tablas
             const consultasIniciales = await leerArchivo(process.env.SQL_INIT_PATH ?? "", true);
             if (consultasIniciales) {
-                await cliente.query(consultasIniciales);
+                if (await !cliente.query("SELECT 1 FROM USUARIOS;")) await cliente.query(consultasIniciales);
                 //Si está en modo development, inserta datos de ejemplo
                 if (process.env.NODE_ENV === "DEVELOPMENT") {
                     const datosIniciales = await leerArchivo(process.env.SQL_INIT_PATH_FAKES ?? "", true);

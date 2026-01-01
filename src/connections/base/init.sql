@@ -6,16 +6,62 @@
 -- SELECT pg_reload_conf();
 
 
--- ACTUALMENTE ES UNA TABLA DE EJEMPLO
-
+DROP TABLE IF EXISTS FOROS;
+DROP TABLE IF EXISTS JUEGOS;
 DROP TABLE IF EXISTS USUARIOS;
 
 CREATE TABLE USUARIOS (
-    id SERIAL PRIMARY KEY,
-    username VARCHAR(50) UNIQUE NOT NULL,
-    email VARCHAR(100) UNIQUE NOT NULL,
-    password_hash VARCHAR(255) NOT NULL,
-    first_name VARCHAR(50),
-    last_name VARCHAR(50),
-    created_at TIMESTAMP WITHOUT TIME ZONE DEFAULT (NOW() at time zone 'utc')
+    uuid VARCHAR(36) PRIMARY KEY, --Identificador
+    nickname VARCHAR(15) UNIQUE NOT NULL, --Nombre identificador
+    nombre VARCHAR(100) UNIQUE NOT NULL, --Nombre normal
+    contrasegna VARCHAR(255) NOT NULL, --Contrasegna encriptada
+    correo VARCHAR(255) UNIQUE NOT NULL, --Correo para login
+    descripcion VARCHAR(511), --Descripcion markdown
+    url_foto VARCHAR(255) DEFAULT '/public/nopfp.png', --Url de su foto
+    --telefono VARCHAR(20),
+    cumpleagnos VARCHAR(15), --Fecha de nacimiento en timestamp para evitar juegos +18
+    fechacreacion VARCHAR(15), --Fecha de creacion del usuario en timestamp
+    --strikes INTEGER DEFAULT 0,
+    disponibilidad INTEGER DEFAULT 0, --0 disponible, 1 desabilitada...
+    premium VARCHAR(15) DEFAULT '', --Si tiene el premium (se almacena la ultima fecha en timestamp, solo es valido si es de hace x tiempo)
+    cantidad_seguidores INTEGER DEFAULT 0 --Cantidad de seguidores que tiene
 );
+
+CREATE TABLE JUEGOS (
+    uuid VARCHAR(36) PRIMARY KEY, --Identificador
+    titulo VARCHAR(63) UNIQUE NOT NULL, --Titulo del juego
+    --Url de las portadas en distinta resolucion
+    url_portada1 VARCHAR(255) DEFAULT '/public/coverless1.png',
+    url_portada2 VARCHAR(255) DEFAULT '/public/coverless2.png',
+    url_portada3 VARCHAR(255) DEFAULT '/public/coverless3.png',
+    --urlportada4 VARCHAR(255) DEFAULT '/public/coverless4.png',
+    publico BOOLEAN DEFAULT TRUE, --Si esta publicado
+    versionactual VARCHAR(15) DEFAULT '1.0.0', --Ultima version
+    fecha_creacion VARCHAR(15), --Fecha en la que se creo
+    fecha_aultima VARCHAR(15), --Ultima fecha en la que se edito el juego
+    descripcion VARCHAR(511), --Descripcion en markdown (alternativamente cambia en los archivos html)
+    uuid_creador VARCHAR(36) REFERENCES USUARIOS(uuid), --uuid de su creador
+    token_administracion VARCHAR(32),
+    --builds
+    --logros
+    --savedatas
+    generos VARCHAR(255), --Generos separados por ,
+    idiomas VARCHAR(255), --Idiomas separados por ,
+    cantidad_seguidores INTEGER DEFAULT 0, --Cantidad de seguidores del juego
+    cantidad_likes INTEGER DEFAULT 0 --Cantidad de likes del juego
+);
+
+CREATE TABLE FOROS (
+    uuid VARCHAR(36) PRIMARY KEY, --Identificador
+    titulo VARCHAR(63) UNIQUE NOT NULL, --Titulo del foro
+    descripcion VARCHAR(511), --Descripcion en markdown
+    url_foto VARCHAR(255) DEFAULT '/public/coverless_forum.png', --Url de la foto principal
+    url_banner VARCHAR(255) DEFAULT '/public/bannerless.png', --Url del banner (foto horizontal)
+    publico BOOLEAN DEFAULT TRUE, --Si esta publico
+    uuid_creador VARCHAR(36) REFERENCES USUARIOS(uuid), --uuid de su creador
+    fecha_creacion VARCHAR(15), --Fecha en la que se creo en formato timestamp
+    cantidad_seguidores INTEGER DEFAULT 0, --Cantidad de seguidores que tiene
+    cantidad_likes INTEGER DEFAULT 0, --Cantidad de likes que tiene
+    juego_asociado VARCHAR(36) --A que juego esta asociado, puede ser un id de igdb o un uuid de un juego en la plataforma
+);
+

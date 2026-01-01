@@ -1,0 +1,3 @@
+init db 
+rutas api usuarios y funcionalidad
+...

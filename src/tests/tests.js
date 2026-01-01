@@ -27,11 +27,11 @@ const hacerTestsConexiones = async () => {
         console.log("----------- ARCHIVOS");
         await escribirArchivo("hola 1234", "./src/files/prueba", "prueba.txt", true);
         console.log(await leerArchivo("./src/files/prueba/prueba.txt", true));
-        await borrarArchivo("./src/files/prueba");
+        await borrarArchivo("./src/files/prueba/prueba.txt");
         console.log("----------- POSTGRESQL");
         const sql1 = await consulta("SELECT * FROM USUARIOS LIMIT 4;");
         console.log("primero", sql1);
-        const sql2 = await consulta("SELECT * FROM USUARIOS WHERE id > $1 AND first_name = $2;", ["2", "Kevin"])
+        const sql2 = await consulta("SELECT * FROM USUARIOS WHERE nombre = $1 AND nickname = $2;", ["nombre", "nickname"])
         console.log("segundo", sql2);
         console.log("------------");
 
