@@ -14,9 +14,11 @@ const app = express();
 
 if (process.env.INIT_TESTS === "true") {
     //Iniciar los tests para establecer las conexiones permanentes. Se hacen varias veces para asegurarse de que las bases de datos estan realmente preparadas
-    hacerTestsConexiones();
-    hacerTestsConexiones();
-    hacerTestsConexiones();
+    setTimeout(async () => {
+        await hacerTestsConexiones();
+        await hacerTestsConexiones();
+        await hacerTestsConexiones();
+    }, 5000);
 }
 if (process.env.NODE_ENV === "DEVELOPMENT") { //Código solo para development
     console.log("ACTUALMENTE EN DEV");
@@ -31,22 +33,34 @@ if (process.env.NODE_ENV === "DEVELOPMENT") { //Código solo para development
 }
 
 //Rutas con contenido estático
-app.use("/public", express.static(process.env.PUBLIC_FILES_PATH));
-app.use("/games", express.static(process.env.GAMES_FILES_PATH));
+if (process.env.SERVE_STATIC === "true") app.use("/public", express.static(process.env.PUBLIC_FILES_PATH));
+if (process.env.SERVE_STATIC === "true") app.use("/games", express.static(process.env.GAMES_FILES_PATH));
 //Peticiones a la API (se gestionan manualmente por el servidor)
 app.use("/api", apiRoutes);
 //Las peticiones en / se dirigen al dist del frontend
-app.use(express.static(path.join(process.cwd(), process.env.FRONTEND_DIST_PATH)));
+if (process.env.SERVE_FRONTEND === "true") app.use(express.static(path.join(process.cwd(), process.env.FRONTEND_DIST_PATH)));
 
 //Errores 404
 app.use((req, res) => {
     if (req.path.startsWith("/public")) {
+        if (process.env.SERVE_STATIC === "false") {
+            res.status(404).json({message: "404 Not found", code: 404});
+            return;
+        }
         res.status(404).redirect('/public/err404.html');
     } else if (req.path.startsWith("/games")) {
+        if (process.env.SERVE_STATIC === "false") {
+            res.status(404).json({message: "404 Not found", code: 404});
+            return;
+        }
         res.status(404).redirect('/games/err404.html');
     } else if (req.path.startsWith("/api")) {
         res.status(404).json({message: "404 Not found", code: 404});
     } else {
+        if (process.env.SERVE_FRONTEND === "false") {
+            res.status(404).json({message: "404 Not found", code: 404});
+            return;
+        }
         res.sendFile(path.join(process.cwd(), process.env.FRONTEND_DIST_PATH, "index.html")); //El error 404 en / lo maneja el frontend
     }
 });

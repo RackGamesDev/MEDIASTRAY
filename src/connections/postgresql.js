@@ -7,17 +7,20 @@ let cliente = null; //Conexión reusable a Postgresql (para su correcto funciona
 const getConexion = async () => {
     if (!cliente) {
         try {
-            console.log(process.env.DATABASE_URL);
-            cliente = new Client({connectionString: process.env.DATABASE_URL,clientVersion: '8.16.3'});
+            cliente = new Client({ connectionString: process.env.DATABASE_URL, clientVersion: '8.16.3' });
             await cliente.connect();
             //Ejecutar las consultas iniciales para crear las tablas
             const consultasIniciales = await leerArchivo(process.env.SQL_INIT_PATH ?? "", true);
             if (consultasIniciales) {
-                if (await !cliente.query("SELECT 1 FROM USUARIOS;")) await cliente.query(consultasIniciales);
-                //Si está en modo development, inserta datos de ejemplo
-                if (process.env.NODE_ENV === "DEVELOPMENT") {
-                    const datosIniciales = await leerArchivo(process.env.SQL_INIT_PATH_FAKES ?? "", true);
-                    await cliente.query(datosIniciales);
+                try {
+                    await cliente.query("SELECT 1 FROM USUARIOS LIMIT 1;");
+                } catch (e) {
+                    await cliente.query(consultasIniciales);
+                    //Si está en modo development, inserta datos de ejemplo
+                    if (process.env.NODE_ENV === "DEVELOPMENT") {
+                        const datosIniciales = await leerArchivo(process.env.SQL_INIT_PATH_FAKES ?? "", true);
+                        await cliente.query(datosIniciales);
+                    }
                 }
             }
             return cliente;
@@ -57,7 +60,7 @@ const getCliente = async () => {
 const sigueConectado = async () => {
     if (!cliente) await getConexion();
     try {
-        await cliente.query("SELECT 1;");
+        await cliente.query("SELECT 1 FROM USUARIOS LIMIT 1;");
         return true;
     } catch (error) {
         console.log(error);

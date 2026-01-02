@@ -39,7 +39,7 @@ const mongoSet = async (collectionNombre, data) => {
     }
 }
 
-//Devuelve los elementos que coincidan con el json en la colección
+//Devuelve los elementos que coincidan con el json en la coleccion
 const mongoGet = async (collectionNombre, consulta) => {
     if (!cliente) await getConexion();
     try {
@@ -54,15 +54,30 @@ const mongoGet = async (collectionNombre, consulta) => {
     }
 }
 
+//Borra el elemento que coincida con el json en la coleccion
+const mongoDelete = async (collectionNombre, consulta, multiple) => {
+    if (!cliente) await getConexion();
+    try {
+        const db = cliente.db(process.env.MONGODB_DATABASE ?? 'base')//.toArray();
+        const collection = db.collection(collectionNombre);
+        if (multiple) return await collection.deleteMany(consulta);
+        return await collection.deleteOne(consulta);
+    } catch (error) {
+        //cliente = null; getConexion();
+        console.error(error);
+        return null;
+    }
+}
+
 //Devuelve la conexión para hacer operaciones personalizadas
 const getCliente = async () => {
     if (!cliente) await getConexion();
     try {
-        return cliente;
+        return cliente.db(process.env.MONGODB_DATABASE ?? 'base');
     } catch (error) {
         console.error(error);
         return null;
     }
 }
 
-export { getConexion, mongoGet, mongoSet, getCliente }
+export { getConexion, mongoGet, mongoSet, getCliente, mongoDelete }
