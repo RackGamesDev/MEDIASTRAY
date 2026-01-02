@@ -1,12 +1,13 @@
 #!/bin/bash
 clear
 cat .env.example > .env
+cat frontend.env.example > frontend/.env
 #cat .docker/postgresql-extra.conf > .docker/database/postgresql/postgresql.conf
 #rm -rf .docker/database/postgresql
 #rm -rf .docker/database/mongodb
 npm install
 cd frontend
-cat .env.example > .env
+#cat .env.example > .env
 npm install
 npm run build
 npm run dev -- --port 8520 &

@@ -31,6 +31,10 @@ if (process.env.NODE_ENV === "DEVELOPMENT") { //Código solo para development
         res.json({ message: `Hello, World! Test Processed` });
     });
 }
+app.use(cors({
+    origin: process.env.FRONTEND_URL ?? "localhost",
+    credentials: true
+}));
 
 //Rutas con contenido estático
 if (process.env.SERVE_STATIC === "true") app.use("/public", express.static(process.env.PUBLIC_FILES_PATH));
