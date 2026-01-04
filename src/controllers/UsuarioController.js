@@ -4,6 +4,7 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { redisDelete, redisSet } from '../connections/redis.js';
 import { consulta } from '../connections/postgresql.js';
+import { mongoDelete, mongoGet, mongoSet } from '../connections/mongodb.js';
 
 const validarJsonCreacionUsuario = (usuario) => {
     return validarNombre(usuario.nombre) && validarNickname(usuario.nickname) && validarCorreo(usuario.correo) && validarContrasegna(usuario.contrasegna) && validarCumpleagnos(usuario.cumpleagnos);
@@ -129,10 +130,55 @@ const borrarUsuario = async (contrasegna, uuid) => {
         } else {
             throw {message: "Validate password is needed", code: 401}
         }
-        return true;
     } catch (error) {
         throw error;
     }
 }
 
-export { validarJsonCreacionUsuario, crearUsuario, loginUsuario, editarUsuario, borrarUsuario }
+//Altera la disponibilidad de un usuario (no para api), 0 disponible, 1 desabilitada de subir juegos, 2 desabilitada de interactuar, 3 desabilitada de login...
+const alterarDisponibilidadUsuario = async (nuevoValor, uuid) => {
+    try {
+        const resultado = await consulta("UPDATE USUARIOS SET disponibilidad = $1 WHERE uuid = $2;", [nuevoValor, uuid]);
+        //EN UN FUTURO, HACER EL BORRADO EN CASCADA
+        return resultado ? true : false;
+    } catch (error) {
+        throw error;
+    }
+}
+
+//Renueva el premium de un usuario estableciendo la ultima renovacion a la fecha actual
+const alterarPremiumUsuario = async (uuid) => {
+    try {
+        const resultado = await consulta("UPDATE USUARIOS SET premium = $1 WHERE uuid = $2;", [Date.now(), uuid]);
+        return resultado ? true : false;
+    } catch (error) {
+        throw error;
+    }
+}
+
+//Altera la cantidad de seguidores de un usuario (en su registro sql), si la cantidad es 0 devuelve si el usuario a sigue al b
+const alterarSeguidores = async (uuidA, uuidB, cantidad) => {
+    try {
+        const yaLeSigue = await mongoGet("intermediario", {sujeto: uuidA, verbo: "sigue", predicado: uuidB}) ?? {};
+        if (cantidad === 0) return yaLeSigue.uuid;
+        const seguidoresPrevios = await consulta("SELECT cantidad_seguidores FROM USUARIOS WHERE uuid = $1", [uuidB]);
+        if (!seguidoresPrevios[0]) throw {message: "Invalid credentials", code: 401};
+        let resultado = false;
+        if (yaLeSigue.uuid && cantidad < 0) {
+            await mongoDelete("intermediario", {sujeto: uuidA, verbo: "sigue", predicado: uuidB}, true);
+            resultado = await consulta("UPDATE USUARIOS SET cantidad_seguidores = $1 WHERE uuid = $2;", [seguidoresPrevios[0].cantidad_seguidores + cantidad, uuidB]);
+        } else if (!yaLeSigue.uuid && cantidad > 0) {
+            await mongoSet("intermediario", {uuid: uuidv4(), sujeto: uuidA, verbo: "sigue", predicado: uuidB});
+            resultado = await consulta("UPDATE USUARIOS SET cantidad_seguidores = $1 WHERE uuid = $2;", [seguidoresPrevios[0].cantidad_seguidores + cantidad, uuidB]);
+        } else {
+            return false;
+        }
+        //if (!validarEnteroPositivo(cantidad)) throw {message: "Invalid amount", code: 401};
+        return resultado ? true : false;
+    } catch (error) {
+        //console.log(error);
+        throw error;
+    }
+}
+
+export { validarJsonCreacionUsuario, crearUsuario, loginUsuario, editarUsuario, borrarUsuario, alterarDisponibilidadUsuario, alterarPremiumUsuario, alterarSeguidores }

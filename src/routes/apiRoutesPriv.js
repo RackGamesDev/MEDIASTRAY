@@ -1,6 +1,6 @@
 import express from 'express';
 import { autenticarTokenApi, autenticarTokenSesion } from './autenticaciones.js';
-import { crearUsuario, loginUsuario, editarUsuario, borrarUsuario } from '../controllers/UsuarioController.js';
+import { crearUsuario, loginUsuario, editarUsuario, borrarUsuario, alterarSeguidores } from '../controllers/UsuarioController.js';
 import { redisGet } from '../connections/redis.js';
 
 const routerPriv = express.Router();
@@ -94,5 +94,46 @@ routerPriv.delete("/userDelete", autenticarTokenApi, autenticarTokenSesion, asyn
         }
     }
 });
+
+//Devuelve si el usuario A sigue al usuario B (uuid_a, uuid_b)
+routerPriv.get("/userFollow", async (req, res) => {
+    try {
+        if (await alterarSeguidores(req.body.uuid_a, req.body.uuid_b, 0)) {
+            return res.json({ message: `Follows`, code: 200, data: true });
+        } else {
+            return res.json({ message: `Does not follow`, code: 200, data: false });
+        }
+    } catch (error) {
+        try {
+            console.log(error);
+            return res.status(error.code).json({message: error.message, code: error.code});
+        } catch (error2) {
+            //console.log(error2);
+            return res.status(500).json({message: "Server error", code: 500});
+        }
+    }
+});
+
+//Usuario A sigue a usuario B, se crea el registro en mongodb y se altera la cantidad de seguidores en el usuario B, requiere follow +1 o -1 para seguir o desseguir (si es posible) (uuid_b, cantidad)
+routerPriv.post("/userFollow", autenticarTokenApi, autenticarTokenSesion, async (req, res) => {
+    try {
+        const token = req.body.token ?? (req.header('X-auth-session') ?? "");
+        const uuid = await redisGet("SESSION-TOKEN-" + token) ?? "";
+        if (await alterarSeguidores(uuid, req.body.uuid_b, req.body.cantidad)) {
+            return res.json({ message: `User followed/unfollowed successfully`, code: 200 });
+        } else {
+            throw {message: "Couldn't perform action (follow)", code: 401};
+        }
+    } catch (error) {
+        try {
+            console.log(error);
+            return res.status(error.code).json({message: error.message, code: error.code});
+        } catch (error2) {
+            //console.log(error2);
+            return res.status(500).json({message: "Server error", code: 500});
+        }
+    }
+});
+
 
 export default routerPriv;
