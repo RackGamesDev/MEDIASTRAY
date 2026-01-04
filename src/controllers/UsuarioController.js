@@ -82,7 +82,6 @@ const editarUsuario = async (nuevos, uuid) => {
             if (await bcrypt.compare(nuevos.contrasegnaAntigua ?? "a", usuarioPrevio[0].contrasegna ?? "b")){
                 proporcionadoContrasegnaAntigua = true;
             } else {
-                console.log("no", nuevos.contrasegnaAntigua, usuarioPrevio[0].contrasegna);
                 throw {message: "Validate password is needed", code: 401}
             };
         }
@@ -119,6 +118,21 @@ const editarUsuario = async (nuevos, uuid) => {
     }
 }
 
+//Borra el usuario, requiere de su contrasegna en el body asi como el token de sesion
+const borrarUsuario = async (contrasegna, uuid) => {
+    try {
+        const usuario = await consulta("SELECT * FROM USUARIOS WHERE uuid = $1;", [uuid]);
+        if (!usuario[0]) throw {message: "Invalid credentials", code: 401};
+        if (await bcrypt.compare(contrasegna ?? "a", usuario[0].contrasegna ?? "b")){
+            const resultado = await consulta("DELETE FROM USUARIOS WHERE uuid = $1", [uuid]);
+            return resultado ? true : false;
+        } else {
+            throw {message: "Validate password is needed", code: 401}
+        }
+        return true;
+    } catch (error) {
+        throw error;
+    }
+}
 
-
-export { validarJsonCreacionUsuario, crearUsuario, loginUsuario, editarUsuario }
+export { validarJsonCreacionUsuario, crearUsuario, loginUsuario, editarUsuario, borrarUsuario }

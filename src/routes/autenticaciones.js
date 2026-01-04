@@ -37,4 +37,9 @@ const autenticarTokenJuego = (req, res, next) => {
 
 }
 
-export { autenticarTokenApi, autenticarTokenJuego, autenticarTokenSesion };
+//Para requerir el token de edicion de un juego en el header
+const autenticarTokenAdministracionJuego = (req, res, next) => {
+
+}
+
+export { autenticarTokenApi, autenticarTokenJuego, autenticarTokenSesion, autenticarTokenAdministracionJuego };
