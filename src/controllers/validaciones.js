@@ -20,7 +20,7 @@ const nickname = (data) => {
 
 //Valida un nombre de usuario, de 5 a 100 caracteres
 const nombre = (data) => {
-    return esString(data) && data.length > 5 && data.length < 100;
+    return esString(data) && data.length >= 5 && data.length < 100;
 }
 
 //Valida una contrasegna, debe tener entre 8 y 32 caracteres y contener una letra mayuscula y minuscula, un numero y un simbolo
