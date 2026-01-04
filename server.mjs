@@ -2,6 +2,7 @@ import express from 'express';
 import dotenv from 'dotenv';
 import { abrirServidorMetricas } from './src/servidorMetricas.js';
 import apiRoutes from "./src/routes/apiRoutes.js";
+import apiRoutesPriv from "./src/routes/apiRoutesPriv.js";
 import path from 'path';
 
 import cors from 'cors';
@@ -11,6 +12,9 @@ import { hacerTestsConexiones } from './src/tests/tests.js';
 dotenv.config({path: new URL("./.env", import.meta.url).pathname});
 const APP_PORT = process.env.BACKEND_PORT ?? 8510;
 const app = express();
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 
 if (process.env.INIT_TESTS === "true") {
     //Iniciar los tests para establecer las conexiones permanentes. Se hacen varias veces para asegurarse de que las bases de datos estan realmente preparadas
@@ -41,6 +45,7 @@ if (process.env.SERVE_STATIC === "true") app.use("/public", express.static(proce
 if (process.env.SERVE_STATIC === "true") app.use("/games", express.static(process.env.GAMES_FILES_PATH));
 //Peticiones a la API (se gestionan manualmente por el servidor)
 app.use("/api", apiRoutes);
+app.use("/api", apiRoutesPriv);
 //Las peticiones en / se dirigen al dist del frontend
 if (process.env.SERVE_FRONTEND === "true") app.use(express.static(path.join(process.cwd(), process.env.FRONTEND_DIST_PATH)));
 

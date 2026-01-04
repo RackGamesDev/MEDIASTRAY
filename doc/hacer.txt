@@ -1,3 +1,9 @@
 init db 
 rutas api usuarios y funcionalidad
+interfaz basica interactuar con usuarios
+rutas api crear juegos y foros (si eso), y interactibilidad con usuarios
+aplicar edicion de metadatos de jeugos y foros en la interfaz
+agregar funcionalidad de subir el juego en si
+que el juego sea visible en la interfaz
+mejorar interfaz
 ...
