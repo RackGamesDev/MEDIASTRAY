@@ -22,7 +22,7 @@ CREATE TABLE USUARIOS (
     cumpleagnos VARCHAR(15), --Fecha de nacimiento en timestamp para evitar juegos +18
     fechacreacion VARCHAR(15), --Fecha de creacion del usuario en timestamp
     --strikes INTEGER DEFAULT 0,
-    disponibilidad INTEGER DEFAULT 0, --0 disponible, 1 desabilitada...
+    disponibilidad INTEGER DEFAULT 0, --0 disponible, 1 desabilitada de subir juegos, 2 desabilitada de interactuar, 3 desabilitada de login...
     premium VARCHAR(15) DEFAULT '', --Si tiene el premium (se almacena la ultima fecha en timestamp, solo es valido si es de hace x tiempo)
     cantidad_seguidores INTEGER DEFAULT 0 --Cantidad de seguidores que tiene
 );

@@ -54,6 +54,7 @@ const loginUsuario = async (datosLogin) => {
         if (!validarJsonLoginUsuario(datosLogin)) throw {message: "Invalid user data", code: 400};
         const elUsuario = await consulta("SELECT * FROM USUARIOS WHERE nickname = $1 OR correo = $1;", [datosLogin.identification]);
         if (!elUsuario[0] || await !bcrypt.compare(datosLogin.contrasegna, elUsuario.contrasegna ?? '')) throw {message: "Invalid credentials", code: 401};
+        if (elUsuario[0].disponibilidad === 4) throw {message: "User has not allowed login", code: 401};
         const TOKEN_SECRET = process.env.JWT_SECRET;
         const token = await jwt.sign({ uuid: elUsuario[0].uuid, nickname: elUsuario[0].nickname }, TOKEN_SECRET, {expiresIn: '4h', algorithm: 'HS256'});
         await redisDelete("SESSION-TOKEN-" + elUsuario[0].uuid);
@@ -68,32 +69,39 @@ const loginUsuario = async (datosLogin) => {
 }
 
 //Editar un usuario actualizando sus datos, requiere en el body (newData) todos los posibles nuevos datos. Devuelve true si va todo bien
-//Concretamente se pueden editar: nickname, nombre, contrasegna, correo, descripcion, url_foto, cumpleagnos
+//Concretamente se pueden editar: nickname, nombre, contrasegna, correo, descripcion, url_foto, cumpleagnos. Para nickname, correo o contrasegna se requiere tambien la contrasegna antigua (contrasegnaAntigua)
 const editarUsuario = async (nuevos, uuid) => {
     try {
         if (!nuevos || !uuid) throw {message: "Invalid credentials", code: 401};
         const usuarioPrevio = await consulta("SELECT * FROM USUARIOS WHERE uuid = $1;", [uuid]);
         if (!usuarioPrevio[0]) throw {message: "Invalid credentials", code: 401};
+        if (usuarioPrevio[0].disponibilidad >= 3) throw {message: "User has not allowed login nor edit credentials or profile", code: 401};
         validarJsonEdicionUsuario(nuevos);
+        let proporcionadoContrasegnaAntigua = false;
+        if (nuevos.contrasegnaAntigua) {
+            if (await bcrypt.compare(nuevos.contrasegnaAntigua ?? "a", usuarioPrevio[0].contrasegna ?? "b")){
+                proporcionadoContrasegnaAntigua = true;
+            } else {
+                console.log("no", nuevos.contrasegnaAntigua, usuarioPrevio[0].contrasegna);
+                throw {message: "Validate password is needed", code: 401}
+            };
+        }
         if (nuevos.nickname) {
+            if (!proporcionadoContrasegnaAntigua) throw {message: "Validate password is needed", code: 401};
             const conEseNickname = await consulta("SELECT uuid FROM USUARIOS WHERE nickname = $1;", [nuevos.nickname]);
             if (conEseNickname[0]) throw {message: "Nickname already in use", code: 401};
         }
         if (nuevos.email) {
+            if (!proporcionadoContrasegnaAntigua) throw {message: "Validate password is needed", code: 401};
             const conEseEmail = await consulta("SELECT uuid FROM USUARIOS WHERE email = $1;", [nuevos.email]);
             if (conEseEmail[0]) throw {message: "Email already in use", code: 401};
         }
         if (nuevos.contrasegna) {
+            if (!proporcionadoContrasegnaAntigua) throw {message: "Validate password is needed", code: 401};
             nuevos.contrasegna = await bcrypt.hash(nuevos.contrasegna, 10);
         }
         if (await consulta("UPDATE USUARIOS SET nickname = $1, nombre = $2, contrasegna = $3, correo = $4, descripcion = $5, url_foto = $6, cumpleagnos = $7 WHERE uuid = $8;", 
-                [nuevos.nickname ?? usuarioPrevio[0].nickname, 
-                nuevos.nombre ?? usuarioPrevio[0].nombre, 
-                nuevos.contrasegna ?? usuarioPrevio[0].contrasegna, 
-                nuevos.correo ?? usuarioPrevio[0].correo, 
-                nuevos.descripcion ?? usuarioPrevio[0].descripcion, 
-                nuevos.url_foto ?? usuarioPrevio[0].url_foto, 
-                nuevos.cumpleagnos ?? usuarioPrevio[0].cumpleagnos, uuid])) {
+                [nuevos.nickname ?? usuarioPrevio[0].nickname, nuevos.nombre ?? usuarioPrevio[0].nombre, nuevos.contrasegna ?? usuarioPrevio[0].contrasegna, nuevos.correo ?? usuarioPrevio[0].correo, nuevos.descripcion ?? usuarioPrevio[0].descripcion, nuevos.url_foto ?? usuarioPrevio[0].url_foto, nuevos.cumpleagnos ?? usuarioPrevio[0].cumpleagnos, uuid])) {
             const TOKEN_SECRET = process.env.JWT_SECRET;
             const token = await jwt.sign({ uuid, nickname: nuevos.nickname ?? usuarioPrevio[0].nickname }, TOKEN_SECRET, {expiresIn: '4h', algorithm: 'HS256'});
             await redisDelete("SESSION-TOKEN-" + uuid);
@@ -101,6 +109,7 @@ const editarUsuario = async (nuevos, uuid) => {
             await redisSet("SESSION-TOKEN-" + uuid, token, 14400);
             await redisSet("SESSION-TOKEN-" + token, uuid, 14400);
             const nuevoTodo = await consulta("SELECT * FROM USUARIOS WHERE uuid = $1;", [uuid]);
+            nuevoTodo[0].contrasegna = "";
             return {usuarioRenovado: nuevoTodo[0] ?? {}, tokenNuevo: token}
         } else {
             throw {message: "There was an error updating the user", code: 401};
@@ -109,5 +118,7 @@ const editarUsuario = async (nuevos, uuid) => {
         throw error;
     }
 }
+
+
 
 export { validarJsonCreacionUsuario, crearUsuario, loginUsuario, editarUsuario }
