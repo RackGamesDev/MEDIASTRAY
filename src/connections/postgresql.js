@@ -38,7 +38,7 @@ const consulta = async (consulta, parametros = []) => {
     try {
         const resultado = await cliente.query(consulta, parametros);
         //await cliente.end();
-        return await resultado.rows;
+        return await resultado.rows ?? true;
     } catch (error) {
         console.log(error);
         return null;

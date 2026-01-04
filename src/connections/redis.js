@@ -23,10 +23,10 @@ const getConexion = async () => {
 }
 
 //Establecer un valor en Redis
-const redisSet = async (clave, valor) => {
+const redisSet = async (clave, valor, ttl) => {
     if (!cliente) await getConexion();
     try {
-        await cliente.set(clave, valor);
+        await cliente.set(clave, valor, {EX: ttl});
         return true;
     } catch (error) {
         console.log(error);
@@ -45,6 +45,18 @@ const redisGet = async (clave) => {
     }
 }
 
+//Borrar un registro en redis manualmente
+const redisDelete = async (clave) => {
+    if (!cliente) await getConexion();
+    try {
+        await cliente.del(clave);
+        return true;
+    } catch (error) {
+        console.log(error);
+        return false;
+    }
+}
+
 //getConexion();
 
 //Devuelve la conexión para hacer operaciones personalizadas
@@ -58,4 +70,4 @@ const getCliente = async () => {
     }
 }
 
-export { getConexion, redisGet, redisSet, getCliente }
+export { getConexion, redisGet, redisSet, redisDelete, getCliente }
