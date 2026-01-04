@@ -23,6 +23,7 @@ const crearUsuario = async (datosUsuario) => {
         const token = await jwt.sign({ uuid, nickname: datosUsuario.nickname }, TOKEN_SECRET, {expiresIn: '4h', algorithm: 'HS256'});
         await redisDelete(uuid);
         await redisSet(uuid, token, 14400);
+        await redisSet(token, uuid, 14400);
         if (await !consulta("INSERT INTO USUARIOS (uuid, nickname, nombre, contrasegna, correo, cumpleagnos, fechacreacion) VALUES ($1, $2, $3, $4, $5, $6, $7);", 
             [uuid, datosUsuario.nickname, datosUsuario.nombre, contrasegnaEncriptada, datosUsuario.correo, datosUsuario.cumpleagnos, fechaCreacion])) throw new Error("Internal server error");
         return token;
@@ -32,7 +33,43 @@ const crearUsuario = async (datosUsuario) => {
 }
 
 const loginUsuario = async (datosLogin) => {
+    /*import jwt from 'jsonwebtoken';
+import redis from 'redis';
 
+// Replace with your actual secret key (must match the one used for generation!)
+const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
+
+// Redis configuration (adjust as needed)
+const redisClient = redis.createClient({
+  url: process.env.REDIS_URL || 'redis://localhost:6379' // Use environment variable for Redis URL
+});
+
+redisClient.on('error', (err) => console.log('Redis Client Error', err));
+redisClient.connect();
+
+
+// Function to validate a token and extract user ID
+async function validateToken(token) {
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET);
+
+    // Check if the token is present in Redis (blacklist/revocation check - optional but recommended)
+    const redisKey = `blacklisted:${token}`;
+    const isBlacklisted = await promisify((cb) => redisClient.get)(redisKey); // Use promisify for async/await
+
+    if (isBlacklisted) {
+      throw new Error('Token has been blacklisted');
+    }
+
+
+    return decoded;  // Return the decoded payload (e.g., user ID)
+  } catch (error) {
+    console.error("Token validation error:", error);
+    return null; // Token is invalid
+  }
+}
+
+export default validateToken;*/
 } 
 
 export { validarJsonCreacionUsuario, crearUsuario, loginUsuario }

@@ -14,7 +14,7 @@ CREATE TABLE USUARIOS (
     uuid VARCHAR(36) PRIMARY KEY, --Identificador
     nickname VARCHAR(15) UNIQUE NOT NULL, --Nombre identificador
     nombre VARCHAR(100) UNIQUE NOT NULL, --Nombre normal
-    contrasegna VARCHAR(63) NOT NULL, --Contrasegna encriptada
+    contrasegna VARCHAR(127) NOT NULL, --Contrasegna encriptada
     correo VARCHAR(255) UNIQUE NOT NULL, --Correo para login
     descripcion VARCHAR(511) DEFAULT '', --Descripcion markdown
     url_foto VARCHAR(255) DEFAULT '/public/nopfp.png', --Url de su foto
@@ -39,7 +39,7 @@ CREATE TABLE JUEGOS (
     versionactual VARCHAR(15) DEFAULT '1.0.0', --Ultima version
     fecha_creacion VARCHAR(15), --Fecha en la que se creo
     fecha_aultima VARCHAR(15), --Ultima fecha en la que se edito el juego
-    descripcion VARCHAR(511) DEFAULT '', --Descripcion en markdown (alternativamente cambia en los archivos html)
+    descripcion VARCHAR(1023) DEFAULT '', --Descripcion en markdown (alternativamente cambia en los archivos html)
     uuid_creador VARCHAR(36) REFERENCES USUARIOS(uuid), --uuid de su creador
     token_administracion VARCHAR(32),
     --builds
