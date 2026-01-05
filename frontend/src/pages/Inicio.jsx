@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useState, useEffect, useContext } from 'react';
 import { Link } from 'react-router';
 import img from '../assets/react.svg';
+import { AjustesContexto } from '../contexts/AjustesProvider.jsx';
 
 function Inicio() {
 
     const [count, setCount] = useState(0);
+    const { API_URL, PUBLIC_URL, API_KEY } = useContext(AjustesContexto);
 
-    const API_URL = import.meta.env.VITE_API_URL ?? process.env.REACT_APP_API_URL;
-    const PUBLIC_URL = import.meta.env.VITE_PUBLIC_URL ?? process.env.REACT_APP_PUBLIC_URL;
-    const GAMES_URL = import.meta.env.VITE_GAMES_URL ?? process.env.REACT_APP_GAMES_URL;
 
     useEffect(() => {
         console.log(API_URL);

@@ -1,0 +1,46 @@
+{
+    "textos": {
+        "enlacesCabecera": {
+            "EN-us": [
+                {
+                    "direccion": "/login",
+                    "titulo": "Log in"
+                },
+                {
+                    "direccion": "/register",
+                    "titulo": "Sign in"
+                },
+                {
+                    "direccion": "/info",
+                    "titulo": "About"
+                },
+                {
+                    "direccion": "/settings",
+                    "titulo": "Settings"
+                }
+            ],
+            "ES-es": [
+                {
+                    "direccion": "/login",
+                    "titulo": "Iniciar sesión"
+                },
+                {
+                    "direccion": "/register",
+                    "titulo": "Registrarse"
+                },
+                {
+                    "direccion": "/info",
+                    "titulo": "Información"
+                },
+                {
+                    "direccion": "/settings",
+                    "titulo": "Ajustes"
+                }
+            ]
+        },
+        "botones": {
+            "EN-us": [],
+            "ES-es": []
+        }
+    }
+}

@@ -27,7 +27,8 @@ if (process.env.INIT_TESTS === "true") {
 if (process.env.NODE_ENV === "DEVELOPMENT") { //Código solo para development
     console.log("ACTUALMENTE EN DEV");
     app.use(cors({
-        origin: process.env.FREE_CORS ?? "n" === "s" ? true : 'http://localhost:8520', //Permitir peticiones de vite
+        //origin: process.env.FREE_CORS ?? "n" === "s" ? true : 'http://localhost:8520', //Permitir peticiones de vite
+        origin: process.env.FRONTEND_URL_DEV ?? 'http://localhost:8520', //Permitir peticiones de vite
         credentials: true,
     }));
     app.get('/api/test', async (req, res) => { //Re-ejecutar los tests
@@ -35,10 +36,10 @@ if (process.env.NODE_ENV === "DEVELOPMENT") { //Código solo para development
         res.json({ message: `Hello, World! Test Processed` });
     });
 }
-app.use(cors({
+/*app.use(cors({
     origin: process.env.FRONTEND_URL ?? "localhost",
     credentials: true
-}));
+}));*/
 
 //Rutas con contenido estático
 if (process.env.SERVE_STATIC === "true") app.use("/public", express.static(process.env.PUBLIC_FILES_PATH));

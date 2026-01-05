@@ -1,4 +1,5 @@
 import { redisGet } from "../connections/redis.js";
+import jwt from 'jsonwebtoken';
 
 //Para requerir el token de la api en el header
 const autenticarTokenApi = (req, res, next) => {
@@ -18,10 +19,12 @@ const autenticarTokenApi = (req, res, next) => {
 //Para requerir el token de sesion de un usuario en el header
 const autenticarTokenSesion = async (req, res, next) => {
     try {
+        const TOKEN_SECRET = process.env.JWT_SECRET;
         const token = req.body.token ?? (req.header('X-auth-session') ?? "");
         const uuid = await redisGet("SESSION-TOKEN-" + token) ?? "";
         const token2 = await redisGet("SESSION-TOKEN-" + uuid) ?? "";
-        if (token2 === token && token !== "" && token2 !== "" && uuid !== "") {
+        const uuid2 = jwt.verify(token, TOKEN_SECRET)?.uuid ?? undefined;
+        if (token2 === token && uuid2 === uuid && token !== "" && token2 !== "" && uuid !== "" && uuid2) {
             next();
         } else {
             throw { message: `User session token NOT valid OR server error`, code: 200 }

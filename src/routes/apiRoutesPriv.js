@@ -1,6 +1,6 @@
 import express from 'express';
 import { autenticarTokenApi, autenticarTokenSesion } from './autenticaciones.js';
-import { crearUsuario, loginUsuario, editarUsuario, borrarUsuario, alterarSeguidores } from '../controllers/UsuarioController.js';
+import { crearUsuario, loginUsuario, editarUsuario, borrarUsuario, alterarSeguidores } from '../controllers/usuarioController.js';
 import { redisGet } from '../connections/redis.js';
 
 const routerPriv = express.Router();
