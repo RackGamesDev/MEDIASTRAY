@@ -3,12 +3,32 @@
         "enlacesCabecera": {
             "EN-us": [
                 {
-                    "direccion": "/login",
-                    "titulo": "Log in"
+                    "direccion": "/featuredGames",
+                    "titulo": "Featured games"
                 },
                 {
-                    "direccion": "/register",
-                    "titulo": "Sign in"
+                    "direccion": "/browseGames",
+                    "titulo": "Browse games"
+                },
+                {
+                    "direccion": "/featuredForums",
+                    "titulo": "Featured forums"
+                },
+                {
+                    "direccion": "/browseForums",
+                    "titulo": "Browse forums"
+                },
+                {
+                    "direccion": "/browseUsers",
+                    "titulo": "Browse users"
+                },
+                {
+                    "direccion": "/docs",
+                    "titulo": "Documentation"
+                },
+                {
+                    "direccion": "/premium",
+                    "titulo": "Premium"
                 },
                 {
                     "direccion": "/info",
@@ -21,12 +41,32 @@
             ],
             "ES-es": [
                 {
-                    "direccion": "/login",
-                    "titulo": "Iniciar sesión"
+                    "direccion": "/featuredGames",
+                    "titulo": "Juegos destacados"
                 },
                 {
-                    "direccion": "/register",
-                    "titulo": "Registrarse"
+                    "direccion": "/browseGames",
+                    "titulo": "Buscar juegos"
+                },
+                {
+                    "direccion": "/featuredForums",
+                    "titulo": "Foros destacados"
+                },
+                {
+                    "direccion": "/browseForums",
+                    "titulo": "Buscar foros"
+                },
+                {
+                    "direccion": "/browseUsers",
+                    "titulo": "Buscar usuarios"
+                },
+                {
+                    "direccion": "/docs",
+                    "titulo": "Documentación"
+                },
+                {
+                    "direccion": "/premium",
+                    "titulo": "Premium"
                 },
                 {
                     "direccion": "/info",
@@ -36,7 +76,43 @@
                     "direccion": "/settings",
                     "titulo": "Ajustes"
                 }
-            ]
+            ],
+            "noUsuario": {
+                "EN-us": [
+                    {
+                        "direccion": "/register",
+                        "titulo": "Sign in"
+                    },
+                    {
+                        "direccion": "/login",
+                        "titulo": "Log in"
+                    }
+                ],
+                "ES-es": [
+                    {
+                        "direccion": "/register",
+                        "titulo": "Registrarse"
+                    },
+                    {
+                        "direccion": "/login",
+                        "titulo": "Iniciar sesión"
+                    }
+                ]
+            },
+            "siUsuario": {
+                "EN-us": [
+                    {
+                        "direccion": "/logout",
+                        "titulo": "Log out"
+                    }
+                ],
+                "ES-es": [
+                    {
+                        "direccion": "/logout",
+                        "titulo": "Cerrar sesión"
+                    }
+                ]
+            }
         },
         "botones": {
             "EN-us": [],

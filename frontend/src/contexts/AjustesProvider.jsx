@@ -14,14 +14,19 @@ const AjustesProvider = (props) => {
     const [usuarioActual, setUsuarioActual] = useState({});
     const [tokenSesionActual, setTokenSesionActual] = useState("");
     const [tokenJuegoActual, setTokenJuegoActual] = useState("");
-    const [idiomaActual, setIdiomaActual] = useState("");
+    const [idiomaActual, setIdiomaActual] = useState("EN-us");
     const idiomasAdmitidos = ["EN-us", "ES-es"];
 
 
   const [fallo, setFallo] = useState(false);
   //Carga al inicio
-  const recibirDatos = async () => {
+  const inicio = async () => {
     try {
+        await localStorage.setItem("API_URL", API_URL);
+        await localStorage.setItem("PUBLIC_URL", PUBLIC_URL);
+        await localStorage.setItem("GAMES_URL", GAMES_URL);
+        await localStorage.setItem("API_KEY", API_KEY);
+        await localStorage.setItem("idiomaActual", idiomaActual);
         setFallo(false);
     } catch (error) {
         setFallo({error: true, objeto: error});
@@ -29,27 +34,36 @@ const AjustesProvider = (props) => {
 
   }
   useEffect(() => {
-    recibirDatos();
+    inicio();
   }, []);
 
   const cambiarUsuarioActual = async (usuario) => {
     if (validarDatosUsuario(usuario)) {
         setUsuarioActual(usuario);
+        await localStorage.setItem("usuarioActual", JSON.stringify(usuario));
     } else {
         setFallo({error: true, code: "user-non-validable"});
+        //await localStorage.setItem("usuarioActual", "");
     }
   }
 
   const cambiarTokenSesionActual = async (token) => {
-    if (token) setTokenSesionActual(token);
+    if (token) {
+      setTokenSesionActual(token);
+      await localStorage.setItem("tokenSesionActual", token);
+    }
   }
   const cambiarTokenJuegoActual = async (token) => {
-    if (token) setTokenJuegoActual(token);
+    if (token) {
+      setTokenJuegoActual(token);
+      await localStorage.setItem("tokenJuegoActual", token);
+    }
   }
 
   const cambiarIdiomaActual = async (nuevo) => {
     if (idiomasAdmitidos.find((e)=>e===nuevo)) {
         setIdiomaActual(nuevo);
+        await localStorage.setItem("idiomaActual", nuevo);
     } else {
         setFallo({error: true, code: "language-not-found"});
     }
