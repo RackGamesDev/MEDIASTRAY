@@ -7,3 +7,15 @@ agregar funcionalidad de subir el juego en si
 que el juego sea visible en la interfaz
 mejorar interfaz
 ...
+
+
+
+extras:
+medallas
+premium
+versiones juegos
+logros
+guardado juegos
+moderadores
+alojamiento imagenes
+jams

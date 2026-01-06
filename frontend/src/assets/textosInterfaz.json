@@ -115,8 +115,48 @@
             }
         },
         "botones": {
-            "EN-us": [],
-            "ES-es": []
+            "EN-us": {
+                "irInicio": "Back to home",
+                "iniciarSesion": "Log in"
+            },
+            "ES-es": {
+                "irInicio": "Volver al inicio",
+                "iniciarSesion": "Iniciar sesión"
+            }
+        },
+        "titulos": {
+            "EN-us": {
+                "login": "Log in with an existing account",
+                "register": "Create a new account",
+                "error404": "Error 404",
+                "error404Explicacion": "Site not found :("
+            },
+            "ES-es": {
+                "login": "Iniciar sesión con una cuenta ya existente",
+                "register": "Crear una nueva cuenta",
+                "error404": "Error 404",
+                "error404Explicacion": "Sitio no encontrado :("
+            }
+        },
+        "parrafos": {
+            "EN-us": {
+                "error404Explicacion": "Site not found :("
+            },
+            "ES-es": {
+                "error404Explicacion": "Sitio no encontrado :("
+            }
+        },
+        "formularios": {
+            "EN-us": {
+                "identificacion": "Email or nickname:",
+                "contrasegna": "Password:",
+                "contrasegnaMostrar": "Show password"
+            },
+            "ES-es": {
+                "identificacion": "Correo o nickname:",
+                "contrasegna": "Contraseña:",
+                "contrasegnaMostrar": "Mostrar contraseña"
+            }
         }
     }
 }

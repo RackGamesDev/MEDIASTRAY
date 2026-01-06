@@ -69,9 +69,8 @@ const AjustesProvider = (props) => {
     }
   }
 
-  const exportaciones = { fallo: fallo, tokenSesionActual, usuarioActual, tokenJuegoActual, idiomaActual, idiomasAdmitidos, API_URL, API_KEY, PUBLIC_URL, GAMES_URL, 
-    textosInterfazEnlacesCabecera: textos.enlacesCabecera,
-    textosInterfazBotones: textos.botones,
+  const exportaciones = { fallo: fallo, tokenSesionActual, usuarioActual, tokenJuegoActual, idiomaActual, idiomasAdmitidos, API_URL, API_KEY, PUBLIC_URL, GAMES_URL, textosInterfaz: textos,
+    textosInterfazEnlacesCabecera: textos.enlacesCabecera, textosInterfazBotones: textos.botones, textosInterfazTitulos: textos.titulos,
     cambiarUsuarioActual, cambiarTokenJuegoActual, cambiarIdiomaActual, cambiarTokenSesionActual };
 
 

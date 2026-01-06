@@ -1,10 +1,11 @@
 import React from 'react';
+import FormularioLogin from '../components/Forms/FormularioLogin.jsx';
 
 function Login() {
 
   return (
     <>
-      <h2>login</h2>
+      <FormularioLogin />
     </>
   )
 }
