@@ -7,6 +7,7 @@ import { consulta } from '../connections/postgresql.js';
 import { mongoDelete, mongoGet, mongoSet } from '../connections/mongodb.js';
 
 const validarJsonCreacionUsuario = (usuario) => {
+    console.log(usuario.nickname);
     return validarNombre(usuario.nombre) && validarNickname(usuario.nickname) && validarCorreo(usuario.correo) && validarContrasegna(usuario.contrasegna) && validarCumpleagnos(usuario.cumpleagnos);
 }
 
@@ -40,10 +41,15 @@ const crearUsuario = async (datosUsuario) => {
         await redisDelete("SESSION-TOKEN-" + uuid);
         await redisDelete("SESSION-TOKEN-" + token);
         await redisSet("SESSION-TOKEN-" + uuid, token, 14400);
-        await redisSet("SESSION-TOKEN-" + token, uuid, 14400); 
-        if (await !consulta("INSERT INTO USUARIOS (uuid, nickname, nombre, contrasegna, correo, cumpleagnos, fechacreacion) VALUES ($1, $2, $3, $4, $5, $6, $7);", 
-            [uuid, datosUsuario.nickname, datosUsuario.nombre, contrasegnaEncriptada, datosUsuario.correo, datosUsuario.cumpleagnos, fechaCreacion]));// throw new Error("Internal server error");
-        return token;
+        await redisSet("SESSION-TOKEN-" + token, uuid, 14400);
+        const creacion = await consulta("INSERT INTO USUARIOS (uuid, nickname, nombre, contrasegna, correo, cumpleagnos, fechacreacion) VALUES ($1, $2, $3, $4, $5, $6, $7);", 
+            [uuid, datosUsuario.nickname, datosUsuario.nombre, contrasegnaEncriptada, datosUsuario.correo, datosUsuario.cumpleagnos, fechaCreacion]);
+        if (creacion) {
+            const usuario = await consulta("SELECT * FROM USUARIOS WHERE uuid = $1;", [uuid]);
+            return { token, usuario: usuario[0]};
+        } else {
+            throw {message: "Invalid user data", code: 400};
+        }
     } catch (error) {
         throw error;
     }

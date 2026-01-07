@@ -173,7 +173,7 @@
         "errores": {
             "EN-us": {
                 "noLogin": "Couldn't log in, check that the password and the identification are correct",
-                "noRegister": "Couldn't create an user, check all the fields",
+                "noRegister": "Couldn't create an user, there was an error, check all the fields",
                 "validacionEmail": "The email is not correct",
                 "validacionContrasegna": "The password must have between 8 and 32 characters, an uppercase and a lowercase letter, and a symbol",
                 "validacionNickname": "The nickname must have between 4 and 15 characters and can only include alphabet letters and the symbols \"-\" \"_\" \"|\"",
@@ -186,7 +186,7 @@
             },
             "ES-es": {
                 "noLogin": "No se ha podido iniciar sesión, comprueba que la contraseña y la identificación sean correctas",
-                "noRegister": "No se ha podido crear el usuario, comprueba todos los campos",
+                "noRegister": "No se ha podido crear el usuario, ha habido un error, comprueba todos los campos",
                 "validacionEmail": "El correo introducido no es correcto",
                 "validacionContrasegna": "La contraseña debe tener al entre 8 y 32 carácteres, una mayúscula, una minúscula y un símbolo",
                 "validacionNickname": "El nickname debe tener entre 4 y 15 carácteres y solo puede incluir las letras del alfabeto anglosajón, y los símbolos \"-\" \"_\" \"|\"",

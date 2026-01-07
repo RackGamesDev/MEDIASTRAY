@@ -86,7 +86,7 @@ const juegoDeForo = (data) => {
 //Valida la fecha de cumpleagnos
 const cumpleagnos = (data) => {
     const texto = Date.parse(data);
-    return timestamp(texto + "") && texto > Date.now();
+    return timestamp(texto + "") && texto < Date.now();
 }
 
 export { esString, cumpleagnos, version, descripcionForo, descripcionJuego, timestamp, titulo, nombre, nickname, nombreForo, juegoDeForo, enteroPositivo, url, contrasegna, correo, descripcionUsuario, uuid, identificacion }

@@ -12,4 +12,8 @@ const identificacionFalsa = () => {
     return Math.random() < 0.5 ? correoFalso() : nicknameFalso();
 }
 
-export { correoFalso, nicknameFalso, identificacionFalsa }
+const nombreFalso = () => {
+    return datosFalsos.nombres[Math.floor(Math.random() * datosFalsos.nombres.length)];
+}
+
+export { correoFalso, nicknameFalso, identificacionFalsa, nombreFalso }
