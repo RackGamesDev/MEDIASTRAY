@@ -40,7 +40,7 @@ const crearUsuario = async (datosUsuario) => {
         await redisDelete("SESSION-TOKEN-" + uuid);
         await redisDelete("SESSION-TOKEN-" + token);
         await redisSet("SESSION-TOKEN-" + uuid, token, 14400);
-        await redisSet("SESSION-TOKEN-" + token, uuid, 14400);
+        await redisSet("SESSION-TOKEN-" + token, uuid, 14400); 
         if (await !consulta("INSERT INTO USUARIOS (uuid, nickname, nombre, contrasegna, correo, cumpleagnos, fechacreacion) VALUES ($1, $2, $3, $4, $5, $6, $7);", 
             [uuid, datosUsuario.nickname, datosUsuario.nombre, contrasegnaEncriptada, datosUsuario.correo, datosUsuario.cumpleagnos, fechaCreacion]));// throw new Error("Internal server error");
         return token;

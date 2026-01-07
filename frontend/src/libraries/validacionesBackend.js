@@ -83,4 +83,10 @@ const juegoDeForo = (data) => {
     return esString(data) && (uuid(data) || (data.length > 2 && data.length < 36));
 }
 
-export { esString, version, descripcionForo, descripcionJuego, timestamp, titulo, nombre, nickname, nombreForo, juegoDeForo, identificacion, enteroPositivo, url, contrasegna, correo, descripcionUsuario, uuid }
+//Valida la fecha de cumpleagnos
+const cumpleagnos = (data) => {
+    const texto = Date.parse(data);
+    return timestamp(texto + "") && texto > Date.now();
+}
+
+export { esString, cumpleagnos, version, descripcionForo, descripcionJuego, timestamp, titulo, nombre, nickname, nombreForo, juegoDeForo, enteroPositivo, url, contrasegna, correo, descripcionUsuario, uuid, identificacion }

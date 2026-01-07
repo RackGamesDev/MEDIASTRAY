@@ -20,9 +20,9 @@ routerPriv.get("/authSessionToken", autenticarTokenApi, autenticarTokenSesion, a
 //Ruta para crear el usuario, requiere en el body (usuario): nombre, nickname, correo, contrasegna, cumpleagnos. Devuelve un token de sesion
 routerPriv.post("/userCreate", autenticarTokenApi, async (req, res) => {
     try {
-        const token = await crearUsuario(req.body.usuario);
+        const { token, usuario } = await crearUsuario(req.body.usuario);
         res.setHeader('X-auth-session', token);
-        return res.json({ message: `User created successfully`, code: 200, sessionToken: token });
+        return res.json({ message: `User created successfully`, code: 200, sessionToken: token, user: usuario });
     } catch (error) {
         try {
             console.log(error);

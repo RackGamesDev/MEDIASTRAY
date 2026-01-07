@@ -1,10 +1,11 @@
 import React from 'react';
+import FormularioRegister from '../components/Forms/FormularioRegister.jsx';
 
 function Register() {
 
   return (
     <>
-      <h2>Register</h2>
+      <FormularioRegister />
     </>
   )
 }

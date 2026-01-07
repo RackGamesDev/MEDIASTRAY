@@ -1,4 +1,5 @@
 import React, { useState, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Texto from '../Texto.jsx';
 import InputBasico from '../Elements/InputBasico.jsx';
 import BotonFuncion from '../Elements/BotonFuncion.jsx';
@@ -12,7 +13,8 @@ function FormularioLogin() {
   const objetoLoginBasico = {identificacion: "", contrasegna: "", verContrasegna: false}
   const [objetoLogin, setObjetoLogin] = useState({...objetoLoginBasico});
   const [errorFormulario, setErrorFormulario] = useState("");
-  const { idiomaActual, API_URL, API_KEY } = useContext(AjustesContexto);
+  const { idiomaActual, API_URL, API_KEY, cambiarTokenSesionActual, cambiarUsuarioActual } = useContext(AjustesContexto);
+  const navegar = useNavigate();
 
   const cambio = (e) => {
     if (e.target.nodeName === "INPUT") {
@@ -37,9 +39,15 @@ function FormularioLogin() {
     e.preventDefault();
     if (validar()) {
       setErrorFormulario("");
-      console.log(objetoLogin);
-      const resultado = await peticionBasica(API_URL + "/userLogin", {"X-auth-api": API_KEY}, "GET", {credentials: {contrasegna: objetoLogin.contrasegna, identificacion: objetoLogin.identificacion}});
-      console.log(resultado);
+      const resultado = await peticionBasica(API_URL + "/userLogin", {"X-auth-api": API_KEY}, "POST", {credentials: {contrasegna: objetoLogin.contrasegna, identification: objetoLogin.identificacion}});
+      if (resultado.code === 200 && !resultado.fallo) {
+        cambiarTokenSesionActual(resultado.sessionToken);
+        cambiarUsuarioActual(resultado.user);
+        navegar("/user/" + resultado.user.uuid);
+        reset();
+      } else {
+        setErrorFormulario(TextoTraducido("errores", idiomaActual, "noLogin"));
+      }
     } else {
       setErrorFormulario(TextoTraducido("errores", idiomaActual, "noLogin"));
     }
@@ -53,9 +61,7 @@ function FormularioLogin() {
             <InputBasico nombre="contrasegna" titulo={<Texto tipo="formularios" nombre="contrasegna" />} valor={objetoLogin.contrasegna} tipo={objetoLogin.verContrasegna ? "text" : "password"} placeholder="········"/>
             <InputBasico nombre="verContrasegna" titulo={<Texto tipo="formularios" nombre="contrasegnaMostrar" />} estaChecked={objetoLogin.verContrasegna} tipo="checkbox" />
             <BotonFuncion titulo={<Texto tipo="botones" nombre="iniciarSesion" />} funcion={enviar}/>
-            <div className="caja-errores">
-              {errorFormulario}
-            </div>
+            <div className="caja-errores">{errorFormulario}</div>
         </form>
     </div>
   )
