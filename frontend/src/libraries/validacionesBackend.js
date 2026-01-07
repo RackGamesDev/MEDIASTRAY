@@ -83,4 +83,4 @@ const juegoDeForo = (data) => {
     return esString(data) && (uuid(data) || (data.length > 2 && data.length < 36));
 }
 
-export { esString, version, descripcionForo, descripcionJuego, timestamp, titulo, nombre, nickname, nombreForo, juegoDeForo, enteroPositivo, url, contrasegna, correo, descripcionUsuario, uuid, identificacion }
+export { esString, version, descripcionForo, descripcionJuego, timestamp, titulo, nombre, nickname, nombreForo, juegoDeForo, identificacion, enteroPositivo, url, contrasegna, correo, descripcionUsuario, uuid }

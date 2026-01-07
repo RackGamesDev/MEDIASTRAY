@@ -3,6 +3,7 @@ cat .env.example > .env
 #cat .docker/postgresql-extra.conf > .docker/database/postgresql/postgresql.conf
 #rm -rf .docker/database/postgresql
 #rm -rf .docker/database/mongodb
+#cat src/controllers/validaciones.js > frontend/src/libraries/validacionesBackend.js
 npm install
 cd frontend
 npm install
