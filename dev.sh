@@ -1,5 +1,7 @@
 #!/bin/bash
 clear
+touch logs/backend.log
+touch logs/db.log
 cat .env.example > .env
 cat frontend.env.example > frontend/.env
 #cat .docker/postgresql-extra.conf > .docker/database/postgresql/postgresql.conf

@@ -9,8 +9,19 @@ const escribirArchivo = async (contenido, ruta, nombre, esTexto) => {
             await fs.promises.writeFile(path.join(ruta, nombre), contenido, 'utf8');
         } else {
             await fs.promises.writeFile(path.join(ruta, nombre), contenido);
+            
         }
         return true;
+    } catch (error) {
+        console.log(error);
+        return false;
+    }
+}
+
+//Agnade nuevas lineas en un archivo
+const agnadirEnArchivo = async (lineas, ruta, nombre) => {
+    try {
+        await fs.promises.appendFile(path.join(ruta, nombre), lineas + "\n", 'utf8');
     } catch (error) {
         console.log(error);
         return false;
@@ -49,4 +60,4 @@ const borrarArchivo = async (rutaMasNombre) => {
     }
 }
 
-export { escribirArchivo, leerArchivo, borrarArchivo }
+export { escribirArchivo, leerArchivo, borrarArchivo, agnadirEnArchivo }

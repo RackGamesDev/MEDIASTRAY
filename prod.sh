@@ -1,4 +1,6 @@
 #!/bin/bash
+touch logs/backend.log
+touch logs/db.log
 cat .env.example > .env
 #cat .docker/postgresql-extra.conf > .docker/database/postgresql/postgresql.conf
 #rm -rf .docker/database/postgresql

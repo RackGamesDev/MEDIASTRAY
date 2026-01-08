@@ -19,6 +19,6 @@ guardado juegos
 moderadores
 alojamiento imagenes
 jams
-logs
+logs en red
 monitoreo
 cicd

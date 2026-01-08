@@ -4,6 +4,7 @@ import { abrirServidorMetricas } from './src/servidorMetricas.js';
 import apiRoutes from "./src/routes/apiRoutes.js";
 import apiRoutesPriv from "./src/routes/apiRoutesPriv.js";
 import path from 'path';
+import { iniciarServicioLogs } from './src/connections/logs.js';
 
 import cors from 'cors';
 import { hacerTestsConexiones } from './src/tests/tests.js';
@@ -14,6 +15,7 @@ const APP_PORT = process.env.BACKEND_PORT ?? 8510;
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+iniciarServicioLogs();
 
 
 if (process.env.INIT_TESTS === "true") {
@@ -31,10 +33,6 @@ if (process.env.NODE_ENV === "DEVELOPMENT") { //Código solo para development
         origin: process.env.FRONTEND_URL_DEV ?? 'http://localhost:8520', //Permitir peticiones de vite
         credentials: true,
     }));
-    app.get('/api/test', async (req, res) => { //Re-ejecutar los tests
-        await hacerTestsConexiones();
-        res.json({ message: `Hello, World! Test Processed` });
-    });
 }
 /*app.use(cors({
     origin: process.env.FRONTEND_URL ?? "localhost",

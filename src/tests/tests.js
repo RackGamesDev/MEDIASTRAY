@@ -2,6 +2,7 @@ import { escribirArchivo, leerArchivo, borrarArchivo } from '../connections/arch
 import { mongoGet, mongoSet, mongoDelete } from '../connections/mongodb.js';
 import { consulta } from '../connections/postgresql.js';
 import { redisGet, redisSet } from '../connections/redis.js';
+import { agnadirLog } from '../connections/logs.js';
 
 import { testMongodb } from './testMongodb.js';
 import { testRedis } from './testRedis.js';
@@ -37,6 +38,7 @@ const hacerTestsConexiones = async () => {
         //console.log("segundo", sql2);
         console.log("------------");
 
+        agnadirLog("backend.log", "una prueba de logs");
     } catch (error) {
         console.log(error);
         //if (res) res.json({ message: `error` });
