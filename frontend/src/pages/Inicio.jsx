@@ -11,11 +11,11 @@ function Inicio() {
 
 
     useEffect(() => {
-        console.log(API_URL);
+        //console.log(API_URL);
         (async () => {
             let datos = await fetch(API_URL + "/prueba");
             datos = await datos.json();
-            console.log(await datos);
+            //console.log(await datos);
         })();
     }, []);
 

@@ -3,10 +3,13 @@ import { agnadirEnArchivo } from "./archivos.js"
 let logsPendientes = [];
 let iterador = null;
 
-const agnadirLog = async (archivo, texto) => {
-    logsPendientes = [...logsPendientes, {archivo, texto: Date.now() + ":   " + texto}];
+//Agnade un log para que se guarde en un archivo
+const agnadirLog = async (archivo, texto, suprimirConsola) => {
+    if (iterador !== null) logsPendientes = [...logsPendientes, {archivo, texto: Date.now() + ":   " + texto}];
+    if (!suprimirConsola) console.log(archivo, Date.now() + ":   " + texto);
 }
 
+//Inicia el proceso para guardar los logs en los archivos cada x tiempo
 const iniciarServicioLogs = () => {
     const ruta = process.env.RUTA_LOGS;
     iterador = setInterval(() => {
@@ -17,6 +20,7 @@ const iniciarServicioLogs = () => {
     }, process.env.TIEMPO_LOGS ?? 8000);
 }
 
+//Parar el proceso de los logs temporalmente
 const pararLogs = () => {
     clearInterval(iterador);
     iterador = null;

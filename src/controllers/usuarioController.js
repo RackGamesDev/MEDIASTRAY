@@ -4,6 +4,7 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { redisDelete, redisSet } from '../connections/redis.js';
 import { consulta } from '../connections/postgresql.js';
+import { agnadirLog } from '../connections/logs.js';
 import { mongoDelete, mongoGet, mongoSet } from '../connections/mongodb.js';
 
 const validarJsonCreacionUsuario = (usuario) => {
@@ -46,6 +47,7 @@ const crearUsuario = async (datosUsuario) => {
             [uuid, datosUsuario.nickname, datosUsuario.nombre, contrasegnaEncriptada, datosUsuario.correo, datosUsuario.cumpleagnos, fechaCreacion]);
         if (creacion) {
             const usuario = await consulta("SELECT * FROM USUARIOS WHERE uuid = $1;", [uuid]);
+            agnadirLog("backend.log", "New user created " + uuid);
             return { token, usuario: usuario[0]};
         } else {
             throw {message: "Invalid user data", code: 400};
@@ -69,6 +71,7 @@ const loginUsuario = async (datosLogin) => {
         await redisSet("SESSION-TOKEN-" + elUsuario[0].uuid, token, 14400);
         await redisSet("SESSION-TOKEN-" + token, elUsuario[0].uuid, 14400);
         elUsuario[0].contrasegna = "";
+        agnadirLog("backend.log", "User logged in " + elUsuario[0].uuid);
         return { token, usuario: elUsuario[0]};
     } catch (error) {
         throw error;
@@ -116,6 +119,7 @@ const editarUsuario = async (nuevos, uuid) => {
             await redisSet("SESSION-TOKEN-" + token, uuid, 14400);
             const nuevoTodo = await consulta("SELECT * FROM USUARIOS WHERE uuid = $1;", [uuid]);
             nuevoTodo[0].contrasegna = "";
+            agnadirLog("backend.log", "User editted " + uuid);
             return {usuarioRenovado: nuevoTodo[0] ?? {}, tokenNuevo: token}
         } else {
             throw {message: "There was an error updating the user", code: 401};
@@ -132,6 +136,7 @@ const borrarUsuario = async (contrasegna, uuid) => {
         if (!usuario[0]) throw {message: "Invalid credentials", code: 401};
         if (await bcrypt.compare(contrasegna ?? "a", usuario[0].contrasegna ?? "b")){
             const resultado = await consulta("DELETE FROM USUARIOS WHERE uuid = $1", [uuid]);
+            agnadirLog("backend.log", "User deleted " + uuid);
             return resultado ? true : false;
         } else {
             throw {message: "Validate password is needed", code: 401}
@@ -141,10 +146,21 @@ const borrarUsuario = async (contrasegna, uuid) => {
     }
 }
 
+//Devuelve datos básicos y públicos de un usuario
+const verUsuario = async (uuid) => {
+    try {
+        const usuario = await consulta("SELECT * FROM USUARIOS WHERE uuid = $1;", [uuid]);
+        return usuario[0] ?? null;
+    } catch (error) {
+        throw error;
+    }
+}
+
 //Altera la disponibilidad de un usuario (no para api), 0 disponible, 1 desabilitada de subir juegos, 2 desabilitada de interactuar, 3 desabilitada de login...
 const alterarDisponibilidadUsuario = async (nuevoValor, uuid) => {
     try {
         const resultado = await consulta("UPDATE USUARIOS SET disponibilidad = $1 WHERE uuid = $2;", [nuevoValor, uuid]);
+        agnadirLog("backend.log", `User ${uuid} altered its disponibility to ${nuevoValor}`);
         //EN UN FUTURO, HACER EL BORRADO EN CASCADA
         return resultado ? true : false;
     } catch (error) {
@@ -156,6 +172,7 @@ const alterarDisponibilidadUsuario = async (nuevoValor, uuid) => {
 const alterarPremiumUsuario = async (uuid) => {
     try {
         const resultado = await consulta("UPDATE USUARIOS SET premium = $1 WHERE uuid = $2;", [Date.now(), uuid]);
+        agnadirLog("backend.log", "User got premium " + uuid);
         return resultado ? true : false;
     } catch (error) {
         throw error;
@@ -187,4 +204,4 @@ const alterarSeguidores = async (uuidA, uuidB, cantidad) => {
     }
 }
 
-export { validarJsonCreacionUsuario, crearUsuario, loginUsuario, editarUsuario, borrarUsuario, alterarDisponibilidadUsuario, alterarPremiumUsuario, alterarSeguidores }
+export { validarJsonCreacionUsuario, crearUsuario, loginUsuario, editarUsuario, borrarUsuario, alterarDisponibilidadUsuario, alterarPremiumUsuario, alterarSeguidores, verUsuario }

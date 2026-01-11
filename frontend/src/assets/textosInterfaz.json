@@ -131,13 +131,15 @@
                 "login": "Log in with an existing account",
                 "register": "Create a new account",
                 "error404": "Error 404",
-                "error404Explicacion": "Site not found :("
+                "error404Explicacion": "Site not found :(",
+                "cargando": "Loading..."
             },
             "ES-es": {
                 "login": "Iniciar sesión con una cuenta ya existente",
                 "register": "Crear una nueva cuenta",
                 "error404": "Error 404",
-                "error404Explicacion": "Sitio no encontrado :("
+                "error404Explicacion": "Sitio no encontrado :(",
+                "cargando": "Cargando..."
             }
         },
         "parrafos": {
@@ -182,7 +184,8 @@
                 "validacionNombre": "Name must be at least 5 characters",
                 "validacionCumpleagnos": "Choose a valid date",
                 "nicknameRepetido": "Nickname already in use",
-                "correoRepetido": "Email address already in use"
+                "correoRepetido": "Email address already in use",
+                "usuarioNoEncontrado": "User not found"
             },
             "ES-es": {
                 "noLogin": "No se ha podido iniciar sesión, comprueba que la contraseña y la identificación sean correctas",
@@ -195,7 +198,8 @@
                 "validacionNombre": "El nombre debe tener al menos 5 carácteres",
                 "validacionCumpleagnos": "Selecciona una fecha válida",
                 "nicknameRepetido": "Nickname ya en uso",
-                "correoRepetido": "Correo ya en uso"
+                "correoRepetido": "Correo ya en uso",
+                "usuarioNoEncontrado": "Usuario no encontrado"
             }
         }
     }
