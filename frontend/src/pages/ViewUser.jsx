@@ -4,11 +4,11 @@ import VerUsuarioCompleto from '../components/Usuario/VerUsuarioCompleto.jsx';
 
 function ViewUser() {
 
-  const {uuid} = useParams();
+  const {id} = useParams();
 
   return (
     <>
-      <VerUsuarioCompleto uuid={uuid} />
+      <VerUsuarioCompleto id={id} />
     </>
   )
 }

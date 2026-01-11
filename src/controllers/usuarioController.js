@@ -146,10 +146,11 @@ const borrarUsuario = async (contrasegna, uuid) => {
     }
 }
 
-//Devuelve datos básicos y públicos de un usuario
-const verUsuario = async (uuid) => {
+//Devuelve datos básicos y públicos de un usuario a partir de su uuid o su nickname
+const verUsuario = async (id) => {
     try {
-        const usuario = await consulta("SELECT * FROM USUARIOS WHERE uuid = $1;", [uuid]);
+        const usuario = await consulta("SELECT * FROM USUARIOS WHERE uuid = $1 OR nickname = $2;", [id, id]);
+        usuario[0].contrasegna = undefined;
         return usuario[0] ?? null;
     } catch (error) {
         throw error;

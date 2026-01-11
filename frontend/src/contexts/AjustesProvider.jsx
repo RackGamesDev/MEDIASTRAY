@@ -27,6 +27,13 @@ const AjustesProvider = (props) => {
         await localStorage.setItem("GAMES_URL", GAMES_URL);
         await localStorage.setItem("API_KEY", API_KEY);
         await localStorage.setItem("idiomaActual", idiomaActual);
+        const usuarioPrecargado = JSON.parse(await localStorage.getItem("usuarioActual"));
+        if (/*validarDatosUsuario(usuarioPrecargado) && */usuarioPrecargado.uuid) {
+          setUsuarioActual(usuarioPrecargado);
+        } else {
+          await localStorage.setItem("usuarioActual", "");
+        }
+        //await localStorage.setItem("usuarioActual", JSON.stringify(usuarioActual));
         setFallo(false);
     } catch (error) {
         setFallo({error: true, objeto: error});

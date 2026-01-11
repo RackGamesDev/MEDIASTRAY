@@ -1,3 +1,9 @@
+bugs:
+//usuario hace logout al recargar
+peticion ver usuario 2 veces
+contexto cargando antes que componentes usuarioActual
+
+
 init db 
 rutas api usuarios y funcionalidad
 interfaz basica interactuar con usuarios

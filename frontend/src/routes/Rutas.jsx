@@ -38,7 +38,8 @@ function Rutas() {
 
         </Route>
         {/*<Route path="/user" element={<ViewUser />} />*/}
-        <Route path="/user/:uuid" element={<ViewUser />} />
+        <Route path="/user/:id" element={<ViewUser />} />
+        <Route path="/user" element={<ViewUser />} />
         <Route path="/settings" element={<Settings />} />
         <Route path="/error" element={<ErrorNotFound />} />
         <Route path="/*" element={<ErrorNotFound />} />

@@ -55,7 +55,7 @@ function FormularioRegister(props) {
         if (resultado.code === 200 && !resultado.fallo) {
           cambiarTokenSesionActual(resultado.sessionToken);
           cambiarUsuarioActual(resultado.user);
-          navegar("/user/" + resultado.user.uuid);
+          navegar("/user/" + resultado.user.nickname);
           reset();
         } else {
           setErrorFormulario(TextoTraducido("errores", idiomaActual, "noRegister"));
@@ -72,7 +72,7 @@ function FormularioRegister(props) {
       <h2><Texto tipo="titulos" nombre="register" /></h2>
       <form onChange={cambio}>
         <InputBasico nombre="nickname" placeholder={nicknameFalsoPlaceholder} titulo={<Texto tipo="formularios" nombre="nickname" />} valor={objetoRegister.nickname} tipo="text" mensajeError={<Texto tipo="errores" nombre="validacionNickname" />} validador={validarNickname} />
-        <InputBasico nombre="correo" placeholder={correoFalsoPlaceholder} titulo={<Texto tipo="formularios" nombre="correo" />} valor={objetoRegister.correo} tipo="text" mensajeError={<Texto tipo="errores" nombre="validacionCorreo" />} validador={validarCorreo} />
+        <InputBasico nombre="correo" placeholder={correoFalsoPlaceholder} titulo={<Texto tipo="formularios" nombre="correo" />} valor={objetoRegister.correo} tipo="text" mensajeError={<Texto tipo="errores" nombre="validacionEmail" />} validador={validarCorreo} />
         <InputBasico nombre="nombre" placeholder={nombreFalsoPlaceholder} titulo={<Texto tipo="formularios" nombre="nombre" />} valor={objetoRegister.nombre} tipo="text" mensajeError={<Texto tipo="errores" nombre="validacionNombre" />} validador={validarNombre} />
         <InputBasico nombre="cumpleagnos" titulo={<Texto tipo="formularios" nombre="cumpleagnos" />} valor={objetoRegister.cumpleagnos} tipo="date" mensajeError={<Texto tipo="errores" nombre="validacionCumpleagnos" />} validador={validarCumpleagnos} />
         <InputBasico nombre="contrasegna" titulo={<Texto tipo="formularios" nombre="contrasegna" />} valor={objetoRegister.contrasegna} tipo={objetoRegister.verContrasegna ? "text" : "password"} placeholder="········" />

@@ -46,7 +46,7 @@ function FormularioLogin(props) {
         if (resultado.code === 200 && !resultado.fallo) {
           cambiarTokenSesionActual(resultado.sessionToken);
           cambiarUsuarioActual(resultado.user);
-          navegar("/user/" + resultado.user.uuid);
+          navegar("/user/" + resultado.user.nickname);
           reset();
         } else {
           setErrorFormulario(TextoTraducido("errores", idiomaActual, "noLogin"));
