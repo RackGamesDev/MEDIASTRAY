@@ -23,7 +23,7 @@ function Cabecera() {
             })}
             {usuarioActual.uuid ? (
               <span className="usuario-cabecera">
-                <BotonNavegacion cabecera={true} direccion={"/user/" + usuarioActual.nickname} titulo={usuarioActual.nickname ?? "User"} />
+                <BotonNavegacion cabecera={true} direccion={"/user"} titulo={usuarioActual.nickname ?? "User"} />
               </span>
             ) : ""}
             <span id="cambiar-idioma">

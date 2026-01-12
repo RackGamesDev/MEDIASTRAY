@@ -9,7 +9,7 @@ function Logout() {
 
   const cerrarSesion = async () => {
     cambiarTokenSesionActual("");
-    cambiarUsuarioActual({});
+    cambiarUsuarioActual({ninguno: true});
     navegar("/");
   }
 

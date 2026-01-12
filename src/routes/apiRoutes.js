@@ -34,7 +34,6 @@ router.get("/user/:uuid", async (req, res) => {
     try {
         if (!req.params.uuid) return res.status(404).json({message: "User not found or not present", code: 404});
         const usuario = await verUsuario(req.params.uuid) ?? false;
-        console.log(usuario);
         if (!usuario) return res.status(404).json({message: "User not found", code: 404});
         return res.json({ code: 200, data: usuario });
     } catch (error) {

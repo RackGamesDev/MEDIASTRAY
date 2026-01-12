@@ -9,8 +9,8 @@ cat .env.example > .env
 npm install
 cd frontend
 npm install
-npm run build
 cat .env.example > .env
+npm run build
 cd ..
 docker compose -f ./docker-compose.yml down
 docker compose -f ./docker-compose-dev.yml down

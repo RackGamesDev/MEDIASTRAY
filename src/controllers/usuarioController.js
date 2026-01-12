@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
-import { nombre as validarNombre, nickname as validarNickname, correo as validarCorreo, timestamp as validarCumpleagnos, contrasegna as validarContrasegna, descripcionForo as validarDescripcion, url as validarUrl, enteroPositivo as validarEnteroPositivo } from './validaciones.js';
+import { nombre as validarNombre, nickname as validarNickname, correo as validarCorreo, timestamp as validarCumpleagnos, contrasegna as validarContrasegna, descripcionForo as validarDescripcion, url as validarUrl, enteroPositivo as validarEnteroPositivo, contrasegna } from './validaciones.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { redisDelete, redisSet } from '../connections/redis.js';
@@ -148,10 +148,11 @@ const borrarUsuario = async (contrasegna, uuid) => {
 
 //Devuelve datos básicos y públicos de un usuario a partir de su uuid o su nickname
 const verUsuario = async (id) => {
+    console.log("llamada");
     try {
         const usuario = await consulta("SELECT * FROM USUARIOS WHERE uuid = $1 OR nickname = $2;", [id, id]);
-        usuario[0].contrasegna = undefined;
-        return usuario[0] ?? null;
+        //usuario[0].contrasegna = undefined;
+        return {...usuario[0], contrasegna: undefined} ?? null;
     } catch (error) {
         throw error;
     }

@@ -10,16 +10,17 @@ function VerUsuarioCompleto(props) {
   const [usuarioCargado, setUsuarioCargado] = useState({});
   const [fallo, setFallo] = useState(false);
   const uuidBuscar = props.id ?? usuarioActual.uuid;
+  const [soyYo, setSoyYo] = useState(false);
 
   const cargaInicial = async () => {
-    console.log(await usuarioActual);
     if (!props.id && !usuarioActual.uuid) {
-      console.log("no");
       setFallo(true);
     } else {
-      if (usuarioActual.uuid) {
+      if (usuarioActual.uuid === props.id || usuarioActual.nickname === props.id || (!props.id && usuarioActual.uuid)) {
+        setSoyYo(true);
         setUsuarioCargado(usuarioActual);
       } else {
+        console.log("llamada" + Math.random());
         const resultado = await peticionBasica(API_URL + "/user/" + props.id, [], "GET");
         if (resultado.code === 200) {
           setUsuarioCargado(resultado.data);
@@ -35,11 +36,11 @@ function VerUsuarioCompleto(props) {
 
   return (
     <>
-      {JSON.stringify(usuarioCargado)}
       {uuidBuscar ? (<div>
         {fallo ? (<p className="error error-expandido"><Texto tipo="errores" nombre="usuarioNoEncontrado" /></p>) : (<div>
           {usuarioCargado.uuid ? (<div className="ver-usuario">
             {JSON.stringify(usuarioCargado)}
+            {JSON.stringify(soyYo)}
           </div>) : (<img className="cargando" src={imgCargando} alt={<Texto tipo="titulos" nombre="cargando" />} />)}
         </div>)}
       </div>) : (<p className="error error-expandido"><Texto tipo="errores" nombre="usuarioNoEncontrado" /></p>)}
