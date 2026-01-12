@@ -5,6 +5,7 @@ import imgLogo from '../../assets/images/logoA.png';
 import { useNavigate } from 'react-router-dom';
 import './Cabecera.css';
 import EnlaceFuncion from '../Elements/EnlaceFuncion.jsx';
+import { cambiarIdiomaHtml } from '../../libraries/accionesIndex.js';
 
 function Cabecera() {
   
@@ -30,6 +31,7 @@ function Cabecera() {
               {idiomasAdmitidos.map((e, i) => {
                 if (e !== idiomaActual) return (<EnlaceFuncion key={i} cabecera={true} titulo={e} funcion={() => {
                   cambiarIdiomaActual(e);
+                  cambiarIdiomaHtml((e[0]+e[1]).toLowerCase());
                 }}/>)
               })}
             </span>

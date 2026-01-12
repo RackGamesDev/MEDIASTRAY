@@ -89,7 +89,6 @@ const AjustesProvider = (props) => {
 
   return (
     <AjustesContexto value={exportaciones}>
-      <h2>aaa</h2>
       {(usuarioActual.ninguno || usuarioActual.uuid) && props.children}
     </AjustesContexto>
   )

@@ -30,10 +30,11 @@ router.get("/userFollow", async (req, res) => {
 });
 
 //Devuelve los datos públicos base de un usuario
-router.get("/user/:uuid", async (req, res) => {
+router.get("/user/:id", async (req, res) => {
+    console.log("ver");
     try {
-        if (!req.params.uuid) return res.status(404).json({message: "User not found or not present", code: 404});
-        const usuario = await verUsuario(req.params.uuid) ?? false;
+        if (!req.params.id) return res.status(404).json({message: "User not found or not present", code: 404});
+        const usuario = await verUsuario(req.params.id) ?? false;
         if (!usuario) return res.status(404).json({message: "User not found", code: 404});
         return res.json({ code: 200, data: usuario });
     } catch (error) {

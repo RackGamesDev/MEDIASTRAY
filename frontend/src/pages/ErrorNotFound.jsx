@@ -1,9 +1,16 @@
-import React from 'react';
+import React, { useEffect, useContext } from 'react';
 import { AjustesContexto } from '../contexts/AjustesProvider.jsx';
 import BotonNavegacion from '../components/Elements/BotonNavegacion.jsx';
 import Texto from '../components/Texto.jsx';
+import { cambiarTitulo } from '../libraries/accionesIndex';
+import { TextoTraducido } from '../libraries/traducir.js';
 
 function ErrorNotFound() {
+
+  const { idiomaActual } = useContext(AjustesContexto);
+    useEffect(()=>{
+      cambiarTitulo(TextoTraducido("titulosHtml", idiomaActual, "errorNotFound") + " - MEDIASTRAY");
+    }, [idiomaActual]);
 
   return (
     <>

@@ -201,6 +201,38 @@
                 "correoRepetido": "Correo ya en uso",
                 "usuarioNoEncontrado": "Usuario no encontrado"
             }
+        },
+        "titulosHtml": {
+            "EN-us": {
+                "browseForums": "Browse forums",
+                "browseGames": "Browse games",
+                "browseUsers": "Browse users",
+                "errorNotFound": "404 not found",
+                "featuredForums": "Featured forums",
+                "featuredGames": "Featured games",
+                "info": "Info",
+                "inicioDocumentacion": "Documentation",
+                "login": "Log in",
+                "premium": "PREMIUM",
+                "register": "Register",
+                "settings": "Settings",
+                "viewUser": "User"
+            },
+            "ES-es": {
+                "browseForums": "Buscar foros",
+                "browseGames": "Buscar juegos",
+                "browseUsers": "Buscar usuarios",
+                "errorNotFound": "404 no encontrado",
+                "featuredForums": "Foros destacados",
+                "featuredGames": "Juegos destacados",
+                "info": "Información",
+                "inicioDocumentacion": "Documentación",
+                "login": "Iniciar sesión",
+                "premium": "PREMIUM",
+                "register": "Registrarse",
+                "settings": "Ajustes",
+                "viewUser": "Usuario"
+            }
         }
     }
 }

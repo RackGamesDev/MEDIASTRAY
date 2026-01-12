@@ -3,14 +3,16 @@ import React, { useState, useEffect, useContext } from 'react';
 import { Link } from 'react-router';
 import img from '../assets/react.svg';
 import { AjustesContexto } from '../contexts/AjustesProvider.jsx';
+import { cambiarTitulo } from '../libraries/accionesIndex';
+
 
 function Inicio() {
 
     const [count, setCount] = useState(0);
     const { API_URL, PUBLIC_URL, API_KEY } = useContext(AjustesContexto);
 
-
     useEffect(() => {
+        cambiarTitulo( "MEDIASTRAY");
         //console.log(API_URL);
         (async () => {
             let datos = await fetch(API_URL + "/prueba");
