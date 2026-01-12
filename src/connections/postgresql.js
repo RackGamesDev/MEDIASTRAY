@@ -13,7 +13,8 @@ const getConexion = async () => {
             const consultasIniciales = await leerArchivo(process.env.SQL_INIT_PATH ?? "", true);
             if (consultasIniciales) {
                 try {
-                    await cliente.query("SELECT 1 FROM USUARIOS LIMIT 1;");
+                    const test = await cliente.query("SELECT 1 FROM USUARIOS LIMIT 1;");
+                    test[0]++;
                 } catch (e) {
                     await cliente.query(consultasIniciales);
                     //Si está en modo development, inserta datos de ejemplo

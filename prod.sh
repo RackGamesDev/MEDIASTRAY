@@ -2,6 +2,8 @@
 touch logs/backend.log
 touch logs/db.log
 cat .env.example > .env
+mkdir .docker/database/mongodb
+mkdir .docker/database/postgresql
 #cat .docker/postgresql-extra.conf > .docker/database/postgresql/postgresql.conf
 #rm -rf .docker/database/postgresql
 #rm -rf .docker/database/mongodb
@@ -9,7 +11,7 @@ cat .env.example > .env
 npm install
 cd frontend
 npm install
-cat .env.example > .env
+cat ../frontend.env.example > .env
 npm run build
 cd ..
 docker compose -f ./docker-compose.yml down

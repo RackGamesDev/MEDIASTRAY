@@ -8,7 +8,6 @@ import { agnadirLog } from '../connections/logs.js';
 import { mongoDelete, mongoGet, mongoSet } from '../connections/mongodb.js';
 
 const validarJsonCreacionUsuario = (usuario) => {
-    console.log(usuario.nickname);
     return validarNombre(usuario.nombre) && validarNickname(usuario.nickname) && validarCorreo(usuario.correo) && validarContrasegna(usuario.contrasegna) && validarCumpleagnos(usuario.cumpleagnos);
 }
 
@@ -148,7 +147,6 @@ const borrarUsuario = async (contrasegna, uuid) => {
 
 //Devuelve datos básicos y públicos de un usuario a partir de su uuid o su nickname
 const verUsuario = async (id) => {
-    console.log("llamada");
     try {
         const usuario = await consulta("SELECT * FROM USUARIOS WHERE uuid = $1 OR nickname = $2;", [id, id]);
         //usuario[0].contrasegna = undefined;

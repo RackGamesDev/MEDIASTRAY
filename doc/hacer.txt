@@ -1,11 +1,12 @@
 bugs:
 //usuario hace logout al recargar
-peticion ver usuario 2 veces
-comprobar prod.sh
+peticion ver usuario 2 veces (en teoria solo en dev)
+comprobar prod.sh (.env frontend no va)
 
 orm
 tests
 monitoreo
+refactor
 
 
 init db 

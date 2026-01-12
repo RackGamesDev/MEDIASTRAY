@@ -14,7 +14,7 @@ const AjustesProvider = (props) => {
   const [usuarioActual, setUsuarioActual] = useState({});
   const [tokenSesionActual, setTokenSesionActual] = useState("");
   const [tokenJuegoActual, setTokenJuegoActual] = useState("");
-  const [idiomaActual, setIdiomaActual] = useState("EN-us");
+  const [idiomaActual, setIdiomaActual] = useState("");
   const idiomasAdmitidos = ["EN-us", "ES-es"];
   const [fallo, setFallo] = useState(false);
 
@@ -25,8 +25,13 @@ const AjustesProvider = (props) => {
       await localStorage.setItem("PUBLIC_URL", PUBLIC_URL);
       await localStorage.setItem("GAMES_URL", GAMES_URL);
       await localStorage.setItem("API_KEY", API_KEY);
-      await localStorage.setItem("idiomaActual", idiomaActual);
-      const usuarioPrecargado = JSON.parse(await localStorage.getItem("usuarioActual"));
+
+      const idiomaPreferente = navigator.language;
+      const idiomaPrecargado = await localStorage.getItem("idiomaActual") ?? `${(idiomaPreferente[0] + idiomaPreferente[1]).toUpperCase()}-${(idiomaPreferente[3] + idiomaPreferente[4]).toLowerCase()}`;
+      setIdiomaActual(idiomaPrecargado);
+      await localStorage.setItem("idiomaActual", idiomaPrecargado);
+
+      const usuarioPrecargado = JSON.parse(await localStorage.getItem("usuarioActual") ?? '{"ninguno": true}');
       if (validarDatosUsuario(usuarioPrecargado) && usuarioPrecargado?.uuid) {
         setUsuarioActual(usuarioPrecargado);
       } else {
@@ -35,7 +40,6 @@ const AjustesProvider = (props) => {
       }
       //await localStorage.setItem("usuarioActual", JSON.stringify(usuarioActual));
       setFallo(false);
-      console.log("si");
     } catch (error) {
       console.log(error);
       setUsuarioActual({ninguno: true});
