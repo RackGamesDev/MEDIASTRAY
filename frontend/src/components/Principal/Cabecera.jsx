@@ -36,7 +36,6 @@ function Cabecera() {
                 }}/>)
               })}
             </span>
-            
         </header>
     </>
   )

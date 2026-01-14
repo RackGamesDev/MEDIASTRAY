@@ -1,7 +1,7 @@
 import { redisGet } from "../connections/redis.js";
 import jwt from 'jsonwebtoken';
 
-//Para requerir el token de la api en el header
+//Para requerir el token de la api en el header X-auth-api
 const autenticarTokenApi = (req, res, next) => {
     const API_TOKEN = process.env.API_PRIVATE_TOKEN;
     try {
@@ -16,7 +16,7 @@ const autenticarTokenApi = (req, res, next) => {
     }
 }
 
-//Para requerir el token de sesion de un usuario en el header
+//Para requerir el token de sesion de un usuario en el header X-auth-session
 const autenticarTokenSesion = async (req, res, next) => {
     try {
         const TOKEN_SECRET = process.env.JWT_SECRET;
@@ -35,12 +35,12 @@ const autenticarTokenSesion = async (req, res, next) => {
     }
 }
 
-//Para requerir el token de sesion de juego (de un usuario) en el header
+//Para requerir el token de sesion de juego (de un usuario) en el header X-auth-playtime
 const autenticarTokenJuego = (req, res, next) => {
 
 }
 
-//Para requerir el token de edicion de un juego en el header
+//Para requerir el token de edicion de un juego en el header X-auth-game
 const autenticarTokenAdministracionJuego = (req, res, next) => {
 
 }

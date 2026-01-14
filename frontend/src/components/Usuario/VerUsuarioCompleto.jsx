@@ -1,17 +1,19 @@
+/* eslint-disable react-hooks/set-state-in-effect */
 import React, { useState, useEffect } from 'react';
-import Texto from '../Texto.jsx';
-import imgCargando from '../../assets/images/cargando.gif';
-import { peticionBasica } from '../../libraries/peticiones.js';
 import TarjetaUsuarioGrande from './TarjetaUsuarioGrande.jsx';
 import useAjustes from '../../hooks/useAjustes.js';
+import useApi from '../../hooks/useApi.js';
+import ImgCargando from '../Principal/ImgCargando.jsx';
+import CajaError from '../Principal/CajaError.jsx';
 
 function VerUsuarioCompleto(props) {
 
-  const { API_URL, usuarioActual } = useAjustes();
+  const { usuarioActual } = useAjustes();
   const [usuarioCargado, setUsuarioCargado] = useState({});
-  const [fallo, setFallo] = useState(false);
   const uuidBuscar = props.id ?? usuarioActual.uuid;
   const [soyYo, setSoyYo] = useState(false);
+  const { verUsuario, cargando, error } = useApi();
+  const [fallo, setFallo] = useState(false);
 
   const cargaInicial = async () => {
     if (!props.id && !usuarioActual.uuid) {
@@ -21,12 +23,7 @@ function VerUsuarioCompleto(props) {
         setSoyYo(true);
         setUsuarioCargado(usuarioActual);
       } else {
-        const resultado = await peticionBasica(API_URL + "/user/" + props.id, [], "GET");
-        if (resultado.code === 200) {
-          setUsuarioCargado(resultado.data);
-        } else {
-          setFallo(true);
-        }
+        setUsuarioCargado(await verUsuario(props.id));
       }
     }
   }
@@ -37,12 +34,12 @@ function VerUsuarioCompleto(props) {
   return (
     <>
       {uuidBuscar ? (<div>
-        {fallo ? (<p className="error error-expandido"><Texto tipo="errores" nombre="usuarioNoEncontrado" /></p>) : (<div>
-          {usuarioCargado.uuid ? (<div className="ver-usuario">
+        {(fallo || error) ? (<CajaError nombre="usuarioNoEncontrado" />) : (<div>
+          {(usuarioCargado.uuid && !cargando) ? (<div className="ver-usuario">
             <TarjetaUsuarioGrande usuario={usuarioCargado} soyYo={soyYo} />
-          </div>) : (<img className="cargando" src={imgCargando} alt={<Texto tipo="titulos" nombre="cargando" />} />)}
+          </div>) : (<ImgCargando />)}
         </div>)}
-      </div>) : (<p className="error error-expandido"><Texto tipo="errores" nombre="usuarioNoEncontrado" /></p>)}
+      </div>) : (<CajaError nombre="usuarioNoEncontrado" />)}
     </>
   )
 }

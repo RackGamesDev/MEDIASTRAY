@@ -9,12 +9,12 @@ const routerPriv = express.Router();
 
 //Valida si el API token es valido (el del header)
 routerPriv.get("/authApiToken", autenticarTokenApi, (req, res) => {
-    res.json({ message: `Private API token valid`, code: 200 });
+    res.json({ok:true, message: `Private API token valid`, code: 200 });
 });
 
 //Valida si un token de sesion de usuario es valido (en el body)
 routerPriv.get("/authSessionToken", autenticarTokenApi, autenticarTokenSesion, async (req, res) => {
-    return res.json({ message: `User session token valid`, code: 200 });
+    return res.json({ok:true, message: `User session token valid`, code: 200 });
 });
 
 //Ruta para crear el usuario, requiere en el body (usuario): nombre, nickname, correo, contrasegna, cumpleagnos. Devuelve un token de sesion
@@ -23,14 +23,14 @@ routerPriv.post("/userCreate", autenticarTokenApi, async (req, res) => {
         const { token, usuario } = await crearUsuario(req.body.usuario);
         usuario.contrasegna = "";
         res.setHeader('X-auth-session', token);
-        return res.json({ message: `User created successfully`, code: 200, sessionToken: token, user: usuario });
+        return res.json({ok:true, message: `User created successfully`, code: 200, sessionToken: token, user: usuario });
     } catch (error) {
         try {
             console.log(error);
-            return res.status(error.code).json({message: error.message, code: error.code});
+            return res.status(error.code).json({ok:false, message: error.message, code: error.code});
         } catch (error2) {
             //console.log(error2);
-            return res.status(500).json({message: "Server error", code: 500});
+            return res.status(500).json({ok: false, message: "Server error", code: 500});
         }
     }
 });
@@ -41,14 +41,14 @@ routerPriv.post("/userLogin", autenticarTokenApi, async (req, res) => {
         const { token, usuario } = await loginUsuario(req.body.credentials);
         usuario.contrasegna = "";
         res.setHeader('X-auth-session', token);
-        return res.json({ message: `User logged in successfully`, code: 200, sessionToken: token, user: usuario });
+        return res.json({ok:true, message: `User logged in successfully`, code: 200, sessionToken: token, user: usuario });
     } catch (error) {
         try {
             console.log(error);
-            return res.status(error.code).json({message: error.message, code: error.code});
+            return res.status(error.code).json({ok:false, message: error.message, code: error.code});
         } catch (error2) {
             //console.log(error2);
-            return res.status(500).json({message: "Server error", code: 500});
+            return res.status(500).json({ok:false, message: "Server error", code: 500});
         }
     }
 });
@@ -62,14 +62,14 @@ routerPriv.patch("/userEdit", autenticarTokenApi, autenticarTokenSesion, async (
         if (uuid === "") throw {message: "Invalid credentials", code: 401}
         const { usuarioRenovado, tokenNuevo } = await editarUsuario(req.body.newData, uuid);
         res.setHeader('X-auth-session', tokenNuevo);
-        return res.json({ message: `Data editted successfully`, code: 200, user: usuarioRenovado, sessionToken: tokenNuevo });
+        return res.json({ok:true, message: `Data editted successfully`, code: 200, user: usuarioRenovado, sessionToken: tokenNuevo });
     } catch (error) {
         try {
             console.log(error);
-            return res.status(error.code).json({message: error.message, code: error.code});
+            return res.status(error.code).json({ok:false, message: error.message, code: error.code ?? 400});
         } catch (error2) {
             //console.log(error2);
-            return res.status(500).json({message: "Server error", code: 500});
+            return res.status(500).json({ok: false, message: "Server error", code: 500});
         }
     }
 });
@@ -81,17 +81,18 @@ routerPriv.delete("/userDelete", autenticarTokenApi, autenticarTokenSesion, asyn
         const uuid = await redisGet("SESSION-TOKEN-" + token) ?? "";
         if (uuid === "" || !req.body.contrasegna) throw {message: "Invalid credentials", code: 401}
         if (await borrarUsuario(req.body.contrasegna, uuid)) {
-            return res.json({ message: `User deleted successfully...`, code: 200 });
+            return res.json({ok:true, message: `User deleted successfully...`, code: 200 });
+            //MAS cascada
         } else {
             throw {message: "Invalid credentials", code: 401};
         }
     } catch (error) {
         try {
             console.log(error);
-            return res.status(error.code).json({message: error.message, code: error.code});
+            return res.status(error.code).json({ok:false, message: error.message, code: error.code});
         } catch (error2) {
             //console.log(error2);
-            return res.status(500).json({message: "Server error", code: 500});
+            return res.status(500).json({ok:false, message: "Server error", code: 500});
         }
     }
 });
@@ -102,17 +103,17 @@ routerPriv.post("/userFollow", autenticarTokenApi, autenticarTokenSesion, async 
         const token = req.body.token ?? (req.header('X-auth-session') ?? "");
         const uuid = await redisGet("SESSION-TOKEN-" + token) ?? "";
         if (await alterarSeguidores(uuid, req.body.uuid_b, req.body.cantidad)) {
-            return res.json({ message: `User followed/unfollowed successfully`, code: 200 });
+            return res.json({ok:true, message: `User followed/unfollowed successfully`, code: 200 });
         } else {
             throw {message: "Couldn't perform action (follow)", code: 401};
         }
     } catch (error) {
         try {
             console.log(error);
-            return res.status(error.code).json({message: error.message, code: error.code});
+            return res.status(error.code).json({ok:false, message: error.message, code: error.code ?? 400});
         } catch (error2) {
             //console.log(error2);
-            return res.status(500).json({message: "Server error", code: 500});
+            return res.status(500).json({ok:false, message: "Server error", code: 500});
         }
     }
 });

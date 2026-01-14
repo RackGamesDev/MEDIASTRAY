@@ -7,50 +7,49 @@ const router = express.Router();
 //Rutas de la API
 
 router.get("/prueba", (req, res) => {
-    res.json({ message: `Hello, World! Processed` });
+    res.json({ message: `Hello, World! Processed`, code: 200 });
 });
 
 //Devuelve si el usuario A sigue al usuario B (uuid_a, uuid_b)
 router.get("/userFollow", async (req, res) => {
     try {
         if (await alterarSeguidores(req.body.uuid_a, req.body.uuid_b, 0)) {
-            return res.json({ message: `Follows`, code: 200, data: true });
+            return res.json({ ok:true, message: `Follows`, code: 200, data: true });
         } else {
-            return res.json({ message: `Does not follow`, code: 200, data: false });
+            return res.json({ ok:true, message: `Does not follow`, code: 200, data: false });
         }
     } catch (error) {
         try {
             console.log(error);
-            return res.status(error.code).json({message: error.message, code: error.code});
+            return res.status(error.code).json({ok: false, message: error.message, code: error.code ?? 400});
         } catch (error2) {
             //console.log(error2);
-            return res.status(500).json({message: "Server error", code: 500});
+            return res.status(500).json({ok:false, message: "Server error", code: 500});
         }
     }
 });
 
 //Devuelve los datos públicos base de un usuario
 router.get("/user/:id", async (req, res) => {
-    console.log("llamada");
     try {
-        if (!req.params.id) return res.status(404).json({message: "User not found or not present", code: 404});
+        if (!req.params.id) return res.status(404).json({ok: false, message: "User not found or not present", code: 404});
         const usuario = await verUsuario(req.params.id) ?? false;
-        if (!usuario.uuid) return res.status(404).json({message: "User not found", code: 404});
-        return res.json({ code: 200, data: usuario });
+        if (!usuario.uuid) return res.status(404).json({ok: false, message: "User not found", code: 404});
+        return res.json({ok:true, code: 200, data: usuario });
     } catch (error) {
         try {
             console.log(error);
-            return res.status(error.code).json({message: error.message, code: error.code});
+            return res.status(error.code).json({ok: false,message: error.message, code: error.code ?? 400});
         } catch (error2) {
             //console.log(error2);
-            return res.status(500).json({message: "Server error", code: 500});
+            return res.status(500).json({ok: false, message: "Server error", code: 500});
         }
     }
 });
 
 if (process.env.NODE_ENV === "DEVELOPMENT") router.get('/test', async (req, res) => { //Re-ejecutar los tests
     await hacerTestsConexiones();
-    res.json({ message: `Hello, World! Test Processed` });
+    res.json({ok:true, message: `Hello, World! Test Processed`, code: 200 });
 });
 
 

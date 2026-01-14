@@ -7,7 +7,8 @@ cat frontend.env.example > frontend/.env
 #cat .docker/postgresql-extra.conf > .docker/database/postgresql/postgresql.conf
 #rm -rf .docker/database/postgresql
 #rm -rf .docker/database/mongodb
-cat src/controllers/validaciones.js > frontend/src/libraries/validacionesBackend.js
+cat src/libraries/validaciones.js > frontend/src/libraries/validacionesBackend.js
+cat frontend/src/libraries/peticiones.js > src/libraries/peticiones.js
 npm install
 cd frontend
 #cat .env.example > .env

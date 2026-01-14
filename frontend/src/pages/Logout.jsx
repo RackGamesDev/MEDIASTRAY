@@ -4,12 +4,11 @@ import useAjustes from '../hooks/useAjustes.js';
 
 function Logout() {
 
-  const { cambiarTokenSesionActual, cambiarUsuarioActual } = useAjustes();
+  const { logout } = useAjustes();
   const navegar = useNavigate();
 
   const cerrarSesion = async () => {
-    cambiarTokenSesionActual("");
-    cambiarUsuarioActual({ninguno: true});
+    await logout();
     navegar("/");
   }
 
