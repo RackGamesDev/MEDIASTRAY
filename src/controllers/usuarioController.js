@@ -47,6 +47,7 @@ const crearUsuario = async (datosUsuario) => {
         if (creacion) {
             const usuario = await consulta("SELECT * FROM USUARIOS WHERE uuid = $1;", [uuid]);
             agnadirLog("backend.log", "New user created " + uuid);
+            agnadirLog("db.log", "New user created USUARIOS " + uuid);
             return { token, usuario: usuario[0]};
         } else {
             throw {message: "Invalid user data", code: 400};
@@ -119,6 +120,7 @@ const editarUsuario = async (nuevos, uuid) => {
             const nuevoTodo = await consulta("SELECT * FROM USUARIOS WHERE uuid = $1;", [uuid]);
             nuevoTodo[0].contrasegna = "";
             agnadirLog("backend.log", "User editted " + uuid);
+            agnadirLog("db.log", "User editted via update USUARIOS " + uuid);
             return {usuarioRenovado: nuevoTodo[0] ?? {}, tokenNuevo: token}
         } else {
             throw {message: "There was an error updating the user", code: 401};
@@ -136,6 +138,7 @@ const borrarUsuario = async (contrasegna, uuid) => {
         if (await bcrypt.compare(contrasegna ?? "a", usuario[0].contrasegna ?? "b")){
             const resultado = await consulta("DELETE FROM USUARIOS WHERE uuid = $1", [uuid]);
             agnadirLog("backend.log", "User deleted " + uuid);
+            agnadirLog("db.log", "User deleted USUARIOS " + uuid);
             return resultado ? true : false;
         } else {
             throw {message: "Validate password is needed", code: 401}
@@ -173,6 +176,7 @@ const alterarPremiumUsuario = async (uuid) => {
     try {
         const resultado = await consulta("UPDATE USUARIOS SET premium = $1 WHERE uuid = $2;", [Date.now(), uuid]);
         agnadirLog("backend.log", "User got premium " + uuid);
+        agnadirLog("db.log", "User got premium USUARIO to current date " + uuid);
         return resultado ? true : false;
     } catch (error) {
         throw error;

@@ -21,6 +21,7 @@ routerPriv.get("/authSessionToken", autenticarTokenApi, autenticarTokenSesion, a
 routerPriv.post("/userCreate", autenticarTokenApi, async (req, res) => {
     try {
         const { token, usuario } = await crearUsuario(req.body.usuario);
+        usuario.contrasegna = "";
         res.setHeader('X-auth-session', token);
         return res.json({ message: `User created successfully`, code: 200, sessionToken: token, user: usuario });
     } catch (error) {
