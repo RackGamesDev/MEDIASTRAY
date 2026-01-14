@@ -73,7 +73,7 @@ routerPriv.patch("/userEdit", autenticarTokenApi, autenticarTokenSesion, async (
     }
 });
 
-//Ruta para borrar un usuario, requiere de su contrasegna en el body asi como el token de sesion
+//Ruta para borrar un usuario, requiere de su contrasegna (sin encriptar, introducida por el usuario) en el body asi como el token de sesion
 routerPriv.delete("/userDelete", autenticarTokenApi, autenticarTokenSesion, async (req, res) => {
     try {
         const token = req.body.token ?? (req.header('X-auth-session') ?? "");
