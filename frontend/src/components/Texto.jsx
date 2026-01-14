@@ -1,9 +1,9 @@
-import React, { useContext } from 'react';
-import { AjustesContexto } from '../contexts/AjustesProvider.jsx';
+import React from 'react';
+import useAjustes from '../hooks/useAjustes.js';
 
 function Cabecera(props) {
   
-  const { idiomaActual, textosInterfaz } = useContext(AjustesContexto);
+  const { idiomaActual, textosInterfaz } = useAjustes();
 
   return (
     <>

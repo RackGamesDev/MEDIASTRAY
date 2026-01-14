@@ -1,19 +1,19 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Texto from '../Texto.jsx';
 import InputBasico from '../Elements/InputBasico.jsx';
 import BotonFuncion from '../Elements/BotonFuncion.jsx';
 import { identificacion as validarIdentificacion, contrasegna as validarContrasegna } from '../../libraries/validacionesBackend.js';
 import { TextoTraducido } from '../../libraries/traducir.js';
-import { AjustesContexto } from '../../contexts/AjustesProvider.jsx';
 import { peticionBasica } from '../../libraries/peticiones.js';
+import useAjustes from '../../hooks/useAjustes.js';
 
 function FormularioLogin(props) {
 
   const objetoLoginBasico = { identificacion: "", contrasegna: "", verContrasegna: false }
   const [objetoLogin, setObjetoLogin] = useState({ ...objetoLoginBasico });
   const [errorFormulario, setErrorFormulario] = useState("");
-  const { idiomaActual, API_URL, API_KEY, cambiarTokenSesionActual, cambiarUsuarioActual } = useContext(AjustesContexto);
+  const { idiomaActual, API_URL, API_KEY, cambiarTokenSesionActual, cambiarUsuarioActual } = useAjustes();
   const navegar = useNavigate();
 
   const cambio = (e) => {

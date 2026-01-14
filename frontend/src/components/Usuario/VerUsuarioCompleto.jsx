@@ -1,13 +1,13 @@
-import React, { useContext, useState, useEffect } from 'react';
-import { AjustesContexto } from '../../contexts/AjustesProvider.jsx';
+import React, { useState, useEffect } from 'react';
 import Texto from '../Texto.jsx';
 import imgCargando from '../../assets/images/cargando.gif';
 import { peticionBasica } from '../../libraries/peticiones.js';
 import TarjetaUsuarioGrande from './TarjetaUsuarioGrande.jsx';
+import useAjustes from '../../hooks/useAjustes.js';
 
 function VerUsuarioCompleto(props) {
 
-  const { API_URL, usuarioActual } = useContext(AjustesContexto);
+  const { API_URL, usuarioActual } = useAjustes();
   const [usuarioCargado, setUsuarioCargado] = useState({});
   const [fallo, setFallo] = useState(false);
   const uuidBuscar = props.id ?? usuarioActual.uuid;

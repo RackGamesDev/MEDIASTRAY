@@ -1,20 +1,20 @@
-import React, { useState, useContext, useMemo } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Texto from '../Texto.jsx';
 import InputBasico from '../Elements/InputBasico.jsx';
 import BotonFuncion from '../Elements/BotonFuncion.jsx';
 import { correo as validarCorreo, contrasegna as validarContrasegna, nickname as validarNickname, nombre as validarNombre, cumpleagnos as validarCumpleagnos } from '../../libraries/validacionesBackend.js';
 import { TextoTraducido } from '../../libraries/traducir.js';
-import { AjustesContexto } from '../../contexts/AjustesProvider.jsx';
 import { peticionBasica } from '../../libraries/peticiones.js';
 import { nicknameFalso, nombreFalso, correoFalso } from '../../libraries/datosFalsos.js';
+import useAjustes from '../../hooks/useAjustes.js';
 
 function FormularioRegister(props) {
 
   const objetoRegisterBasico = { correo: "", nickname: "", contrasegna: "", verContrasegna: false, contrasegna2: "", nombre: "", cumpleagnos: "" }
   const [objetoRegister, setObjetoRegister] = useState({ ...objetoRegisterBasico });
   const [errorFormulario, setErrorFormulario] = useState("");
-  const { idiomaActual, API_URL, API_KEY, cambiarTokenSesionActual, cambiarUsuarioActual } = useContext(AjustesContexto);
+  const { idiomaActual, API_URL, API_KEY, cambiarTokenSesionActual, cambiarUsuarioActual } = useAjustes();
   const navegar = useNavigate();
   const nombreFalsoPlaceholder = useMemo(() => nombreFalso(), []);
   const nicknameFalsoPlaceholder = useMemo(() => nicknameFalso(), []);

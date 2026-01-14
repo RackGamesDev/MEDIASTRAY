@@ -81,8 +81,7 @@ const AjustesProvider = (props) => {
   }
 
   const exportaciones = /*useMemo(()=>(*/{
-    fallo: fallo, tokenSesionActual, usuarioActual, tokenJuegoActual, idiomaActual, idiomasAdmitidos, API_URL, API_KEY, PUBLIC_URL, GAMES_URL, textosInterfaz: textos,
-    textosInterfazEnlacesCabecera: textos.enlacesCabecera, textosInterfazBotones: textos.botones, textosInterfazTitulos: textos.titulos,
+    fallo: fallo, tokenSesionActual, usuarioActual, tokenJuegoActual, idiomaActual, idiomasAdmitidos, API_URL, API_KEY, PUBLIC_URL, GAMES_URL, textosInterfaz: textos, textosInterfazEnlacesCabecera: textos.enlacesCabecera,
     cambiarUsuarioActual, cambiarTokenJuegoActual, cambiarIdiomaActual, cambiarTokenSesionActual
   }//), [fallo, tokenSesionActual, usuarioActual, tokenJuegoActual, idiomaActual, idiomasAdmitidos, API_URL, API_KEY, PUBLIC_URL, GAMES_URL, textos, cambiarUsuarioActual, cambiarTokenJuegoActual, cambiarIdiomaActual, cambiarTokenSesionActual]);
 

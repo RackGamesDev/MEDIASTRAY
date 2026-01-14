@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { AjustesContexto } from '../../contexts/AjustesProvider.jsx';
 import BotonNavegacion from '../Elements/BotonNavegacion.jsx';
 import imgLogo from '../../assets/images/logoA.png';
@@ -6,10 +6,11 @@ import { useNavigate } from 'react-router-dom';
 import './Cabecera.css';
 import EnlaceFuncion from '../Elements/EnlaceFuncion.jsx';
 import { cambiarIdiomaHtml } from '../../libraries/accionesIndex.js';
+import useAjustes from '../../hooks/useAjustes.js';
 
 function Cabecera() {
   
-  const { idiomaActual, idiomasAdmitidos, cambiarIdiomaActual, usuarioActual, textosInterfazEnlacesCabecera, PUBLIC_URL } = useContext(AjustesContexto);
+  const { idiomaActual, idiomasAdmitidos, cambiarIdiomaActual, usuarioActual, textosInterfazEnlacesCabecera, PUBLIC_URL } = useAjustes();
   const navegar = useNavigate();
   //usuarioActual.uuid = "si"; usuarioActual.nickname = "sisisi";
   return (

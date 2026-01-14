@@ -1,10 +1,11 @@
 bugs:
+-
 
-orm
 tests
 monitoreo
 refactor backend (usar orm, modelos, reducir conexiones)
 refactor frontend (custom hooks, mejorar contextos)
+manejo de errores personalizado
 
 
 init db 

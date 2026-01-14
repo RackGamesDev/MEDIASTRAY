@@ -1,10 +1,10 @@
-import React, { useEffect, useContext } from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AjustesContexto } from '../contexts/AjustesProvider.jsx';
+import useAjustes from '../hooks/useAjustes.js';
 
 function Logout() {
 
-  const { cambiarTokenSesionActual, cambiarUsuarioActual } = useContext(AjustesContexto);
+  const { cambiarTokenSesionActual, cambiarUsuarioActual } = useAjustes();
   const navegar = useNavigate();
 
   const cerrarSesion = async () => {

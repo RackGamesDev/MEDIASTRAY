@@ -1,14 +1,9 @@
-import React, { useEffect, useContext } from 'react';
-import { cambiarTitulo } from '../libraries/accionesIndex';
-import { TextoTraducido } from '../libraries/traducir.js';
-import { AjustesContexto } from '../contexts/AjustesProvider.jsx';
+import React from 'react';
+import useTituloDinamico from '../hooks/useTituloDinamico.js';
 
 function InicioDocumentacion() {
 
-  const { idiomaActual } = useContext(AjustesContexto);
-    useEffect(()=>{
-      cambiarTitulo(TextoTraducido("titulosHtml", idiomaActual, "inicioDocumentacion") + " - MEDIASTRAY");
-    }, [idiomaActual]);
+  useTituloDinamico("inicioDocumentacion");
 
   return (
     <>
