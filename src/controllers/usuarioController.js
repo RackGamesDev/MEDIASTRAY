@@ -28,11 +28,12 @@ const validarJsonEdicionUsuario = (usuario) => {
 //Registrarse, requiere en el body (usuario): nombre, nickname, correo, contrasegna, cumpleagnos. Devuelve un token de sesion
 const crearUsuario = async (datosUsuario) => {
     try {
+        console.log(datosUsuario)
         if (!validarJsonCreacionUsuario(datosUsuario)) throw {message: "Invalid user data", code: 400};
         const nicknameExiste = await consulta("select uuid from USUARIOS where nickname = $1;", [datosUsuario.nickname]);
         const correoExiste = await consulta("select uuid from USUARIOS where correo = $1;", [datosUsuario.correo]);
-        if (nicknameExiste[0]) throw {message: "Nickname already in use", code: 400};
-        if (correoExiste[0]) throw {message: "Email already in use", code: 400};
+        if (nicknameExiste[0]) throw {message: "Nickname already in use", code: 400, data: {doubleNickname: true}};
+        if (correoExiste[0]) throw {message: "Email already in use", code: 400, data: {doubleEmail: true}};
         const uuid = uuidv4();
         const contrasegnaEncriptada = await bcrypt.hash(datosUsuario.contrasegna, 10);
         const fechaCreacion = Date.now() + "";
@@ -62,7 +63,10 @@ const loginUsuario = async (datosLogin) => {
     try {
         if (!validarJsonLoginUsuario(datosLogin)) throw {message: "Invalid user data", code: 400};
         const elUsuario = await consulta("SELECT * FROM USUARIOS WHERE nickname = $1 OR correo = $1;", [datosLogin.identification]);
-        if (!elUsuario[0] || await !bcrypt.compare(datosLogin.contrasegna, elUsuario.contrasegna ?? '')) throw {message: "Invalid credentials", code: 401};
+        const contrasegnaCoincide = await bcrypt.compare(datosLogin.contrasegna, elUsuario.contrasegna ?? '')
+        console.log(datosLogin.contrasegna)
+        console.log(contrasegnaCoincide)
+        if (!elUsuario[0] || !contrasegnaCoincide) throw {message: "Invalid credentials", code: 401};
         if (elUsuario[0].disponibilidad === 4) throw {message: "User has not allowed login", code: 401};
         const TOKEN_SECRET = process.env.JWT_SECRET;
         const token = await jwt.sign({ uuid: elUsuario[0].uuid, nickname: elUsuario[0].nickname }, TOKEN_SECRET, {expiresIn: '4h', algorithm: 'HS256'});

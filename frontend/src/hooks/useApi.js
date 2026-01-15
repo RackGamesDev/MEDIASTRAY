@@ -8,11 +8,11 @@ const useApi = () => {
     const { tokenSesionActual, usuarioActual, tokenJuegoActual, API_URL, API_KEY, cambiarTokenSesionActual, cambiarUsuarioActual } = useAjustes();
 
     const peticionGenerica = async (url, verbo = "GET", body, headersExtra = {}) => {
-        setCargando(true);
-        setError(false);
+        await setCargando(true);
+        await setError(false);
         try {
             const resultado = await peticionBasica(url, {...headersExtra, "X-auth-api": API_KEY, "X-auth-session": tokenSesionActual ?? '', "X-auth-playtime": tokenJuegoActual ?? '', "X-my-uuid": usuarioActual.uuid ?? '', "X-auth-game": "X"}, verbo, body ?? undefined);
-            if (!resultado.ok && resultado.code >= 400) throw {fallo: true, code: resultado.code ?? '', message: "Error api"}
+            if (!resultado.ok && resultado.code >= 400) throw {fallo: true, code: resultado.code ?? '', message: "Error api", result: resultado}
             return resultado;
         } catch (error) {
             setError({fallo: true, error});
@@ -33,8 +33,17 @@ const useApi = () => {
         }
     }
 
-    const register = async () => {
-        
+    const register = async (objetoRegister) => {
+        await setError(false);
+        try {
+            const resultado = await peticionGenerica(API_URL + "/userCreate", "POST", { usuario: { nickname: objetoRegister.nickname, contrasegna: objetoRegister.contrasegna, correo: objetoRegister.correo, nombre: objetoRegister.nombre, cumpleagnos: Date.parse(objetoRegister.cumpleagnos) + "" } });
+            console.log(resultado)
+            cambiarTokenSesionActual(resultado.sessionToken);
+            cambiarUsuarioActual(resultado.user);
+            return resultado;
+        } catch (error) {
+            return {fallo: true, error}
+        }
     }
 
     const verUsuario = async (id) => {
@@ -46,8 +55,12 @@ const useApi = () => {
         }
     }
 
+    const resetEstados = () => {
+        setCargando(false);
+        setError(false)
+    }
 
-    return { cargando, error, peticionGenerica, login, register, verUsuario };
+    return { cargando, error, peticionGenerica, login, register, verUsuario, resetEstados };
 };
 
 export default useApi;

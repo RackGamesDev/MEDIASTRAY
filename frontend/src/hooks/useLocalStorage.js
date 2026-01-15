@@ -33,11 +33,11 @@ const useLocalStorage = () => {
   const leerLS = async (clave) => {
     if (localStoragePermitido()) {
       setCargando(true);
-      const resultado = await localStorage.getItem(clave) ?? false;
+      const resultado = await localStorage.getItem(clave) ?? null;
       setCargando(false);
       return resultado;
     } else {
-      return false;
+      return null;
     }
   }
 

@@ -27,7 +27,7 @@ routerPriv.post("/userCreate", autenticarTokenApi, async (req, res) => {
     } catch (error) {
         try {
             console.log(error);
-            return res.status(error.code).json({ok:false, message: error.message, code: error.code});
+            return res.status(error.code).json({ok:false, message: error.message, code: error.code, data: error.data ?? {}});
         } catch (error2) {
             //console.log(error2);
             return res.status(500).json({ok: false, message: "Server error", code: 500});
@@ -45,7 +45,7 @@ routerPriv.post("/userLogin", autenticarTokenApi, async (req, res) => {
     } catch (error) {
         try {
             console.log(error);
-            return res.status(error.code).json({ok:false, message: error.message, code: error.code});
+            return res.status(error.code).json({ok:false, message: error.message, code: error.code, data: error.data ?? {}});
         } catch (error2) {
             //console.log(error2);
             return res.status(500).json({ok:false, message: "Server error", code: 500});
@@ -66,7 +66,7 @@ routerPriv.patch("/userEdit", autenticarTokenApi, autenticarTokenSesion, async (
     } catch (error) {
         try {
             console.log(error);
-            return res.status(error.code).json({ok:false, message: error.message, code: error.code ?? 400});
+            return res.status(error.code).json({ok:false, message: error.message, code: error.code ?? 400, data: error.data ?? {}});
         } catch (error2) {
             //console.log(error2);
             return res.status(500).json({ok: false, message: "Server error", code: 500});
@@ -89,7 +89,7 @@ routerPriv.delete("/userDelete", autenticarTokenApi, autenticarTokenSesion, asyn
     } catch (error) {
         try {
             console.log(error);
-            return res.status(error.code).json({ok:false, message: error.message, code: error.code});
+            return res.status(error.code).json({ok:false, message: error.message, code: error.code, data: error.data ?? {}});
         } catch (error2) {
             //console.log(error2);
             return res.status(500).json({ok:false, message: "Server error", code: 500});
@@ -110,7 +110,7 @@ routerPriv.post("/userFollow", autenticarTokenApi, autenticarTokenSesion, async 
     } catch (error) {
         try {
             console.log(error);
-            return res.status(error.code).json({ok:false, message: error.message, code: error.code ?? 400});
+            return res.status(error.code).json({ok:false, message: error.message, code: error.code ?? 400, data: error.data ?? {}});
         } catch (error2) {
             //console.log(error2);
             return res.status(500).json({ok:false, message: "Server error", code: 500});

@@ -5,16 +5,18 @@ import InputBasico from '../Elements/InputBasico.jsx';
 import BotonFuncion from '../Elements/BotonFuncion.jsx';
 import { correo as validarCorreo, contrasegna as validarContrasegna, nickname as validarNickname, nombre as validarNombre, cumpleagnos as validarCumpleagnos } from '../../libraries/validacionesBackend.js';
 import { TextoTraducido } from '../../libraries/traducir.js';
-import { peticionBasica } from '../../libraries/peticiones.js';
 import { nicknameFalso, nombreFalso, correoFalso } from '../../libraries/datosFalsos.js';
 import useAjustes from '../../hooks/useAjustes.js';
+import useApi from '../../hooks/useApi.js';
+import ImgCargando from '../Principal/ImgCargando.jsx';
 
 function FormularioRegister(props) {
 
+  const { register, cargando, error, resetEstados } = useApi();
   const objetoRegisterBasico = { correo: "", nickname: "", contrasegna: "", verContrasegna: false, contrasegna2: "", nombre: "", cumpleagnos: "" }
   const [objetoRegister, setObjetoRegister] = useState({ ...objetoRegisterBasico });
   const [errorFormulario, setErrorFormulario] = useState("");
-  const { idiomaActual, API_URL, API_KEY, cambiarTokenSesionActual, cambiarUsuarioActual } = useAjustes();
+  const { idiomaActual } = useAjustes();
   const navegar = useNavigate();
   const nombreFalsoPlaceholder = useMemo(() => nombreFalso(), []);
   const nicknameFalsoPlaceholder = useMemo(() => nicknameFalso(), []);
@@ -51,15 +53,23 @@ function FormularioRegister(props) {
       if (typeof props.enviarPersonalizado === "function") {
         props.enviarPersonalizado(objetoRegister);
       } else {
-        const resultado = await peticionBasica(API_URL + "/userCreate", { "X-auth-api": API_KEY }, "POST", { usuario: { nickname: objetoRegister.nickname, contrasegna: objetoRegister.contrasegna, correo: objetoRegister.correo, nombre: objetoRegister.nombre, cumpleagnos: Date.parse(objetoRegister.cumpleagnos) + "" } });
-        if (resultado.code === 200 && !resultado.fallo) {
-          cambiarTokenSesionActual(resultado.sessionToken);
-          cambiarUsuarioActual(resultado.user);
+        const resultado = await register(objetoRegister);
+        console.log(resultado)
+        console.log(error, resultado.error, "BBBBBBBBBBBBBB")
+        if (!error && !resultado.error) {
           navegar("/user/" + resultado.user.nickname);
           reset();
         } else {
-          setErrorFormulario(TextoTraducido("errores", idiomaActual, "noRegister"));
+          console.log(resultado, "AAAAAAAAAAAAAAAAAAa")
+          if (resultado?.error?.result?.data.doubleNickname) {
+            setErrorFormulario(TextoTraducido("errores", idiomaActual, "nicknameRepetido"));
+          } else if (resultado?.error?.result?.data.doubleEmail) {
+            setErrorFormulario(TextoTraducido("errores", idiomaActual, "correoRepetido"));
+          } else {
+            setErrorFormulario(TextoTraducido("errores", idiomaActual, "noRegister"));
+          }
         }
+        resetEstados();
       }
     } else {
       setErrorFormulario(TextoTraducido("errores", idiomaActual, "noRegister"));
@@ -80,6 +90,7 @@ function FormularioRegister(props) {
         <InputBasico nombre="verContrasegna" titulo={<Texto tipo="formularios" nombre="contrasegnaMostrar" />} estaChecked={objetoRegister.verContrasegna} tipo="checkbox" />
         <BotonFuncion titulo={<Texto tipo="botones" nombre="crearCuenta" />} funcion={enviar} />
         <div className="caja-errores">{errorFormulario}</div>
+        {cargando && (<ImgCargando />)}
       </form>
     </div>
   )

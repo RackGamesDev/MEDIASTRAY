@@ -1,6 +1,5 @@
 bugs:
-deja login con cualquier contrasegna
-register con hook
+deja login con cualquier contrasegna / no deja
 
 tests
 monitoreo
@@ -22,6 +21,7 @@ mejorar interfaz
 
 
 extras:
+movil
 medallas
 premium
 versiones juegos

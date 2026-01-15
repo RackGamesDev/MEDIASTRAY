@@ -30,7 +30,6 @@ const AjustesProvider = (props) => {
 
       const idiomaPreferente = navigator.language ?? 'en-US';
       const idiomaPrecargado = await leerLS("idiomaActual") ?? `${(idiomaPreferente[0] + idiomaPreferente[1]).toUpperCase()}-${(idiomaPreferente[3] + idiomaPreferente[4]).toLowerCase()}`;
-      console.log(idiomaPrecargado)
       setIdiomaActual(idiomaPrecargado ?? "EN-us");
       await guardarLS("idiomaActual", idiomaPrecargado ?? "EN-us");
 
@@ -52,7 +51,11 @@ const AjustesProvider = (props) => {
 
   const logout = async () => {
     await borrarLS("tokenSesionActual");
+    await borrarLS("tokenJuegoActual");
     await guardarLS("usuarioActual", {ninguno: true});
+    setUsuarioActual({ninguno: true});
+    setTokenJuegoActual("");
+    setTokenSesionActual("");
   }
 
   const cambiarUsuarioActual = async (usuario) => {

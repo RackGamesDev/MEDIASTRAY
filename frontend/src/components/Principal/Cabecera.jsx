@@ -16,6 +16,7 @@ function Cabecera() {
   return (
     <>
         <header id="cabecera">
+          {usuarioActual.uuid}
             <img id="logo-cabecera" src={imgLogo ?? PUBLIC_URL + "/logoA.png"} alt="MEDIASTRAY" onClick={()=>{navegar("/")}} />
             {textosInterfazEnlacesCabecera[(usuarioActual.uuid ? "si" : "no") + "Usuario"][idiomaActual].map((e, i) => {
               return (<BotonNavegacion key={i} cabecera={true} direccion={e.direccion} titulo={e.titulo} />)
