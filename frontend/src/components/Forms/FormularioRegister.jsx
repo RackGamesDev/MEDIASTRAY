@@ -54,13 +54,10 @@ function FormularioRegister(props) {
         props.enviarPersonalizado(objetoRegister);
       } else {
         const resultado = await register(objetoRegister);
-        console.log(resultado)
-        console.log(error, resultado.error, "BBBBBBBBBBBBBB")
         if (!error && !resultado.error) {
           navegar("/user/" + resultado.user.nickname);
           reset();
         } else {
-          console.log(resultado, "AAAAAAAAAAAAAAAAAAa")
           if (resultado?.error?.result?.data.doubleNickname) {
             setErrorFormulario(TextoTraducido("errores", idiomaActual, "nicknameRepetido"));
           } else if (resultado?.error?.result?.data.doubleEmail) {

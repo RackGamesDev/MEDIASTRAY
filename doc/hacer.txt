@@ -1,5 +1,5 @@
 bugs:
-deja login con cualquier contrasegna / no deja
+
 
 tests
 monitoreo

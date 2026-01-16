@@ -37,7 +37,6 @@ const useApi = () => {
         await setError(false);
         try {
             const resultado = await peticionGenerica(API_URL + "/userCreate", "POST", { usuario: { nickname: objetoRegister.nickname, contrasegna: objetoRegister.contrasegna, correo: objetoRegister.correo, nombre: objetoRegister.nombre, cumpleagnos: Date.parse(objetoRegister.cumpleagnos) + "" } });
-            console.log(resultado)
             cambiarTokenSesionActual(resultado.sessionToken);
             cambiarUsuarioActual(resultado.user);
             return resultado;
