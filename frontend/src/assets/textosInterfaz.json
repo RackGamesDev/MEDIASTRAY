@@ -118,12 +118,16 @@
             "EN-us": {
                 "irInicio": "Back to home",
                 "iniciarSesion": "Log in",
-                "crearCuenta": "Create account"
+                "crearCuenta": "Create account",
+                "seguir": "Follow",
+                "noSeguir": "Stop following"
             },
             "ES-es": {
                 "irInicio": "Volver al inicio",
                 "iniciarSesion": "Iniciar sesión",
-                "crearCuenta": "Crear cuenta"
+                "crearCuenta": "Crear cuenta",
+                "seguir": "Seguir",
+                "noSeguir": "Dejar de seguir"
             }
         },
         "titulos": {
@@ -159,7 +163,13 @@
                 "correo": "Email:",
                 "nickname": "Nickname:",
                 "nombre": "Name:",
-                "cumpleagnos": "Birth date:"
+                "cumpleagnos": "Birth date:",
+                "fechaCreacion": "Creation date:",
+                "premium": "Premium:",
+                "premiumCaducidad": "Premium expitation date:",
+                "seguidores": "Followers:",
+                "teSigue": "follows you",
+                "noTeSigue": "doesn't follow you"
             },
             "ES-es": {
                 "identificacion": "Correo o nickname:",
@@ -169,7 +179,13 @@
                 "correo": "Correo:",
                 "nickname": "Nickname:",
                 "nombre": "Nombre:",
-                "cumpleagnos": "Fecha de nacimiento:"
+                "cumpleagnos": "Fecha de nacimiento:",
+                "fechaCreacion": "Fecha de creación:",
+                "premium": "Premium:",
+                "premiumCaducidad": "Fecha de caducidad del premium",
+                "seguidores": "Seguidores:",
+                "teSigue": "te sigue",
+                "noTeSigue": "no te sigue"
             }
         },
         "errores": {
@@ -186,7 +202,9 @@
                 "validacionCumpleagnos": "Choose a valid date",
                 "nicknameRepetido": "Nickname already in use",
                 "correoRepetido": "Email address already in use",
-                "usuarioNoEncontrado": "User not found"
+                "usuarioNoEncontrado": "User not found",
+                "nopfp": "No user profile photo",
+                "noDescripcion": "No description..."
             },
             "ES-es": {
                 "error": "Ha habido un error",
@@ -201,7 +219,9 @@
                 "validacionCumpleagnos": "Selecciona una fecha válida",
                 "nicknameRepetido": "Nickname ya en uso",
                 "correoRepetido": "Correo ya en uso",
-                "usuarioNoEncontrado": "Usuario no encontrado"
+                "usuarioNoEncontrado": "Usuario no encontrado",
+                "nopfp": "Sin foto de perfil",
+                "noDescripcion": "Sin descripción..."
             }
         },
         "titulosHtml": {
@@ -234,6 +254,16 @@
                 "register": "Registrarse",
                 "settings": "Ajustes",
                 "viewUser": "Usuario"
+            }
+        },
+        "palabras": {
+            "EN-us": {
+                "si": "Yes",
+                "no": "No"
+            },
+            "ES-es": {
+                "si": "Sí",
+                "no": "No"
             }
         }
     }

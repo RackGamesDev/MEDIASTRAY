@@ -23,7 +23,8 @@ function VerUsuarioCompleto(props) {
         setSoyYo(true);
         setUsuarioCargado(usuarioActual);
       } else {
-        setUsuarioCargado(await verUsuario(props.id));
+        const usuarioAjeno = await verUsuario(props.id);
+        setUsuarioCargado({...usuarioAjeno, correo: "", contrasegna: "", cumpleagnos: "", disponibilidad: "", uuid: "x"});
       }
     }
   }

@@ -54,12 +54,26 @@ const useApi = () => {
         }
     }
 
+    const verSeguir = async (uuid1, uuid2) => {
+        try {
+            const resultado = await peticionGenerica(API_URL + "/userFollow/", "GET", {"uuid_a": uuid1, "uuid_b": uuid2});
+            console.log(resultado)
+            return resultado;
+        } catch (error) {
+            return {fallo: true, error}
+        }
+    }
+
+    const seguir = async (uuid) => {
+
+    }
+
     const resetEstados = () => {
         setCargando(false);
         setError(false)
     }
 
-    return { cargando, error, peticionGenerica, login, register, verUsuario, resetEstados };
+    return { cargando, error, peticionGenerica, login, register, verUsuario, resetEstados, verSeguir, seguir };
 };
 
 export default useApi;

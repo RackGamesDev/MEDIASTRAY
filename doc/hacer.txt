@@ -3,8 +3,8 @@ bugs:
 
 tests
 monitoreo
-refactor backend (usar orm, modelos, reducir conexiones)
-refactor frontend (custom hooks, mejorar contextos)
+refactor backend (usar orm, modelos, reducir conexiones, permisos, mas)
+refactor frontend (librerias)
 manejo de errores personalizado
 
 

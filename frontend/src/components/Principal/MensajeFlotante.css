@@ -6,8 +6,9 @@
     border: 1px solid white;
     width: 200px;
     margin: 5px;
+    color: black;
 }
-.mensaje-flotante.generico {}
+.mensaje-flotante.generico {background-color: gray;}
 .mensaje-flotante.exito {background-color: greenyellow;}
 .mensaje-flotante.error {background-color: red;}
 .mensaje-flotante.alerta {background-color: orange;}

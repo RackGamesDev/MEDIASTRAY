@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
-import { nombre as validarNombre, nickname as validarNickname, correo as validarCorreo, timestamp as validarCumpleagnos, contrasegna as validarContrasegna, descripcionForo as validarDescripcion, url as validarUrl, enteroPositivo as validarEnteroPositivo, contrasegna } from '../libraries/validaciones.js';
+import { nombre as validarNombre, nickname as validarNickname, correo as validarCorreo, timestamp as validarCumpleagnos, contrasegna as validarContrasegna, descripcionForo as validarDescripcion, url as validarUrl, enteroPositivo as validarEnteroPositivo, contrasegna, correo } from '../libraries/validaciones.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { redisDelete, redisSet } from '../connections/redis.js';
@@ -154,7 +154,7 @@ const verUsuario = async (id) => {
     try {
         const usuario = await consulta("SELECT * FROM USUARIOS WHERE uuid = $1 OR nickname = $2;", [id, id]);
         //usuario[0].contrasegna = undefined;
-        return {...usuario[0], contrasegna: undefined} ?? null;
+        return {...usuario[0], contrasegna: "", correo: undefined, cumpleagnos: "", disponibilidad: ""} ?? null;
     } catch (error) {
         throw error;
     }
@@ -172,10 +172,10 @@ const alterarDisponibilidadUsuario = async (nuevoValor, uuid) => {
     }
 }
 
-//Renueva el premium de un usuario estableciendo la ultima renovacion a la fecha actual
-const alterarPremiumUsuario = async (uuid) => {
+//Renueva el premium de un usuario estableciendo la fecha de caducidad
+const alterarPremiumUsuario = async (uuid, fechaCaducidad) => {
     try {
-        const resultado = await consulta("UPDATE USUARIOS SET premium = $1 WHERE uuid = $2;", [Date.now(), uuid]);
+        const resultado = await consulta("UPDATE USUARIOS SET premium = $1 WHERE uuid = $2;", [fechaCaducidad, uuid]);
         agnadirLog("backend.log", "User got premium " + uuid);
         agnadirLog("db.log", "User got premium USUARIO to current date " + uuid);
         return resultado ? true : false;
