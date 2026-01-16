@@ -1,9 +1,9 @@
 import React, { useContext } from "react";
-import { AjustesContexto } from "../contexts/AjustesProvider.jsx";
+import { MensajesContexto } from "../contexts/MensajesProvider.jsx";
 
-const useAjustes = () => {
+const useMensajes = () => {
 
-  const contexto = useContext(AjustesContexto);
+  const contexto = useContext(MensajesContexto);
 
   if (!contexto) {
     throw new Error(
@@ -14,4 +14,4 @@ const useAjustes = () => {
   return contexto;
 };
 
-export default useAjustes;
+export default useMensajes;

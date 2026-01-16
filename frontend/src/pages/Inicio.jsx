@@ -4,9 +4,11 @@ import { Link } from 'react-router';
 import img from '../assets/react.svg';
 import { cambiarTitulo } from '../libraries/accionesIndex';
 import useAjustes from '../hooks/useAjustes.js';
+import useMensajes from '../hooks/useMensaje.js';
 
 function Inicio() {
 
+    const { lanzarMensaje } = useMensajes();
     const [count, setCount] = useState(0);
     const { API_URL, PUBLIC_URL, API_KEY } = useAjustes();
 
@@ -38,6 +40,7 @@ function Inicio() {
             <p className="read-the-docs">
                 Click on the Vite and React logos to learn more
             </p>
+            <button onClick={()=>{lanzarMensaje("hola" + Math.random(), 1)}}>si</button>
         </>
     )
 }

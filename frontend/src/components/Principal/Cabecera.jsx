@@ -1,5 +1,4 @@
 import React from 'react';
-import { AjustesContexto } from '../../contexts/AjustesProvider.jsx';
 import BotonNavegacion from '../Elements/BotonNavegacion.jsx';
 import imgLogo from '../../assets/images/logoA.png';
 import { useNavigate } from 'react-router-dom';
