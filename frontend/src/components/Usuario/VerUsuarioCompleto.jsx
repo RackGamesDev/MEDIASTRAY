@@ -24,7 +24,7 @@ function VerUsuarioCompleto(props) {
         setUsuarioCargado(usuarioActual);
       } else {
         const usuarioAjeno = await verUsuario(props.id);
-        setUsuarioCargado({...usuarioAjeno, correo: "", contrasegna: "", cumpleagnos: "", disponibilidad: "", uuid: "x"});
+        setUsuarioCargado({...usuarioAjeno, correo: "", contrasegna: "", cumpleagnos: "", disponibilidad: ""});
       }
     }
   }

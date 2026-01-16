@@ -7,12 +7,12 @@ const autenticarTokenApi = (req, res, next) => {
     try {
         const auth = req.header('X-auth-api');
         if (auth !== API_TOKEN || API_TOKEN === undefined || auth === undefined) {
-            return res.status(401).json({message: "401: Valid token not provided at private endpoint", code: 404});
+            return res.status(401).json({message: "401: Valid token not provided at private endpoint", code: 401, ok: false });
         } else {
             next();
         }
     } catch (e) {
-        return res.status(401).json({message: "401: Token not provided at private endpoint", code: 404});
+        return res.status(401).json({message: "401: Token not provided at private endpoint", code: 401, ok: false});
     }
 }
 
@@ -27,11 +27,11 @@ const autenticarTokenSesion = async (req, res, next) => {
         if (token2 === token && uuid2 === uuid && token !== "" && token2 !== "" && uuid !== "" && uuid2) {
             next();
         } else {
-            throw { message: `User session token NOT valid OR server error`, code: 200 }
+            throw { message: `User session token NOT valid OR server error`, code: 401, ok: false }
         }
     } catch (error) {
         console.log(error);
-        return res.json({ message: `User session token NOT valid OR server error`, code: 200 });
+        return res.json({ message: `User session token NOT valid OR server error`, code: 401, ok: false });
     }
 }
 

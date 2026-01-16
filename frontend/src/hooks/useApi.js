@@ -56,16 +56,24 @@ const useApi = () => {
 
     const verSeguir = async (uuid1, uuid2) => {
         try {
-            const resultado = await peticionGenerica(API_URL + "/userFollow/", "GET", {"uuid_a": uuid1, "uuid_b": uuid2});
-            console.log(resultado)
-            return resultado;
+            const resultado = await peticionGenerica(API_URL + `/userFollow/${uuid1}/${uuid2}`, "GET");
+            return resultado.data ?? false;
         } catch (error) {
             return {fallo: true, error}
         }
     }
 
-    const seguir = async (uuid) => {
-
+    const seguir = async (uuid, cantidad) => {
+        try {
+            let cantidadCorrecta = cantidad;
+            if (cantidadCorrecta > 1) cantidadCorrecta = 1;
+            if (cantidadCorrecta < -1) cantidadCorrecta = -1;
+            const resultado = await peticionGenerica(API_URL + `/userFollow/`, "POST", {"uuid_b": uuid, "cantidad": cantidadCorrecta});
+            console.log(resultado)
+            return true;
+        } catch (error) {
+            return {fallo: true, error}
+        }
     }
 
     const resetEstados = () => {

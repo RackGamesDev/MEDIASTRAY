@@ -6,7 +6,7 @@ import VerUsuarioCompleto from '../components/Usuario/VerUsuarioCompleto.jsx';
 function ViewUser() {
 
   const {id} = useParams();
-  useTituloDinamico("viewUser", id ?? '');
+  useTituloDinamico("viewUser", (id ?? '') + " ");
 
   return (
     <>

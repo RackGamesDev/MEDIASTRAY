@@ -14,13 +14,36 @@ function TarjetaUsuarioGrande(props) {
   const [siguiendo, setSiguiendo] = useState(false);
   const [teSigue, setTeSigue] = useState(false);
   const { verSeguir, seguir } = useApi();
+  const [seguidoresSimulados, setSeguidoresSimulados] = useState(props.usuario.cantidad_seguidores);
 
   const alternarSeguir = async () => {
-    
+    if (props.soyYo || !usuarioActual.uuid) return false;
+    if (siguiendo) {
+      const resultado = await seguir(props.usuario.uuid, -1);
+      console.log(resultado)
+      if (resultado && !resultado.error) {
+        setSiguiendo(!siguiendo);
+        setSeguidoresSimulados(seguidoresSimulados - 1);
+      }
+    } else {
+      const resultado = await seguir(props.usuario.uuid, 1);
+      console.log(resultado)
+      if (resultado && !resultado.error) {
+        setSiguiendo(!siguiendo); 
+        setSeguidoresSimulados(seguidoresSimulados + 1);
+      }
+    }
   }
 
   const verSiguiendo = async (deVuelta) => {
-
+    if (props.soyYo || !usuarioActual.uuid) return false;
+    if (deVuelta) {
+      const siguiendo = await verSeguir(props.usuario.uuid, usuarioActual.uuid);
+      return siguiendo;
+    } else {
+      const siguiendo = await verSeguir(usuarioActual.uuid, props.usuario.uuid);
+      return siguiendo;
+    }
   }
 
   const cargaInicial = async () => {
@@ -46,7 +69,7 @@ function TarjetaUsuarioGrande(props) {
         <p>{TextoTraducido("formularios", idiomaActual, "fechaCreacion")} {fechaCreacion}</p>
         <p>{TextoTraducido("formularios", idiomaActual, "premium")} {esPremium ? TextoTraducido("palabras", idiomaActual, "si") : TextoTraducido("palabras", idiomaActual, "no")}</p>
         {esPremium && (<p>{TextoTraducido("formularios", idiomaActual, "premiumCaducidad")} {fechaPremium}</p>)}
-        <p>{TextoTraducido("formularios", idiomaActual, "seguidores")} {props.usuario.cantidad_seguidores} {(!props.soyYo && usuarioActual.uuid) && (<span>
+        <p>{TextoTraducido("formularios", idiomaActual, "seguidores")} {seguidoresSimulados} {(!props.soyYo && usuarioActual.uuid) && (<span>
           <BotonFuncion funcion={alternarSeguir} titulo={TextoTraducido("botones", idiomaActual, siguiendo ? "noSeguir" : "seguir")} />
           <span>{props.usuario.nombre} {TextoTraducido("formularios", idiomaActual, teSigue ? "teSigue" : "noTeSigue")}</span>
         </span>)}</p>

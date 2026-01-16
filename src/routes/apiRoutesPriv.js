@@ -100,9 +100,13 @@ routerPriv.delete("/userDelete", autenticarTokenApi, autenticarTokenSesion, asyn
 //Usuario A sigue a usuario B, se crea el registro en mongodb y se altera la cantidad de seguidores en el usuario B, requiere follow +1 o -1 para seguir o desseguir (si es posible) (uuid_b, cantidad)
 routerPriv.post("/userFollow", autenticarTokenApi, autenticarTokenSesion, async (req, res) => {
     try {
+        console.log("SEGUIR")
         const token = req.body.token ?? (req.header('X-auth-session') ?? "");
         const uuid = await redisGet("SESSION-TOKEN-" + token) ?? "";
-        if (await alterarSeguidores(uuid, req.body.uuid_b, req.body.cantidad)) {
+        let cantidad = req.body.cantidad;
+        if (cantidad > 1) cantidad = 1;
+        if (cantidad < -1) cantidad = -1;
+        if (await alterarSeguidores(uuid, req.body.uuid_b, cantidad)) {
             return res.json({ok:true, message: `User followed/unfollowed successfully`, code: 200 });
         } else {
             throw {message: "Couldn't perform action (follow)", code: 401};

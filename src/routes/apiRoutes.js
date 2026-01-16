@@ -11,9 +11,9 @@ router.get("/prueba", (req, res) => {
 });
 
 //Devuelve si el usuario A sigue al usuario B (uuid_a, uuid_b)
-router.get("/userFollow", async (req, res) => {
+router.get("/userFollow/:uuid_a/:uuid_b", async (req, res) => {
     try {
-        if (await alterarSeguidores(req.body.uuid_a, req.body.uuid_b, 0)) {
+        if (await alterarSeguidores(req.params.uuid_a, req.params.uuid_b, 0)) {
             return res.json({ ok:true, message: `Follows`, code: 200, data: true });
         } else {
             return res.json({ ok:true, message: `Does not follow`, code: 200, data: false });

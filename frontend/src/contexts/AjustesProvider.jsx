@@ -28,6 +28,9 @@ const AjustesProvider = (props) => {
       await guardarLS("GAMES_URL", GAMES_URL);
       await guardarLS("API_KEY", API_KEY);
 
+      setTokenSesionActual(await leerLS("tokenSesionActual"));
+      setTokenJuegoActual(await leerLS("tokenJuegoActual"));
+
       const idiomaPreferente = navigator.language ?? 'en-US';
       const idiomaPrecargado = await leerLS("idiomaActual") ?? `${(idiomaPreferente[0] + idiomaPreferente[1]).toUpperCase()}-${(idiomaPreferente[3] + idiomaPreferente[4]).toLowerCase()}`;
       setIdiomaActual(idiomaPrecargado ?? "EN-us");
