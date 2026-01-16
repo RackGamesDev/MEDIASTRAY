@@ -68,12 +68,19 @@ const useApi = () => {
             let cantidadCorrecta = cantidad;
             if (cantidadCorrecta > 1) cantidadCorrecta = 1;
             if (cantidadCorrecta < -1) cantidadCorrecta = -1;
-            const resultado = await peticionGenerica(API_URL + `/userFollow/`, "POST", {"uuid_b": uuid, "cantidad": cantidadCorrecta});
-            console.log(resultado)
+            await peticionGenerica(API_URL + `/userFollow/`, "POST", {"uuid_b": uuid, "cantidad": cantidadCorrecta});
             return true;
         } catch (error) {
             return {fallo: true, error}
         }
+    }
+
+    const editarUsuario = async (datosNuevos) => {
+
+    }
+
+    const borrarUsuario = async (uuid, contrasegna) => {
+
     }
 
     const resetEstados = () => {
@@ -81,7 +88,7 @@ const useApi = () => {
         setError(false)
     }
 
-    return { cargando, error, peticionGenerica, login, register, verUsuario, resetEstados, verSeguir, seguir };
+    return { cargando, error, peticionGenerica, login, register, verUsuario, resetEstados, verSeguir, seguir, borrarUsuario, editarUsuario };
 };
 
 export default useApi;

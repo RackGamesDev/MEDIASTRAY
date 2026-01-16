@@ -3,6 +3,7 @@ import { TextoTraducido } from '../../libraries/traducir.js';
 import useAjustes from '../../hooks/useAjustes.js';
 import BotonFuncion from '../Elements/BotonFuncion.jsx';
 import useApi from '../../hooks/useApi.js';
+import FormularioEditarPerfil from '../Forms/FormularioEditarPerfil.jsx';
 
 function TarjetaUsuarioGrande(props) {
 
@@ -15,19 +16,18 @@ function TarjetaUsuarioGrande(props) {
   const [teSigue, setTeSigue] = useState(false);
   const { verSeguir, seguir } = useApi();
   const [seguidoresSimulados, setSeguidoresSimulados] = useState(props.usuario.cantidad_seguidores);
+  const [editandoPerfil, setEditandoPerfil] = useState(false);
 
   const alternarSeguir = async () => {
     if (props.soyYo || !usuarioActual.uuid) return false;
     if (siguiendo) {
       const resultado = await seguir(props.usuario.uuid, -1);
-      console.log(resultado)
       if (resultado && !resultado.error) {
         setSiguiendo(!siguiendo);
         setSeguidoresSimulados(seguidoresSimulados - 1);
       }
     } else {
       const resultado = await seguir(props.usuario.uuid, 1);
-      console.log(resultado)
       if (resultado && !resultado.error) {
         setSiguiendo(!siguiendo); 
         setSeguidoresSimulados(seguidoresSimulados + 1);
@@ -58,8 +58,6 @@ function TarjetaUsuarioGrande(props) {
 
   return (
     <div className="tarjeta-usuario-grande">
-        {JSON.stringify(props.usuario)}
-        {JSON.stringify(props.soyYo)}
         <h2>{props.usuario.nombre}</h2>
         <img src={props.usuario.url_foto ?? "#"} alt={TextoTraducido("errores", idiomaActual, "nopfp")} />
         <p>{"("}{props.usuario.nickname}{")"}</p>
@@ -73,9 +71,10 @@ function TarjetaUsuarioGrande(props) {
           <BotonFuncion funcion={alternarSeguir} titulo={TextoTraducido("botones", idiomaActual, siguiendo ? "noSeguir" : "seguir")} />
           <span>{props.usuario.nombre} {TextoTraducido("formularios", idiomaActual, teSigue ? "teSigue" : "noTeSigue")}</span>
         </span>)}</p>
-        {props.soyYo ? (<div>
-
-        </div>) : (<p></p>)}
+        {(props.soyYo) ? (<div>
+          {!editandoPerfil && (<BotonFuncion funcion={() => {setEditandoPerfil(true)}} titulo={TextoTraducido("botones", idiomaActual, "editarPerfil")} />)}
+        </div>) : (<p>REPORTAR USUARIO</p>)}
+        {editandoPerfil && props.soyYo && (<FormularioEditarPerfil usuario={props.usuario} />)}
     </div>
   )
 }

@@ -120,14 +120,18 @@
                 "iniciarSesion": "Log in",
                 "crearCuenta": "Create account",
                 "seguir": "Follow",
-                "noSeguir": "Stop following"
+                "noSeguir": "Stop following",
+                "editarPerfil": "Edit profile",
+                "reset": "Reset"
             },
             "ES-es": {
                 "irInicio": "Volver al inicio",
                 "iniciarSesion": "Iniciar sesión",
                 "crearCuenta": "Crear cuenta",
                 "seguir": "Seguir",
-                "noSeguir": "Dejar de seguir"
+                "noSeguir": "Dejar de seguir",
+                "editarPerfil": "Editar perfil",
+                "reset": "Reiniciar"
             }
         },
         "titulos": {
@@ -136,14 +140,16 @@
                 "register": "Create a new account",
                 "error404": "Error 404",
                 "error404Explicacion": "Site not found :(",
-                "cargando": "Loading..."
+                "cargando": "Loading...",
+                "editarUsuario": "Edit user details"
             },
             "ES-es": {
                 "login": "Iniciar sesión con una cuenta ya existente",
                 "register": "Crear una nueva cuenta",
                 "error404": "Error 404",
                 "error404Explicacion": "Sitio no encontrado :(",
-                "cargando": "Cargando..."
+                "cargando": "Cargando...",
+                "editarUsuario": "Editar los detalles del usuario"
             }
         },
         "parrafos": {
@@ -191,7 +197,7 @@
         "errores": {
             "EN-us": {
                 "error": "There was an error",
-                "noLogin": "Couldn't log in, check that the password and the identification are correct",
+                "noLogin": "Couldn't log iuser/nuevo2n, check that the password and the identification are correct",
                 "noRegister": "Couldn't create an user, there was an error, check all the fields",
                 "validacionEmail": "The email is not correct",
                 "validacionContrasegna": "The password must have between 8 and 32 characters, an uppercase and a lowercase letter, and a symbol",
@@ -221,7 +227,7 @@
                 "correoRepetido": "Correo ya en uso",
                 "usuarioNoEncontrado": "Usuario no encontrado",
                 "nopfp": "Sin foto de perfil",
-                "noDescripcion": "Sin descripción..."
+                "noDescripcion": "Sin descuser/nuevo2ripción..."
             }
         },
         "titulosHtml": {

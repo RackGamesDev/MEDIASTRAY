@@ -4,7 +4,7 @@ function BotonFuncion(props) {
   
   return (
         <span className={(props.cabecera ? "boton-cabecera" : "") + "boton-funcion"}>
-            <button onClick={(e)=>{props?.funcion(e)}}>{props.titulo}</button>
+            <button onClick={(e)=>{e.preventDefault(); props?.funcion(e)}}>{props.titulo}</button>
         </span>
   )
 }

@@ -11,7 +11,7 @@ import ImgCargando from '../Principal/ImgCargando.jsx';
 
 function FormularioLogin(props) {
 
-  const { login, cargando, error } = useApi();
+  const { login, cargando } = useApi();
   const objetoLoginBasico = { identificacion: "", contrasegna: "", verContrasegna: false }
   const [objetoLogin, setObjetoLogin] = useState({ ...objetoLoginBasico });
   const [errorFormulario, setErrorFormulario] = useState("");
@@ -59,7 +59,6 @@ function FormularioLogin(props) {
 
   return (
     <div>
-      <h2><Texto tipo="titulos" nombre="login" /></h2>
       {cargando ? (<ImgCargando />) : (<form onChange={cambio}>
         <InputBasico nombre="identificacion" titulo={<Texto tipo="formularios" nombre="identificacion" />} valor={objetoLogin.identificacion} tipo="text" mensajeError={<Texto tipo="errores" nombre="validacionIdentificacion" />} validador={validarIdentificacion} />
         <InputBasico nombre="contrasegna" titulo={<Texto tipo="formularios" nombre="contrasegna" />} valor={objetoLogin.contrasegna} tipo={objetoLogin.verContrasegna ? "text" : "password"} placeholder="········" />

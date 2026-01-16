@@ -34,7 +34,8 @@ function FormularioRegister(props) {
   }
 
   const reset = () => {
-    setObjetoRegister({ ...objetoRegisterBasico });
+    setObjetoRegister(objetoRegisterBasico);
+    resetEstados();
   }
 
   const validar = () => {
@@ -76,7 +77,6 @@ function FormularioRegister(props) {
 
   return (
     <div>
-      <h2><Texto tipo="titulos" nombre="register" /></h2>
       <form onChange={cambio}>
         <InputBasico nombre="nickname" placeholder={nicknameFalsoPlaceholder} titulo={<Texto tipo="formularios" nombre="nickname" />} valor={objetoRegister.nickname} tipo="text" mensajeError={<Texto tipo="errores" nombre="validacionNickname" />} validador={validarNickname} />
         <InputBasico nombre="correo" placeholder={correoFalsoPlaceholder} titulo={<Texto tipo="formularios" nombre="correo" />} valor={objetoRegister.correo} tipo="text" mensajeError={<Texto tipo="errores" nombre="validacionEmail" />} validador={validarCorreo} />
@@ -86,6 +86,7 @@ function FormularioRegister(props) {
         <InputBasico nombre="contrasegna2" titulo={<Texto tipo="formularios" nombre="contrasegna2" />} valor={objetoRegister.contrasegna2} tipo={objetoRegister.verContrasegna ? "text" : "password"} placeholder="········" />
         <InputBasico nombre="verContrasegna" titulo={<Texto tipo="formularios" nombre="contrasegnaMostrar" />} estaChecked={objetoRegister.verContrasegna} tipo="checkbox" />
         <BotonFuncion titulo={<Texto tipo="botones" nombre="crearCuenta" />} funcion={enviar} />
+        <BotonFuncion titulo={<Texto tipo="botones" nombre="reset" />} funcion={reset} />
         <div className="caja-errores">{errorFormulario}</div>
         {cargando && (<ImgCargando />)}
       </form>
