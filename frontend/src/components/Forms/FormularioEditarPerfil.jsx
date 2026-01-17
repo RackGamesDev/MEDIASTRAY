@@ -4,7 +4,7 @@ import useApi from '../../hooks/useApi.js';
 import { useNavigate } from 'react-router-dom';
 import InputBasico from '../Elements/InputBasico.jsx';
 import BotonFuncion from '../Elements/BotonFuncion.jsx';
-import { correo as validarCorreo, contrasegna as validarContrasegna, nickname as validarNickname, nombre as validarNombre, cumpleagnos as validarCumpleagnos } from '../../libraries/validacionesBackend.js';
+import { correo as validarCorreo, contrasegna as validarContrasegna, nickname as validarNickname, nombre as validarNombre, cumpleagnos as validarCumpleagnos, url as validarUrl, descripcionUsuario as validarDescripcion } from '../../libraries/validacionesBackend.js';
 import { TextoTraducido } from '../../libraries/traducir.js';
 import { nicknameFalso, nombreFalso, correoFalso } from '../../libraries/datosFalsos.js';
 import useAjustes from '../../hooks/useAjustes.js';
@@ -14,7 +14,7 @@ function FormularioEditarPerfil(props) {
 
     const previo = props.usuario;
     const { editarUsuario, borrarUsuario, cargando, error, resetEstados } = useApi();
-    const objetoPatchBasico = { correo: previo.correo ?? "", nickname: previo.nickname ?? "", contrasegna: "", verContrasegna: false, contrasegna2: "", nombre: previo.nombre ?? "", cumpleagnos: "", descripcion: previo.descripcion ?? "", url_foto: previo.url_foto ?? "", cambiarContrasegna: false }
+    const objetoPatchBasico = { correo: previo.correo ?? "", nickname: previo.nickname ?? "", contrasegna: "", verContrasegna: false, contrasegna2: "", nombre: previo.nombre ?? "", cumpleagnos: "", descripcion: previo.descripcion ?? "", url_foto: previo.url_foto ?? "", cambiarContrasegna: false, contrasegnaAntigua: "", contrasegnaEliminar: "", correoEliminar: "" }
     const [objetoPatch, setObjetoPatch] = useState({ ...objetoPatchBasico });
     const [errorFormulario, setErrorFormulario] = useState("");
     const { idiomaActual } = useAjustes();
@@ -22,9 +22,9 @@ function FormularioEditarPerfil(props) {
     const nombreFalsoPlaceholder = useMemo(() => nombreFalso(), []);
     const nicknameFalsoPlaceholder = useMemo(() => nicknameFalso(), []);
     const correoFalsoPlaceholder = useMemo(() => correoFalso(), []);
+    const [quiereEliminar, setQuiereEliminar] = useState(false);
 
     const cambio = (e) => {
-        console.log("asdfkjasdlf")
         if (e.target.nodeName === "INPUT") {
             if (e.target.type === "checkbox") {
                 setObjetoPatch({ ...objetoPatch, [e.target.name]: e.target.checked });
@@ -46,11 +46,14 @@ function FormularioEditarPerfil(props) {
             && validarNombre(objetoPatch.nombre)
             && validarCorreo(objetoPatch.correo)
             && validarNickname(objetoPatch.nickname)
-            && validarCumpleagnos(objetoPatch.cumpleagnos);
+            && validarCumpleagnos(objetoPatch.cumpleagnos)
+            && validarUrl(objetoPatch.url_foto)
+            && validarDescripcion(objetoPatch.descripcion);
     }
 
     const enviar = async (e) => {
         e.preventDefault();
+        //validar correctamente, mirar que no haya uniques en uso (a no ser que sean propios), enviar al servidor, si es correcto setear datos nuevos, si no mostrar error
         if (validar()) {
             setErrorFormulario("");
             const resultado = await editarUsuario(objetoPatch);
@@ -74,6 +77,12 @@ function FormularioEditarPerfil(props) {
         if (objetoPatch.contrasegna2 !== objetoPatch.contrasegna) setErrorFormulario(TextoTraducido("errores", idiomaActual, "dobleContrasegna"));
     }
 
+    const enviarEliminarCuenta = async () => {
+        if (quiereEliminar) {
+            //comprobar datos, enviar al servidor, si se elimina hacer logout y redirigir, si no mostrar error
+        }
+    }
+
     return (
         <>
             {JSON.stringify(previo)}<br></br>
@@ -83,14 +92,25 @@ function FormularioEditarPerfil(props) {
                 <InputBasico nombre="nickname" placeholder={nicknameFalsoPlaceholder} titulo={<Texto tipo="formularios" nombre="nickname" />} valor={objetoPatch.nickname} tipo="text" mensajeError={<Texto tipo="errores" nombre="validacionNickname" />} validador={validarNickname} />
                 <InputBasico nombre="correo" placeholder={correoFalsoPlaceholder} titulo={<Texto tipo="formularios" nombre="correo" />} valor={objetoPatch.correo} tipo="text" mensajeError={<Texto tipo="errores" nombre="validacionEmail" />} validador={validarCorreo} />
                 <InputBasico nombre="nombre" placeholder={nombreFalsoPlaceholder} titulo={<Texto tipo="formularios" nombre="nombre" />} valor={objetoPatch.nombre} tipo="text" mensajeError={<Texto tipo="errores" nombre="validacionNombre" />} validador={validarNombre} />
+                <InputBasico nombre="url_foto" placeholder={''} titulo={<Texto tipo="formularios" nombre="urlFoto" />} valor={objetoPatch.url_foto} tipo="url" mensajeError={<Texto tipo="errores" nombre="validacionUrl" />} validador={validarUrl} />
+                <InputBasico nombre="descripcion" placeholder={'...'} titulo={<Texto tipo="formularios" nombre="descripcion" />} valor={objetoPatch.descripcion} tipo="textarea" mensajeError={<Texto tipo="errores" nombre="validacionDescripcion" />} validador={validarDescripcion} />
                 <InputBasico nombre="cumpleagnos" titulo={<Texto tipo="formularios" nombre="cumpleagnos" />} valor={objetoPatch.cumpleagnos} tipo="date" mensajeError={<Texto tipo="errores" nombre="validacionCumpleagnos" />} validador={validarCumpleagnos} />
+                <InputBasico nombre="cambiarContrasegna" titulo={<Texto tipo="formularios" nombre="cambiarContrasegna" />} estaChecked={objetoPatch.cambiarContrasegna} tipo="checkbox" />
                 {objetoPatch.cambiarContrasegna && (<div>
                     <InputBasico nombre="contrasegna" titulo={<Texto tipo="formularios" nombre="contrasegna" />} valor={objetoPatch.contrasegna} tipo={objetoPatch.verContrasegna ? "text" : "password"} placeholder="········" />
                     <InputBasico nombre="contrasegna2" titulo={<Texto tipo="formularios" nombre="contrasegna2" />} valor={objetoPatch.contrasegna2} tipo={objetoPatch.verContrasegna ? "text" : "password"} placeholder="········" />
+                    <InputBasico nombre="contrasegnaAntigua" titulo={<Texto tipo="formularios" nombre="contrasegnaAntigua" />} valor={objetoPatch.contrasegnaAntigua} tipo={objetoPatch.verContrasegna ? "text" : "password"} placeholder="········" />
                     <InputBasico nombre="verContrasegna" titulo={<Texto tipo="formularios" nombre="contrasegnaMostrar" />} estaChecked={objetoPatch.verContrasegna} tipo="checkbox" />
                 </div>)}
                 <BotonFuncion titulo={<Texto tipo="botones" nombre="editarPerfil" />} funcion={enviar} />
                 <BotonFuncion titulo={<Texto tipo="botones" nombre="reset" />} funcion={reset} />
+
+                {!quiereEliminar ? (<BotonFuncion titulo={<Texto tipo="botones" nombre="eliminarCuenta1" />} funcion={() => {setQuiereEliminar(true)}} />) : (<div>
+                    <InputBasico nombre="correoEliminar" titulo={<Texto tipo="formularios" nombre="correoAntiguo" />} valor={objetoPatch.correoEliminar} tipo="text" placeholder="" />
+                    <InputBasico nombre="contrasegnaEliminar" titulo={<Texto tipo="formularios" nombre="contrasegnaAntigua" />} valor={objetoPatch.contrasegnaEliminar} tipo="password" placeholder="········" />
+                    <BotonFuncion titulo={<Texto tipo="botones" nombre="eliminarCuenta2" />} funcion={enviarEliminarCuenta} />
+                </div>)}
+
                 <div className="caja-errores">{errorFormulario}</div>
                 {cargando && (<ImgCargando />)}
             </form>

@@ -122,7 +122,9 @@
                 "seguir": "Follow",
                 "noSeguir": "Stop following",
                 "editarPerfil": "Edit profile",
-                "reset": "Reset"
+                "reset": "Reset",
+                "eliminarCuenta1": "Delete account",
+                "eliminarCuenta2": "DELETE ACCOUNT..."
             },
             "ES-es": {
                 "irInicio": "Volver al inicio",
@@ -131,7 +133,9 @@
                 "seguir": "Seguir",
                 "noSeguir": "Dejar de seguir",
                 "editarPerfil": "Editar perfil",
-                "reset": "Reiniciar"
+                "reset": "Reiniciar",
+                "eliminarCuenta1": "Eliminar la cuenta",
+                "eliminarCuenta2": "ELIMINAR LA CUENTA..."
             }
         },
         "titulos": {
@@ -175,7 +179,12 @@
                 "premiumCaducidad": "Premium expitation date:",
                 "seguidores": "Followers:",
                 "teSigue": "follows you",
-                "noTeSigue": "doesn't follow you"
+                "noTeSigue": "doesn't follow you",
+                "cambiarContrasegna": "Change password",
+                "urlFoto": "Photo URL",
+                "descripcion": "Description:",
+                "contrasegnaAntigua": "Original password:",
+                "correoAntiguo": "Original email for verification:"
             },
             "ES-es": {
                 "identificacion": "Correo o nickname:",
@@ -191,7 +200,12 @@
                 "premiumCaducidad": "Fecha de caducidad del premium",
                 "seguidores": "Seguidores:",
                 "teSigue": "te sigue",
-                "noTeSigue": "no te sigue"
+                "noTeSigue": "no te sigue",
+                "cambiarContrasegna": "Cambiar contraseña",
+                "urlFoto": "URL de la foto",
+                "descripcion": "Descripción:",
+                "contrasegnaAntigua": "Contraseña original:",
+                "correoAntiguo": "Correo original para verificar:"
             }
         },
         "errores": {
@@ -200,6 +214,7 @@
                 "noLogin": "Couldn't log iuser/nuevo2n, check that the password and the identification are correct",
                 "noRegister": "Couldn't create an user, there was an error, check all the fields",
                 "validacionEmail": "The email is not correct",
+                "validacionUrl": "Input a valid URL",
                 "validacionContrasegna": "The password must have between 8 and 32 characters, an uppercase and a lowercase letter, and a symbol",
                 "validacionNickname": "The nickname must have between 4 and 15 characters and can only include alphabet letters and the symbols \"-\" \"_\" \"|\"",
                 "validacionIdentificacion": "You must identify yourself with a valid email or a nickname, which must have between 4 and 15 characters and can only include alphabet letters and the symbols \"-\" \"_\" \"|\"",
@@ -210,7 +225,8 @@
                 "correoRepetido": "Email address already in use",
                 "usuarioNoEncontrado": "User not found",
                 "nopfp": "No user profile photo",
-                "noDescripcion": "No description..."
+                "noDescripcion": "No description...",
+                "validacionDescripcion": "Description too long"
             },
             "ES-es": {
                 "error": "Ha habido un error",
@@ -227,7 +243,8 @@
                 "correoRepetido": "Correo ya en uso",
                 "usuarioNoEncontrado": "Usuario no encontrado",
                 "nopfp": "Sin foto de perfil",
-                "noDescripcion": "Sin descuser/nuevo2ripción..."
+                "noDescripcion": "Sin descuser/nuevo2ripción...",
+                "validacionDescripcion": "La descripción es muy larga"
             }
         },
         "titulosHtml": {
