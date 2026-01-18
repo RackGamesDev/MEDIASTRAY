@@ -9,12 +9,13 @@ import { TextoTraducido } from '../../libraries/traducir.js';
 import { nicknameFalso, nombreFalso, correoFalso } from '../../libraries/datosFalsos.js';
 import useAjustes from '../../hooks/useAjustes.js';
 import ImgCargando from '../Principal/ImgCargando.jsx';
+import { timestampAInputDate } from '../../libraries/extraFechas.js';
 
 function FormularioEditarPerfil(props) {
 
     const previo = props.usuario;
     const { editarUsuario, borrarUsuario, cargando, error, resetEstados } = useApi();
-    const objetoPatchBasico = { correo: previo.correo ?? "", nickname: previo.nickname ?? "", contrasegna: "", verContrasegna: false, contrasegna2: "", nombre: previo.nombre ?? "", cumpleagnos: "", descripcion: previo.descripcion ?? "", url_foto: previo.url_foto ?? "", cambiarContrasegna: false, contrasegnaAntigua: "", contrasegnaEliminar: "", correoEliminar: "" }
+    const objetoPatchBasico = { correo: previo.correo ?? "", nickname: previo.nickname ?? "", contrasegna: "", verContrasegna: false, contrasegna2: "", nombre: previo.nombre ?? "", cumpleagnos: timestampAInputDate(previo.cumpleagnos) ?? "", descripcion: previo.descripcion ?? "", url_foto: previo.url_foto ?? "", cambiarContrasegna: false, contrasegnaAntigua: "", contrasegnaEliminar: "", correoEliminar: "" }
     const [objetoPatch, setObjetoPatch] = useState({ ...objetoPatchBasico });
     const [errorFormulario, setErrorFormulario] = useState("");
     const { idiomaActual } = useAjustes();
@@ -40,8 +41,9 @@ function FormularioEditarPerfil(props) {
         resetEstados();
     }
 
-    const validar = () => {
-        return validarContrasegna(objetoPatch.contrasegna)
+    const validarEdicion = () => {
+        const contrasegnasBien = objetoPatch.cambiarContrasegna ? (validarContrasegna(objetoPatch.contrasegna) && objetoPatch.contrasegna === objetoPatch.contrasegna2 && validarContrasegna(objetoPatch.contrasegnaAntigua)) : true;
+        return contrasegnasBien
             && objetoPatch.contrasegna2 === objetoPatch.contrasegna
             && validarNombre(objetoPatch.nombre)
             && validarCorreo(objetoPatch.correo)
@@ -51,13 +53,19 @@ function FormularioEditarPerfil(props) {
             && validarDescripcion(objetoPatch.descripcion);
     }
 
+    const validarBorrado = () => {
+        return objetoPatch.correoEliminar === previo.correo
+        && validarContrasegna(objetoPatch.contrasegnaEliminar);
+    }
+
     const enviar = async (e) => {
         e.preventDefault();
         //validar correctamente, mirar que no haya uniques en uso (a no ser que sean propios), enviar al servidor, si es correcto setear datos nuevos, si no mostrar error
-        if (validar()) {
+        if (validarEdicion()) {
             setErrorFormulario("");
             const resultado = await editarUsuario(objetoPatch);
-            if (!error && !resultado.error) {
+            console.log("SI", resultado);
+            if (!error && !resultado?.error) {
                 navegar("/user/" + resultado.user.nickname);
                 reset();
             } else {
@@ -73,12 +81,14 @@ function FormularioEditarPerfil(props) {
 
         } else {
             setErrorFormulario(TextoTraducido("errores", idiomaActual, "noRegister"));
+            if (objetoPatch.cambiarContrasegna && objetoPatch.contrasegna !== objetoPatch.contrasegna2) setErrorFormulario(TextoTraducido("errores", idiomaActual, "dobleContrasegna"));
         }
         if (objetoPatch.contrasegna2 !== objetoPatch.contrasegna) setErrorFormulario(TextoTraducido("errores", idiomaActual, "dobleContrasegna"));
     }
 
-    const enviarEliminarCuenta = async () => {
-        if (quiereEliminar) {
+    const enviarEliminarCuenta = async (e) => {
+        e.preventDefault();
+        if (quiereEliminar && validarBorrado()) {
             //comprobar datos, enviar al servidor, si se elimina hacer logout y redirigir, si no mostrar error
         }
     }
@@ -97,9 +107,9 @@ function FormularioEditarPerfil(props) {
                 <InputBasico nombre="cumpleagnos" titulo={<Texto tipo="formularios" nombre="cumpleagnos" />} valor={objetoPatch.cumpleagnos} tipo="date" mensajeError={<Texto tipo="errores" nombre="validacionCumpleagnos" />} validador={validarCumpleagnos} />
                 <InputBasico nombre="cambiarContrasegna" titulo={<Texto tipo="formularios" nombre="cambiarContrasegna" />} estaChecked={objetoPatch.cambiarContrasegna} tipo="checkbox" />
                 {objetoPatch.cambiarContrasegna && (<div>
-                    <InputBasico nombre="contrasegna" titulo={<Texto tipo="formularios" nombre="contrasegna" />} valor={objetoPatch.contrasegna} tipo={objetoPatch.verContrasegna ? "text" : "password"} placeholder="········" />
-                    <InputBasico nombre="contrasegna2" titulo={<Texto tipo="formularios" nombre="contrasegna2" />} valor={objetoPatch.contrasegna2} tipo={objetoPatch.verContrasegna ? "text" : "password"} placeholder="········" />
                     <InputBasico nombre="contrasegnaAntigua" titulo={<Texto tipo="formularios" nombre="contrasegnaAntigua" />} valor={objetoPatch.contrasegnaAntigua} tipo={objetoPatch.verContrasegna ? "text" : "password"} placeholder="········" />
+                    <InputBasico nombre="contrasegna" titulo={<Texto tipo="formularios" nombre="contrasegna" />} valor={objetoPatch.contrasegna} tipo={objetoPatch.verContrasegna ? "text" : "password"} placeholder="········"  mensajeError={<Texto tipo="errores" nombre="validacionContrasegna" />} validador={validarContrasegna} />
+                    <InputBasico nombre="contrasegna2" titulo={<Texto tipo="formularios" nombre="contrasegna2" />} valor={objetoPatch.contrasegna2} tipo={objetoPatch.verContrasegna ? "text" : "password"} placeholder="········" />
                     <InputBasico nombre="verContrasegna" titulo={<Texto tipo="formularios" nombre="contrasegnaMostrar" />} estaChecked={objetoPatch.verContrasegna} tipo="checkbox" />
                 </div>)}
                 <BotonFuncion titulo={<Texto tipo="botones" nombre="editarPerfil" />} funcion={enviar} />

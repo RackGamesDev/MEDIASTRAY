@@ -4,14 +4,15 @@ import useAjustes from '../../hooks/useAjustes.js';
 import BotonFuncion from '../Elements/BotonFuncion.jsx';
 import useApi from '../../hooks/useApi.js';
 import FormularioEditarPerfil from '../Forms/FormularioEditarPerfil.jsx';
+import { timestampAFecha } from '../../libraries/extraFechas.js';
 
 function TarjetaUsuarioGrande(props) {
 
   const { idiomaActual, usuarioActual } = useAjustes();
   const esPremium = props.usuario.premium ? (props.usuario.premium > Date.now()) : false;
-  const fechaCumpleagnos = new Date(Number(props.usuario.cumpleagnos)).toLocaleDateString();
-  const fechaCreacion = new Date(Number(props.usuario.fechacreacion)).toLocaleDateString();
-  const fechaPremium = new Date(Number(props.usuario.premium)).toLocaleDateString();
+  const fechaCumpleagnos = timestampAFecha(props.usuario.cumpleagnos);
+  const fechaCreacion = timestampAFecha(props.usuario.fechacreacion);
+  const fechaPremium = timestampAFecha(props.usuario.premium);
   const [siguiendo, setSiguiendo] = useState(false);
   const [teSigue, setTeSigue] = useState(false);
   const { verSeguir, seguir } = useApi();
