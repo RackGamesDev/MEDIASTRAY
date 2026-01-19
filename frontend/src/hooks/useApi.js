@@ -5,7 +5,7 @@ import { peticionBasica } from "../libraries/peticiones.js";
 const useApi = () => {
     const [cargando, setCargando] = useState(false);
     const [error, setError] = useState(false);
-    const { tokenSesionActual, usuarioActual, tokenJuegoActual, API_URL, API_KEY, cambiarTokenSesionActual, cambiarUsuarioActual } = useAjustes();
+    const { tokenSesionActual, usuarioActual, tokenJuegoActual, API_URL, API_KEY, cambiarTokenSesionActual, cambiarUsuarioActual, logout } = useAjustes();
 
     const peticionGenerica = async (url, verbo = "GET", body, headersExtra = {}) => {
         await setCargando(true);
@@ -36,7 +36,7 @@ const useApi = () => {
 
     const register = async (objetoRegister) => {
         try {
-            const resultado = await peticionGenerica(API_URL + "/userCreate", "POST", { usuario: { nickname: objetoRegister.nickname, contrasegna: objetoRegister.contrasegna, correo: objetoRegister.correo, nombre: objetoRegister.nombre, cumpleagnos: Date.parse(objetoRegister?.cumpleagnos) + "" } });
+            const resultado = await peticionGenerica(API_URL + "/userCreate", "POST", { usuario: { ...objetoRegister, cumpleagnos: Date.parse(objetoRegister?.cumpleagnos) + "" } });
             cambiarTokenSesionActual(resultado.sessionToken);
             cambiarUsuarioActual(resultado.user);
             return resultado;
@@ -77,7 +77,7 @@ const useApi = () => {
 
     const editarUsuario = async (datosNuevos) => {
         try {
-            const resultado = await peticionGenerica(API_URL + "/userEdit", "PATCH", { newData: {...datosNuevos, cumpleagnos: Date.parse(datosNuevos?.cumpleagnos) + ""} });
+            const resultado = await peticionGenerica(API_URL + "/userEdit", "PATCH", { newData: {...datosNuevos, cumpleagnos: Date.parse(datosNuevos?.cumpleagnos) + "", correoEliminar: undefined, contrasegnaEliminar: undefined} });
             cambiarTokenSesionActual(resultado.sessionToken);
             cambiarUsuarioActual(resultado.user);
             return resultado;
@@ -86,8 +86,15 @@ const useApi = () => {
         }
     }
 
-    const borrarUsuario = async (uuid, contrasegna) => {
-
+    const borrarUsuario = async (contrasegna) => {
+        try {
+            const resultado = await peticionGenerica(API_URL + "/userDelete", "DELETE", {contrasegna});
+            console.log("bbb", resultado)
+            await logout();
+            return resultado;
+        } catch (error) {
+            return {fallo: true, error}
+        }
     }
 
     const resetEstados = () => {

@@ -9,6 +9,7 @@ import { nicknameFalso, nombreFalso, correoFalso } from '../../libraries/datosFa
 import useAjustes from '../../hooks/useAjustes.js';
 import ImgCargando from '../Principal/ImgCargando.jsx';
 import { timestampAInputDate } from '../../libraries/extraFechas.js';
+import { useNavigate } from 'react-router-dom';
 
 function FormularioEditarPerfil(props) {
 
@@ -23,6 +24,7 @@ function FormularioEditarPerfil(props) {
     const nicknameFalsoPlaceholder = useMemo(() => nicknameFalso(), []);
     const correoFalsoPlaceholder = useMemo(() => correoFalso(), []);
     const [quiereEliminar, setQuiereEliminar] = useState(false);
+    const navegar = useNavigate();
 
     const cambio = (e) => {
         if (e.target.nodeName === "INPUT" || e.target.nodeName === "TEXTAREA") {
@@ -65,7 +67,6 @@ function FormularioEditarPerfil(props) {
             const resultado = await editarUsuario(objetoPatch);
             if (resultado?.ok && !error) {
                 reset();
-                console.log("moviendo")
                 //navegar("/user/" + resultado.user.nickname);
                 window.location.reload();
             } else {
@@ -80,7 +81,6 @@ function FormularioEditarPerfil(props) {
                 }
             }
             resetEstados();
-
         } else {
             setErrorFormulario(TextoTraducido("errores", idiomaActual, "noUsuarioEdit"));
             if (objetoPatch.cambiarContrasegna && objetoPatch.contrasegna !== objetoPatch.contrasegna2) setErrorFormulario(TextoTraducido("errores", idiomaActual, "dobleContrasegna"));
@@ -91,8 +91,14 @@ function FormularioEditarPerfil(props) {
     const enviarEliminarCuenta = async (e) => {
         e.preventDefault();
         if (quiereEliminar && validarBorrado()) {
-            //comprobar datos, enviar al servidor, si se elimina hacer logout y redirigir, si no mostrar error
+            const resultado = await borrarUsuario(objetoPatch.contrasegnaEliminar);
+            console.log(resultado)
+            if (resultado.ok) {
+                navegar("/");
+                return;
+            }
         }
+        setErrorFormulario(TextoTraducido("errores", idiomaActual, "noUsuarioDelete"));
     }
 
     return (

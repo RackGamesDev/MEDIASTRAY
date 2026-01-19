@@ -17,10 +17,10 @@ function Cabecera() {
         <header id="cabecera">
           {usuarioActual.uuid}
             <img id="logo-cabecera" src={imgLogo ?? PUBLIC_URL + "/logoA.png"} alt="MEDIASTRAY" onClick={()=>{navegar("/")}} />
-            {textosInterfazEnlacesCabecera[(usuarioActual.uuid ? "si" : "no") + "Usuario"][idiomaActual].map((e, i) => {
+            {textosInterfazEnlacesCabecera[(usuarioActual.uuid ? "si" : "no") + "Usuario"][idiomaActual]?.map((e, i) => {
               return (<BotonNavegacion key={i} cabecera={true} direccion={e.direccion} titulo={e.titulo} />)
             })}
-            {textosInterfazEnlacesCabecera[idiomaActual].map((e, i) => {
+            {textosInterfazEnlacesCabecera[idiomaActual]?.map((e, i) => {
               return (<BotonNavegacion key={i} cabecera={true} direccion={e.direccion} titulo={e.titulo} />)
             })}
             {usuarioActual.uuid ? (
@@ -29,7 +29,7 @@ function Cabecera() {
               </span>
             ) : ""}
             <span id="cambiar-idioma">
-              {idiomasAdmitidos.map((e, i) => {
+              {idiomasAdmitidos?.map((e, i) => {
                 if (e !== idiomaActual) return (<EnlaceFuncion key={i} cabecera={true} titulo={e} funcion={() => {
                   cambiarIdiomaActual(e);
                   cambiarIdiomaHtml((e[0]+e[1]).toLowerCase());
