@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import Texto from '../Texto.jsx';
 import useApi from '../../hooks/useApi.js';
 import { useNavigate } from 'react-router-dom';
@@ -15,8 +15,9 @@ function FormularioEditarPerfil(props) {
 
     const previo = props.usuario;
     const { editarUsuario, borrarUsuario, cargando, error, resetEstados } = useApi();
-    const objetoPatchBasico = { correo: previo.correo ?? "", nickname: previo.nickname ?? "", contrasegna: "", verContrasegna: false, contrasegna2: "", nombre: previo.nombre ?? "", cumpleagnos: timestampAInputDate(previo.cumpleagnos) ?? "", descripcion: previo.descripcion ?? "", url_foto: previo.url_foto ?? "", cambiarContrasegna: false, contrasegnaAntigua: "", contrasegnaEliminar: "", correoEliminar: "" }
-    const [objetoPatch, setObjetoPatch] = useState({ ...objetoPatchBasico });
+    const objetoPatchBasico = useMemo(() => {return {correo: previo.correo ?? "", nickname: previo.nickname ?? "", contrasegna: "", verContrasegna: false, contrasegna2: "", nombre: previo.nombre ?? "", cumpleagnos: timestampAInputDate(previo.cumpleagnos) ?? "", descripcion: previo.descripcion ?? "", url_foto: previo.url_foto ?? "", cambiarContrasegna: false, contrasegnaAntigua: "", contrasegnaEliminar: "", correoEliminar: "" }}, [previo]);
+    //const objetoPatchBasico = {correo: previo.correo ?? "", nickname: previo.nickname ?? "", contrasegna: "", verContrasegna: false, contrasegna2: "", nombre: previo.nombre ?? "", cumpleagnos: timestampAInputDate(previo.cumpleagnos) ?? "", descripcion: previo.descripcion ?? "", url_foto: previo.url_foto ?? "", cambiarContrasegna: false, contrasegnaAntigua: "", contrasegnaEliminar: "", correoEliminar: "" }
+    const [objetoPatch, setObjetoPatch] = useState(objetoPatchBasico);
     const [errorFormulario, setErrorFormulario] = useState("");
     const { idiomaActual } = useAjustes();
     const navegar = useNavigate();
@@ -31,13 +32,16 @@ function FormularioEditarPerfil(props) {
                 setObjetoPatch({ ...objetoPatch, [e.target.name]: e.target.checked });
             } else {
                 e.preventDefault();
+                console.log(e.target.name, e.target.value, { ...objetoPatch, [e.target.name]: e.target.value });
                 setObjetoPatch({ ...objetoPatch, [e.target.name]: e.target.value });
             }
+        } else if (e.target.nodeName === "TEXTAREA") {
+            setObjetoPatch({ ...objetoPatch, [e.target.id]: e.target.innerHTML });
         }
     }
 
     const reset = () => {
-        setObjetoPatch({ ...objetoPatchBasico });
+        setObjetoPatch(objetoPatchBasico);
         resetEstados();
     }
 
@@ -95,10 +99,10 @@ function FormularioEditarPerfil(props) {
 
     return (
         <>
-            {JSON.stringify(previo)}<br></br>
-            {JSON.stringify(objetoPatchBasico)}
             <h3><Texto tipo="titulos" nombre="editarUsuario" /></h3>
+            <button onClick={() => {setObjetoPatch({hola:234})}}>adfasdf</button>
             <form onChange={cambio}>
+            {JSON.stringify(objetoPatch)}
                 <InputBasico nombre="nickname" placeholder={nicknameFalsoPlaceholder} titulo={<Texto tipo="formularios" nombre="nickname" />} valor={objetoPatch.nickname} tipo="text" mensajeError={<Texto tipo="errores" nombre="validacionNickname" />} validador={validarNickname} />
                 <InputBasico nombre="correo" placeholder={correoFalsoPlaceholder} titulo={<Texto tipo="formularios" nombre="correo" />} valor={objetoPatch.correo} tipo="text" mensajeError={<Texto tipo="errores" nombre="validacionEmail" />} validador={validarCorreo} />
                 <InputBasico nombre="nombre" placeholder={nombreFalsoPlaceholder} titulo={<Texto tipo="formularios" nombre="nombre" />} valor={objetoPatch.nombre} tipo="text" mensajeError={<Texto tipo="errores" nombre="validacionNombre" />} validador={validarNombre} />
