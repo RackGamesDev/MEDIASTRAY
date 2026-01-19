@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/set-state-in-effect */
 import { React, createContext, useState, useEffect } from 'react';
-import { validarDatosUsuario } from '../libraries/validaciones.js';
+import { validarDatosUsuarioLS } from '../libraries/validacionesBackend.js';
 import { textos } from '../assets/textosInterfaz.json';
 import useLocalStorage from '../hooks/useLocalStorage.js';
 import { peticionBasica } from '../libraries/peticiones.js';
@@ -40,7 +40,7 @@ const AjustesProvider = (props) => {
       await guardarLS("idiomaActual", idiomaPrecargado ?? "EN-us");
 
       const usuarioPrecargado = JSON.parse(await leerLS("usuarioActual") ?? '{"ninguno": true}');
-      if (validarDatosUsuario(usuarioPrecargado) && usuarioPrecargado?.uuid) {
+      if (validarDatosUsuarioLS(usuarioPrecargado) && usuarioPrecargado?.uuid) {
         setUsuarioActual(usuarioPrecargado);
       } else {
         setUsuarioActual({ ninguno: true });
@@ -76,7 +76,7 @@ const AjustesProvider = (props) => {
   }
 
   const cambiarUsuarioActual = async (usuario) => {
-    if (validarDatosUsuario(usuario)) {
+    if (validarDatosUsuarioLS(usuario)) {
       setUsuarioActual(usuario);
       await guardarLS("usuarioActual", JSON.stringify(usuario));
     } else {

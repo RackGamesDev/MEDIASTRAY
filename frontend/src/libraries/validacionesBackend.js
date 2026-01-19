@@ -10,7 +10,7 @@ const enteroPositivo = (data) => {
 
 //Valida un uuid
 const uuid = (data) => {
-    return esString(data) && /^[0-9a-fA-F]{36}$/.test(data);
+    return esString(data) && /^[0-9a-fA-F\-]{36}$/.test(data);
 }
 
 //Valida un nickname de usuario, de 4 a 15 caracteres que sean letras, numeros o simbolos concretos
@@ -89,4 +89,20 @@ const cumpleagnos = (data) => {
     return timestamp(texto + "") && texto < Date.now();
 }
 
-export { esString, cumpleagnos, version, descripcionForo, descripcionJuego, timestamp, titulo, nombre, nickname, nombreForo, juegoDeForo, enteroPositivo, url, contrasegna, correo, descripcionUsuario, uuid, identificacion }
+//Pensada para validar el localstorage
+const validarDatosUsuarioLS = (usuario) => {
+    return typeof usuario === "object"
+        && uuid(usuario.uuid)
+        && nickname(usuario.nickname)
+        && nombre(usuario.nombre)
+        && correo(usuario.correo)
+        && descripcionUsuario(usuario.descripcion)
+        && (url(usuario.url_foto) || usuario.url_foto === "/public/nopfp.png" || usuario.url_foto === "")
+        && timestamp(usuario.cumpleagnos)
+        && timestamp(usuario.fechacreacion)
+        && enteroPositivo(usuario.disponibilidad)
+        && (usuario.premium === "" || timestamp(usuario.premium))
+        //&& enteroPositivo(usuario.permisos);
+}
+
+export { esString, validarDatosUsuarioLS, cumpleagnos, version, descripcionForo, descripcionJuego, timestamp, titulo, nombre, nickname, nombreForo, juegoDeForo, enteroPositivo, url, contrasegna, correo, descripcionUsuario, uuid, identificacion }

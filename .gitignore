@@ -6,3 +6,5 @@ dist
 dist/
 node_modules/
 frontend/src/assets/images
+package-lock.json
+frontend/package-lock.json

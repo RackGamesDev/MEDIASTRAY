@@ -60,6 +60,7 @@ function TarjetaUsuarioGrande(props) {
 
   return (
     <div className="tarjeta-usuario-grande">
+      {JSON.stringify(props.usuario)}
         <h2>{props.usuario.nombre}</h2>
         <img src={props.usuario.url_foto ?? "#"} alt={TextoTraducido("errores", idiomaActual, "nopfp")} />
         <p>{"("}{props.usuario.nickname}{")"}</p>

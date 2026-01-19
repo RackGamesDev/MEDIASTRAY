@@ -21,11 +21,12 @@ CREATE TABLE USUARIOS (
     --telefono VARCHAR(20),
     cumpleagnos VARCHAR(15), --Fecha de nacimiento en timestamp para evitar juegos +18
     fechacreacion VARCHAR(15), --Fecha de creacion del usuario en timestamp
-    --strikes INTEGER DEFAULT 0,
+    strikes INTEGER DEFAULT 0,
     disponibilidad INTEGER DEFAULT 0, --0 disponible, 1 desabilitada de subir juegos, 2 desabilitada de interactuar, 3 desabilitada de login...
     premium VARCHAR(15) DEFAULT '', --Si tiene el premium (se almacena la fecha de caducidad, si esta vacio no tiene directamente)
-    cantidad_seguidores INTEGER DEFAULT 0 --Cantidad de seguidores que tiene
-    --nivel_publico INTEGER DEFAULT 0
+    cantidad_seguidores INTEGER DEFAULT 0, --Cantidad de seguidores que tiene
+    nivel_publico INTEGER DEFAULT 0, --0 normal, 1 pueden saber que existe pero no ver datos, 2 totalmente anonimo...
+    nivel_acceso INTEGER DEFAULT 0 --0 normal, 1 panel de administracion, 2 full admin (no controla desde interfaz)
 );
 
 CREATE TABLE JUEGOS (

@@ -1,6 +1,8 @@
 bugs:
 
-
+borrado en cascada usuario
+permisos y demas usuarios 
+mejorar api
 tests
 monitoreo
 refactor backend (usar orm, modelos, reducir conexiones, permisos, mas)
