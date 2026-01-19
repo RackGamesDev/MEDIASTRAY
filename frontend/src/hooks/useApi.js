@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import useAjustes from "./useAjustes";
-import { peticionBasica } from "../libraries/peticiones";
+import useAjustes from "./useAjustes.js";
+import { peticionBasica } from "../libraries/peticiones.js";
 
 const useApi = () => {
     const [cargando, setCargando] = useState(false);
@@ -12,6 +12,7 @@ const useApi = () => {
         await setError(false);
         try {
             const resultado = await peticionBasica(url, {...headersExtra, "X-auth-api": API_KEY, "X-auth-session": tokenSesionActual ?? '', "X-auth-playtime": tokenJuegoActual ?? '', "X-my-uuid": usuarioActual.uuid ?? '', "X-auth-game": "X"}, verbo, body ?? undefined);
+            console.log("aaa", resultado)
             if (!resultado.ok && resultado.code >= 400) throw {fallo: true, code: resultado.code ?? '', message: "Error api", result: resultado}
             return resultado;
         } catch (error) {
@@ -34,9 +35,8 @@ const useApi = () => {
     }
 
     const register = async (objetoRegister) => {
-        await setError(false);
         try {
-            const resultado = await peticionGenerica(API_URL + "/userCreate", "POST", { usuario: { nickname: objetoRegister.nickname, contrasegna: objetoRegister.contrasegna, correo: objetoRegister.correo, nombre: objetoRegister.nombre, cumpleagnos: Date.parse(objetoRegister.cumpleagnos) + "" } });
+            const resultado = await peticionGenerica(API_URL + "/userCreate", "POST", { usuario: { nickname: objetoRegister.nickname, contrasegna: objetoRegister.contrasegna, correo: objetoRegister.correo, nombre: objetoRegister.nombre, cumpleagnos: Date.parse(objetoRegister?.cumpleagnos) + "" } });
             cambiarTokenSesionActual(resultado.sessionToken);
             cambiarUsuarioActual(resultado.user);
             return resultado;
@@ -76,7 +76,14 @@ const useApi = () => {
     }
 
     const editarUsuario = async (datosNuevos) => {
-
+        try {
+            const resultado = await peticionGenerica(API_URL + "/userEdit", "PATCH", { newData: {...datosNuevos, cumpleagnos: Date.parse(datosNuevos?.cumpleagnos) + ""} });
+            cambiarTokenSesionActual(resultado.sessionToken);
+            cambiarUsuarioActual(resultado.user);
+            return resultado;
+        } catch (error) {
+            return {fallo: true, error}
+        }
     }
 
     const borrarUsuario = async (uuid, contrasegna) => {

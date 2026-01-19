@@ -5,6 +5,7 @@ import BotonFuncion from '../Elements/BotonFuncion.jsx';
 import useApi from '../../hooks/useApi.js';
 import FormularioEditarPerfil from '../Forms/FormularioEditarPerfil.jsx';
 import { timestampAFecha } from '../../libraries/extraFechas.js';
+import BotonNavegacion from '../Elements/BotonNavegacion.jsx'
 
 function TarjetaUsuarioGrande(props) {
 
@@ -74,6 +75,8 @@ function TarjetaUsuarioGrande(props) {
         </span>)}</p>
         {(props.soyYo) ? (<div>
           {!editandoPerfil && (<BotonFuncion funcion={() => {setEditandoPerfil(true)}} titulo={TextoTraducido("botones", idiomaActual, "editarPerfil")} />)}
+          <br />
+          <BotonNavegacion direccion="/logout" titulo={TextoTraducido("botones", idiomaActual, "logout")} />
         </div>) : (<p>REPORTAR USUARIO</p>)}
         {editandoPerfil && props.soyYo && (<FormularioEditarPerfil usuario={props.usuario} />)}
     </div>

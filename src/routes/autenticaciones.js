@@ -1,5 +1,6 @@
 import { redisGet } from "../connections/redis.js";
 import jwt from 'jsonwebtoken';
+import bcrypt from 'bcrypt';
 
 //Para requerir el token de la api en el header X-auth-api
 const autenticarTokenApi = (req, res, next) => {
@@ -35,6 +36,11 @@ const autenticarTokenSesion = async (req, res, next) => {
     }
 }
 
+const autenticarContrasegnaUsuario = async (entrante, encriptada) => {
+    const contrasegnaCoincide = await bcrypt.compare(entrante, encriptada ?? '');
+    return contrasegnaCoincide;
+}
+
 //Para requerir el token de sesion de juego (de un usuario) en el header X-auth-playtime
 const autenticarTokenJuego = (req, res, next) => {
 
@@ -45,4 +51,4 @@ const autenticarTokenAdministracionJuego = (req, res, next) => {
 
 }
 
-export { autenticarTokenApi, autenticarTokenJuego, autenticarTokenSesion, autenticarTokenAdministracionJuego };
+export { autenticarTokenApi, autenticarTokenJuego, autenticarTokenSesion, autenticarTokenAdministracionJuego, autenticarContrasegnaUsuario };

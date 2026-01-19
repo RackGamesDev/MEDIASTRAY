@@ -1,7 +1,6 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import Texto from '../Texto.jsx';
 import useApi from '../../hooks/useApi.js';
-import { useNavigate } from 'react-router-dom';
 import InputBasico from '../Elements/InputBasico.jsx';
 import BotonFuncion from '../Elements/BotonFuncion.jsx';
 import { correo as validarCorreo, contrasegna as validarContrasegna, nickname as validarNickname, nombre as validarNombre, cumpleagnos as validarCumpleagnos, url as validarUrl, descripcionUsuario as validarDescripcion } from '../../libraries/validacionesBackend.js';
@@ -15,28 +14,24 @@ function FormularioEditarPerfil(props) {
 
     const previo = props.usuario;
     const { editarUsuario, borrarUsuario, cargando, error, resetEstados } = useApi();
-    const objetoPatchBasico = useMemo(() => {return {correo: previo.correo ?? "", nickname: previo.nickname ?? "", contrasegna: "", verContrasegna: false, contrasegna2: "", nombre: previo.nombre ?? "", cumpleagnos: timestampAInputDate(previo.cumpleagnos) ?? "", descripcion: previo.descripcion ?? "", url_foto: previo.url_foto ?? "", cambiarContrasegna: false, contrasegnaAntigua: "", contrasegnaEliminar: "", correoEliminar: "" }}, [previo]);
-    //const objetoPatchBasico = {correo: previo.correo ?? "", nickname: previo.nickname ?? "", contrasegna: "", verContrasegna: false, contrasegna2: "", nombre: previo.nombre ?? "", cumpleagnos: timestampAInputDate(previo.cumpleagnos) ?? "", descripcion: previo.descripcion ?? "", url_foto: previo.url_foto ?? "", cambiarContrasegna: false, contrasegnaAntigua: "", contrasegnaEliminar: "", correoEliminar: "" }
+    //const objetoPatchBasico = useMemo(() => {return {correo: previo.correo ?? "", nickname: previo.nickname ?? "", contrasegna: "", verContrasegna: false, contrasegna2: "", nombre: previo.nombre ?? "", cumpleagnos: timestampAInputDate(previo.cumpleagnos) ?? "", descripcion: previo.descripcion ?? "", url_foto: previo.url_foto ?? "", cambiarContrasegna: false, contrasegnaAntigua: "", contrasegnaEliminar: "", correoEliminar: "" }}, [previo]);
+    const objetoPatchBasico = {correo: previo.correo ?? "", nickname: previo.nickname ?? "", contrasegna: "", verContrasegna: false, contrasegna2: "", nombre: previo.nombre ?? "", cumpleagnos: timestampAInputDate(previo.cumpleagnos) ?? "", descripcion: previo.descripcion ?? "", url_foto: previo.url_foto ?? "", cambiarContrasegna: false, contrasegnaAntigua: "", contrasegnaEliminar: "", correoEliminar: "" }
     const [objetoPatch, setObjetoPatch] = useState(objetoPatchBasico);
     const [errorFormulario, setErrorFormulario] = useState("");
     const { idiomaActual } = useAjustes();
-    const navegar = useNavigate();
     const nombreFalsoPlaceholder = useMemo(() => nombreFalso(), []);
     const nicknameFalsoPlaceholder = useMemo(() => nicknameFalso(), []);
     const correoFalsoPlaceholder = useMemo(() => correoFalso(), []);
     const [quiereEliminar, setQuiereEliminar] = useState(false);
 
     const cambio = (e) => {
-        if (e.target.nodeName === "INPUT") {
+        if (e.target.nodeName === "INPUT" || e.target.nodeName === "TEXTAREA") {
             if (e.target.type === "checkbox") {
                 setObjetoPatch({ ...objetoPatch, [e.target.name]: e.target.checked });
             } else {
                 e.preventDefault();
-                console.log(e.target.name, e.target.value, { ...objetoPatch, [e.target.name]: e.target.value });
                 setObjetoPatch({ ...objetoPatch, [e.target.name]: e.target.value });
             }
-        } else if (e.target.nodeName === "TEXTAREA") {
-            setObjetoPatch({ ...objetoPatch, [e.target.id]: e.target.innerHTML });
         }
     }
 
@@ -68,23 +63,26 @@ function FormularioEditarPerfil(props) {
         if (validarEdicion()) {
             setErrorFormulario("");
             const resultado = await editarUsuario(objetoPatch);
-            console.log("SI", resultado);
-            if (!error && !resultado?.error) {
-                navegar("/user/" + resultado.user.nickname);
+            if (resultado?.ok && !error) {
                 reset();
+                console.log("moviendo")
+                //navegar("/user/" + resultado.user.nickname);
+                window.location.reload();
             } else {
                 if (resultado?.error?.result?.data.doubleNickname) {
                     setErrorFormulario(TextoTraducido("errores", idiomaActual, "nicknameRepetido"));
                 } else if (resultado?.error?.result?.data.doubleEmail) {
                     setErrorFormulario(TextoTraducido("errores", idiomaActual, "correoRepetido"));
+                } else if (resultado?.error?.result?.data.failedPassword) {
+                    setErrorFormulario(TextoTraducido("errores", idiomaActual, "noLogin"));
                 } else {
-                    setErrorFormulario(TextoTraducido("errores", idiomaActual, "noRegister"));
+                    setErrorFormulario(TextoTraducido("errores", idiomaActual, "noUsuarioEdit"));
                 }
             }
             resetEstados();
 
         } else {
-            setErrorFormulario(TextoTraducido("errores", idiomaActual, "noRegister"));
+            setErrorFormulario(TextoTraducido("errores", idiomaActual, "noUsuarioEdit"));
             if (objetoPatch.cambiarContrasegna && objetoPatch.contrasegna !== objetoPatch.contrasegna2) setErrorFormulario(TextoTraducido("errores", idiomaActual, "dobleContrasegna"));
         }
         if (objetoPatch.contrasegna2 !== objetoPatch.contrasegna) setErrorFormulario(TextoTraducido("errores", idiomaActual, "dobleContrasegna"));
@@ -100,9 +98,7 @@ function FormularioEditarPerfil(props) {
     return (
         <>
             <h3><Texto tipo="titulos" nombre="editarUsuario" /></h3>
-            <button onClick={() => {setObjetoPatch({hola:234})}}>adfasdf</button>
             <form onChange={cambio}>
-            {JSON.stringify(objetoPatch)}
                 <InputBasico nombre="nickname" placeholder={nicknameFalsoPlaceholder} titulo={<Texto tipo="formularios" nombre="nickname" />} valor={objetoPatch.nickname} tipo="text" mensajeError={<Texto tipo="errores" nombre="validacionNickname" />} validador={validarNickname} />
                 <InputBasico nombre="correo" placeholder={correoFalsoPlaceholder} titulo={<Texto tipo="formularios" nombre="correo" />} valor={objetoPatch.correo} tipo="text" mensajeError={<Texto tipo="errores" nombre="validacionEmail" />} validador={validarCorreo} />
                 <InputBasico nombre="nombre" placeholder={nombreFalsoPlaceholder} titulo={<Texto tipo="formularios" nombre="nombre" />} valor={objetoPatch.nombre} tipo="text" mensajeError={<Texto tipo="errores" nombre="validacionNombre" />} validador={validarNombre} />
