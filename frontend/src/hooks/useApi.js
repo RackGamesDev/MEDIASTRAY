@@ -12,7 +12,6 @@ const useApi = () => {
         await setError(false);
         try {
             const resultado = await peticionBasica(url, {...headersExtra, "X-auth-api": API_KEY, "X-auth-session": tokenSesionActual ?? '', "X-auth-playtime": tokenJuegoActual ?? '', "X-my-uuid": usuarioActual.uuid ?? '', "X-auth-game": "X"}, verbo, body ?? undefined);
-            console.log("aaa", resultado)
             if (!resultado.ok && resultado.code >= 400) throw {fallo: true, code: resultado.code ?? '', message: "Error api", result: resultado}
             return resultado;
         } catch (error) {
@@ -89,7 +88,6 @@ const useApi = () => {
     const borrarUsuario = async (contrasegna) => {
         try {
             const resultado = await peticionGenerica(API_URL + "/userDelete", "DELETE", {contrasegna});
-            console.log("bbb", resultado)
             await logout();
             return resultado;
         } catch (error) {

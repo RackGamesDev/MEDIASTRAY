@@ -14,7 +14,9 @@ routerPriv.get("/authApiToken", autenticarTokenApi, (req, res) => {
 
 //Valida si un token de sesion de usuario es valido (en el body)
 routerPriv.get("/authSessionToken", autenticarTokenApi, autenticarTokenSesion, async (req, res) => {
-    return res.json({ok:true, message: `User session token valid`, code: 200 });
+    const token = req.header('X-auth-session') ?? "";
+    const uuid = await redisGet("SESSION-TOKEN-" + token) ?? "";
+    return res.json({ok:true, message: `User session token valid`, code: 200, uuid });
 });
 
 //Ruta para crear el usuario, requiere en el body (usuario): nombre, nickname, correo, contrasegna, cumpleagnos. Devuelve un token de sesion

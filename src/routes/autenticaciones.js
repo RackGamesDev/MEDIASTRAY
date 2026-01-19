@@ -21,7 +21,7 @@ const autenticarTokenApi = (req, res, next) => {
 const autenticarTokenSesion = async (req, res, next) => {
     try {
         const TOKEN_SECRET = process.env.JWT_SECRET;
-        const token = req.body.token ?? (req.header('X-auth-session') ?? "");
+        const token = req?.body?.token ?? (req.header('X-auth-session') ?? "");
         const uuid = await redisGet("SESSION-TOKEN-" + token) ?? "";
         const token2 = await redisGet("SESSION-TOKEN-" + uuid) ?? "";
         const uuid2 = jwt.verify(token, TOKEN_SECRET)?.uuid ?? undefined;

@@ -7,7 +7,7 @@ const useAjustes = () => {
 
   if (!contexto) {
     throw new Error(
-      "El hook useDiscentes debe ser utilizado dentro del proveedor."
+      "El hook debe ser utilizado dentro del proveedor."
     );
   }
 

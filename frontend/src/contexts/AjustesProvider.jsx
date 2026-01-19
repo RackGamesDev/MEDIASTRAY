@@ -3,6 +3,7 @@ import { React, createContext, useState, useEffect } from 'react';
 import { validarDatosUsuario } from '../libraries/validaciones.js';
 import { textos } from '../assets/textosInterfaz.json';
 import useLocalStorage from '../hooks/useLocalStorage.js';
+import { peticionBasica } from '../libraries/peticiones.js';
 
 const AjustesContexto = createContext();
 
@@ -23,12 +24,14 @@ const AjustesProvider = (props) => {
   //Carga al inicio
   const inicio = async () => {
     try {
+
       await guardarLS("API_URL", API_URL);
       await guardarLS("PUBLIC_URL", PUBLIC_URL);
       await guardarLS("GAMES_URL", GAMES_URL);
       await guardarLS("API_KEY", API_KEY);
 
-      setTokenSesionActual(await leerLS("tokenSesionActual"));
+      const tokenSesionActual = await leerLS("tokenSesionActual")
+      setTokenSesionActual(tokenSesionActual);
       setTokenJuegoActual(await leerLS("tokenJuegoActual"));
 
       const idiomaPreferente = navigator.language ?? 'en-US';
@@ -40,14 +43,25 @@ const AjustesProvider = (props) => {
       if (validarDatosUsuario(usuarioPrecargado) && usuarioPrecargado?.uuid) {
         setUsuarioActual(usuarioPrecargado);
       } else {
-        setUsuarioActual({ninguno: true});
+        setUsuarioActual({ ninguno: true });
         await borrarLS("usuarioActual");
       }
+
+      if (usuarioPrecargado.uuid) {
+        const sesionValida = await peticionBasica(API_URL + "/authSessionToken", { "X-auth-api": API_KEY, "X-auth-session": tokenSesionActual ?? '' }, "GET");
+        if (!sesionValida.ok || sesionValida.uuid !== usuarioPrecargado.uuid || sesionValida.uuid === "") {
+          await logout();
+          window.location.reload();
+          return;
+        }
+      }
+
+
       //await leerLS("usuarioActual", JSON.stringify(usuarioActual));
       setFallo(false);
     } catch (error) {
       console.log(error);
-      setUsuarioActual({ninguno: true});
+      setUsuarioActual({ ninguno: true });
       setFallo({ error: true, objeto: error });
     }
   }
@@ -55,8 +69,8 @@ const AjustesProvider = (props) => {
   const logout = async () => {
     await borrarLS("tokenSesionActual");
     await borrarLS("tokenJuegoActual");
-    await guardarLS("usuarioActual", {ninguno: true});
-    setUsuarioActual({ninguno: true});
+    await guardarLS("usuarioActual", { ninguno: true });
+    setUsuarioActual({ ninguno: true });
     setTokenJuegoActual("");
     setTokenSesionActual("");
   }
@@ -99,7 +113,7 @@ const AjustesProvider = (props) => {
   }//), [fallo, tokenSesionActual, usuarioActual, tokenJuegoActual, idiomaActual, idiomasAdmitidos, API_URL, API_KEY, PUBLIC_URL, GAMES_URL, textos, cambiarUsuarioActual, cambiarTokenJuegoActual, cambiarIdiomaActual, cambiarTokenSesionActual]);
 
   useEffect(() => {
-  //useLayoutEffect(() => {
+    //useLayoutEffect(() => {
     inicio();
   }, []);
 
