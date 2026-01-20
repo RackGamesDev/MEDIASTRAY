@@ -8,6 +8,7 @@ const MensajesProviders = (props) => {
   const [mensajesPendientes, setMensajesPendientes] = useState([]);
   const duracionGeneral = 2000;
 
+  // ["generico", "exito", "error", "alerta", "informacion"]
   const lanzarMensaje = (mensaje, tipo) => {
     const id = self.crypto.randomUUID();
     setMensajesPendientes((prev) => [...prev, { mensaje, tipo: tipo ?? 0, id }]);

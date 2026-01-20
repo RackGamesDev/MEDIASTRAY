@@ -10,6 +10,7 @@ import useAjustes from '../../hooks/useAjustes.js';
 import ImgCargando from '../Principal/ImgCargando.jsx';
 import { timestampAInputDate } from '../../libraries/extraFechas.js';
 import { useNavigate } from 'react-router-dom';
+import useMensajes from '../../hooks/useMensajes.js';
 
 function FormularioEditarPerfil(props) {
 
@@ -25,6 +26,7 @@ function FormularioEditarPerfil(props) {
     const correoFalsoPlaceholder = useMemo(() => correoFalso(), []);
     const [quiereEliminar, setQuiereEliminar] = useState(false);
     const navegar = useNavigate();
+    const { lanzarMensaje } = useMensajes();
 
     const cambio = (e) => {
         if (e.target.nodeName === "INPUT" || e.target.nodeName === "TEXTAREA") {
@@ -69,6 +71,7 @@ function FormularioEditarPerfil(props) {
                 reset();
                 //navegar("/user/" + resultado.user.nickname);
                 window.location.reload();
+                lanzarMensaje(TextoTraducido("mensajes", idiomaActual, "editarUsuarioBien"), 1);
             } else {
                 if (resultado?.error?.result?.data.doubleNickname) {
                     setErrorFormulario(TextoTraducido("errores", idiomaActual, "nicknameRepetido"));
@@ -79,9 +82,11 @@ function FormularioEditarPerfil(props) {
                 } else {
                     setErrorFormulario(TextoTraducido("errores", idiomaActual, "noUsuarioEdit"));
                 }
+                lanzarMensaje(TextoTraducido("mensajes", idiomaActual, "editarUsuarioMal"), 2);
             }
             resetEstados();
         } else {
+            lanzarMensaje(TextoTraducido("mensajes", idiomaActual, "editarUsuarioMal"), 2);
             setErrorFormulario(TextoTraducido("errores", idiomaActual, "noUsuarioEdit"));
             if (objetoPatch.cambiarContrasegna && objetoPatch.contrasegna !== objetoPatch.contrasegna2) setErrorFormulario(TextoTraducido("errores", idiomaActual, "dobleContrasegna"));
         }
@@ -94,6 +99,7 @@ function FormularioEditarPerfil(props) {
             const resultado = await borrarUsuario(objetoPatch.contrasegnaEliminar);
             console.log(resultado)
             if (resultado.ok) {
+                lanzarMensaje(TextoTraducido("mensajes", idiomaActual, "borrarUsuario"), 3);
                 navegar("/");
                 return;
             }

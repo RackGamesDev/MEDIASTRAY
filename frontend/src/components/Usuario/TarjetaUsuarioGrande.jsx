@@ -5,7 +5,8 @@ import BotonFuncion from '../Elements/BotonFuncion.jsx';
 import useApi from '../../hooks/useApi.js';
 import FormularioEditarPerfil from '../Forms/FormularioEditarPerfil.jsx';
 import { timestampAFecha } from '../../libraries/extraFechas.js';
-import BotonNavegacion from '../Elements/BotonNavegacion.jsx'
+import BotonNavegacion from '../Elements/BotonNavegacion.jsx';
+import useMensajes from '../../hooks/useMensajes.js';
 
 function TarjetaUsuarioGrande(props) {
 
@@ -19,18 +20,21 @@ function TarjetaUsuarioGrande(props) {
   const { verSeguir, seguir } = useApi();
   const [seguidoresSimulados, setSeguidoresSimulados] = useState(props.usuario.cantidad_seguidores);
   const [editandoPerfil, setEditandoPerfil] = useState(false);
+  const { lanzarMensaje } = useMensajes();
 
   const alternarSeguir = async () => {
     if (props.soyYo || !usuarioActual.uuid) return false;
     if (siguiendo) {
       const resultado = await seguir(props.usuario.uuid, -1);
       if (resultado && !resultado.error) {
+        lanzarMensaje(TextoTraducido("mensajes", idiomaActual, "noSeguirUsuario"), 4);
         setSiguiendo(!siguiendo);
         setSeguidoresSimulados(seguidoresSimulados - 1);
       }
     } else {
       const resultado = await seguir(props.usuario.uuid, 1);
       if (resultado && !resultado.error) {
+        lanzarMensaje(TextoTraducido("mensajes", idiomaActual, "seguirUsuario"), 4);
         setSiguiendo(!siguiendo); 
         setSeguidoresSimulados(seguidoresSimulados + 1);
       }

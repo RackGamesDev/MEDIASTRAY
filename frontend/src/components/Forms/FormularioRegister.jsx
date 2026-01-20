@@ -9,6 +9,7 @@ import { nicknameFalso, nombreFalso, correoFalso } from '../../libraries/datosFa
 import useAjustes from '../../hooks/useAjustes.js';
 import useApi from '../../hooks/useApi.js';
 import ImgCargando from '../Principal/ImgCargando.jsx';
+import useMensajes from '../../hooks/useMensajes.js';
 
 function FormularioRegister(props) {
 
@@ -21,6 +22,7 @@ function FormularioRegister(props) {
   const nombreFalsoPlaceholder = useMemo(() => nombreFalso(), []);
   const nicknameFalsoPlaceholder = useMemo(() => nicknameFalso(), []);
   const correoFalsoPlaceholder = useMemo(() => correoFalso(), []);
+  const { lanzarMensaje } = useMensajes();
 
   const cambio = (e) => {
     if (e.target.nodeName === "INPUT") {
@@ -56,6 +58,7 @@ function FormularioRegister(props) {
       } else {
         const resultado = await register(objetoRegister);
         if (!error && !resultado.error) {
+          lanzarMensaje(TextoTraducido("mensajes", idiomaActual, "registerBien"), 1);
           navegar("/user/" + resultado.user.nickname);
           reset();
         } else {
@@ -66,10 +69,12 @@ function FormularioRegister(props) {
           } else {
             setErrorFormulario(TextoTraducido("errores", idiomaActual, "noRegister"));
           }
+          lanzarMensaje(TextoTraducido("mensajes", idiomaActual, "registerMal"), 2);
         }
         resetEstados();
       }
     } else {
+      lanzarMensaje(TextoTraducido("mensajes", idiomaActual, "registerMal"), 2);
       setErrorFormulario(TextoTraducido("errores", idiomaActual, "noRegister"));
     }
     if (objetoRegister.contrasegna2 !== objetoRegister.contrasegna) setErrorFormulario(TextoTraducido("errores", idiomaActual, "dobleContrasegna"));

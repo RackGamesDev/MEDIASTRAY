@@ -4,7 +4,7 @@ import { Link } from 'react-router';
 import img from '../assets/react.svg';
 import { cambiarTitulo } from '../libraries/accionesIndex';
 import useAjustes from '../hooks/useAjustes.js';
-import useMensajes from '../hooks/useMensaje.js';
+import useMensajes from '../hooks/useMensajes.js';
 
 function Inicio() {
 

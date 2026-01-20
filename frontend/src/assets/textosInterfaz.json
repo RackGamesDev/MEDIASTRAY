@@ -294,6 +294,32 @@
                 "si": "Sí",
                 "no": "No"
             }
+        },
+        "mensajes": {
+            "EN-us": {
+                "loginBien": "Logged in successfully!",
+                "loginMal": "Couldn't log in",
+                "registerBien": "User created successfully!",
+                "registrarMal": "Couldn't register",
+                "editarUsuarioBien": "User editted successfully!",
+                "editarUsuarioMal": "Couldn't edit user",
+                "borrarUsuario": "User deleted...",
+                "seguirUsuario": "User followed",
+                "noSeguirUsuario": "User unfollowed",
+                "logout": "Logged out..."
+            },
+            "ES-es": {
+                "loginBien": "Sesión iniciada correctamente!",
+                "loginMal": "No se pudo iniciar sesión",
+                "registerBien": "Usuario registrado correctamente!",
+                "registrarMal": "No se pudo crear el usuario",
+                "editarUsuarioBien": "Usuario editado correctamente!",
+                "editarUsuarioMal": "No se pudo editar el usuario",
+                "borrarUsuario": "Usuario borrado...",
+                "seguirUsuario": "Seguiste a este usuario",
+                "noSeguirUsuario": "Ya no sigues a este usuario",
+                "logout": "Sesión cerrada..."
+            }
         }
     }
 }

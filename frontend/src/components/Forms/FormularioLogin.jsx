@@ -8,6 +8,7 @@ import { TextoTraducido } from '../../libraries/traducir.js';
 import useAjustes from '../../hooks/useAjustes.js';
 import useApi from '../../hooks/useApi.js';
 import ImgCargando from '../Principal/ImgCargando.jsx';
+import useMensajes from '../../hooks/useMensajes.js';
 
 function FormularioLogin(props) {
 
@@ -17,6 +18,7 @@ function FormularioLogin(props) {
   const [errorFormulario, setErrorFormulario] = useState("");
   const { idiomaActual } = useAjustes();
   const navegar = useNavigate();
+  const { lanzarMensaje } = useMensajes();
 
   const cambio = (e) => {
     if (e.target.nodeName === "INPUT") {
@@ -46,13 +48,16 @@ function FormularioLogin(props) {
       } else {
         const resultado = await login(objetoLogin);
         if (resultado.code === 200 && !resultado.fallo) {
+          lanzarMensaje(TextoTraducido("mensajes", idiomaActual, "loginBien"), 1);
           navegar("/user/" + resultado.user.nickname);
           reset();
         } else {
+          lanzarMensaje(TextoTraducido("mensajes", idiomaActual, "loginMal"), 2);
           setErrorFormulario(TextoTraducido("errores", idiomaActual, "noLogin"));
         }
       }
     } else {
+      lanzarMensaje(TextoTraducido("mensajes", idiomaActual, "loginMal"), 2);
       setErrorFormulario(TextoTraducido("errores", idiomaActual, "noLogin"));
     }
   }
