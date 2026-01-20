@@ -65,7 +65,7 @@ const loginUsuario = async (datosLogin) => {
         const elUsuario = await consulta("SELECT * FROM USUARIOS WHERE nickname = $1 OR correo = $1;", [datosLogin.identification]);
         const contrasegnaCoincide = await autenticarContrasegnaUsuario(datosLogin.contrasegna, elUsuario[0].contrasegna);
         if (!elUsuario[0] || !contrasegnaCoincide) throw { message: "Invalid credentials", code: 401 };
-        if (elUsuario[0].disponibilidad === 4) throw { message: "User has not allowed login", code: 401 };
+        if (elUsuario[0].disponibilidad === 3) throw { message: "User has not allowed login", code: 401 };
         const TOKEN_SECRET = process.env.JWT_SECRET;
         const token = await jwt.sign({ uuid: elUsuario[0].uuid, nickname: elUsuario[0].nickname }, TOKEN_SECRET, { expiresIn: '4h', algorithm: 'HS256' });
         await redisDelete("SESSION-TOKEN-" + elUsuario[0].uuid);
@@ -87,7 +87,7 @@ const editarUsuario = async (nuevos, uuid) => {
         if (!nuevos || !uuid) throw { message: "Invalid credentials", code: 401 };
         const usuarioPrevio = await consulta("SELECT * FROM USUARIOS WHERE uuid = $1;", [uuid]);
         if (!usuarioPrevio[0]) throw { message: "Invalid credentials", code: 401 };
-        if (usuarioPrevio[0].disponibilidad >= 3) throw { message: "User has not allowed login nor edit credentials or profile", code: 401 };
+        if (usuarioPrevio[0].disponibilidad >= 2) throw { message: "User has not allowed login nor edit credentials or profile", code: 401 };
         validarJsonEdicionUsuario(nuevos);
         let proporcionadoContrasegnaAntigua = false;
         if (!nuevos.cambiarContrasegna) { //Solo se pide la contrasegna original si se va a cambiar a otra distinta
@@ -160,8 +160,12 @@ const borrarUsuario = async (contrasegna, uuid) => {
 const verUsuario = async (id) => {
     try {
         const usuario = await consulta("SELECT * FROM USUARIOS WHERE uuid = $1 OR nickname = $2;", [id, id]);
+        if (!usuario[0] || usuario[0].nivel_publico === 2) throw { message: "User not found", code: 401 }
         //usuario[0].contrasegna = undefined;
-        return { ...usuario[0], contrasegna: "", correo: undefined, cumpleagnos: "", disponibilidad: "" } ?? null;
+        if (usuario[0].nivel_publico === 1) {
+            return { ...usuario[0], contrasegna: "", correo: undefined, cumpleagnos: "", cantidad_seguidores: 0, premium: "",  } ?? null;
+        }
+        return { ...usuario[0], contrasegna: "", correo: undefined, cumpleagnos: "" } ?? null;
     } catch (error) {
         throw error;
     }
@@ -173,6 +177,18 @@ const alterarDisponibilidadUsuario = async (nuevoValor, uuid) => {
         const resultado = await consulta("UPDATE USUARIOS SET disponibilidad = $1 WHERE uuid = $2;", [nuevoValor, uuid]);
         agnadirLog("backend.log", `User ${uuid} altered its disponibility to ${nuevoValor}`);
         //EN UN FUTURO, HACER EL BORRADO EN CASCADA
+        return resultado ? true : false;
+    } catch (error) {
+        throw error;
+    }
+}
+
+//Altera la visibilidad del usuario, 0 normal, 1 pueden saber que existe pero no ver datos, 2 totalmente anonimo...
+const alterarVisibilidadUsuario = async (nuevoValor, uuid) => {
+    try {
+        const resultado = await consulta("UPDATE USUARIOS SET nivel_publico = $1 WHERE uuid = $2;", [nuevoValor, uuid]);
+        agnadirLog("backend.log", `User ${uuid} altered its visibility to ${nuevoValor}`);
+
         return resultado ? true : false;
     } catch (error) {
         throw error;
@@ -196,8 +212,10 @@ const alterarSeguidores = async (uuidA, uuidB, cantidad) => {
     try {
         const yaLeSigue = await mongoGet("intermediario", { sujeto: uuidA, verbo: "sigue", predicado: uuidB }) ?? {};
         if (cantidad === 0) return yaLeSigue.uuid;
-        const seguidoresPrevios = await consulta("SELECT cantidad_seguidores FROM USUARIOS WHERE uuid = $1", [uuidB]);
-        if (!seguidoresPrevios[0]) throw { message: "Invalid credentials", code: 401 };
+        const seguidoresPrevios = await consulta("SELECT cantidad_seguidores, disponibilidad, nivel_publico FROM USUARIOS WHERE uuid = $1;", [uuidB]);
+        if (!seguidoresPrevios[0] || seguidoresPrevios[0].nivel_publico >= 1 || seguidoresPrevios[0].disponibilidad >= 2) throw { message: "Invalid credentials", code: 401 };
+        const usuarioSeguidor = await consulta("SELECT disponibilidad FROM USUARIOS WHERE uuid = $1;", [uuidA]);
+        if (!usuarioSeguidor[0] || usuarioSeguidor[0].disponibilidad >= 2) throw { message: "Invalid credentials", code: 401 };
         let resultado = false;
         if (yaLeSigue.uuid && cantidad < 0) {
             await mongoDelete("intermediario", { sujeto: uuidA, verbo: "sigue", predicado: uuidB }, true);
@@ -216,4 +234,4 @@ const alterarSeguidores = async (uuidA, uuidB, cantidad) => {
     }
 }
 
-export { validarJsonCreacionUsuario, crearUsuario, loginUsuario, editarUsuario, borrarUsuario, alterarDisponibilidadUsuario, alterarPremiumUsuario, alterarSeguidores, verUsuario }
+export { validarJsonCreacionUsuario, crearUsuario, loginUsuario, editarUsuario, borrarUsuario, alterarDisponibilidadUsuario, alterarPremiumUsuario, alterarSeguidores, verUsuario, alterarVisibilidadUsuario }
