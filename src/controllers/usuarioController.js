@@ -113,8 +113,11 @@ const editarUsuario = async (nuevos, uuid) => {
             if (conEseEmail[0]) throw { message: "Email already in use", code: 401, data: { doubleEmail: true } };
         }
         if (nuevos.contrasegna && nuevos.cambiarContrasegna) {
+            console.log("casmbiocon", nuevos.contrasegna);
             if (!proporcionadoContrasegnaAntigua) throw { message: "Validate password is needed", code: 401 };
             nuevos.contrasegna = await bcrypt.hash(nuevos.contrasegna, 10);
+        } else {
+            nuevos.contrasegna = usuarioPrevio[0].contrasegna;
         }
         if (await consulta("UPDATE USUARIOS SET nickname = $1, nombre = $2, contrasegna = $3, correo = $4, descripcion = $5, url_foto = $6, cumpleagnos = $7 WHERE uuid = $8;",
             [nuevos.nickname ?? usuarioPrevio[0].nickname, nuevos.nombre ?? usuarioPrevio[0].nombre, nuevos.contrasegna ?? usuarioPrevio[0].contrasegna, nuevos.correo ?? usuarioPrevio[0].correo, nuevos.descripcion ?? usuarioPrevio[0].descripcion, nuevos.url_foto ?? usuarioPrevio[0].url_foto, nuevos.cumpleagnos ?? usuarioPrevio[0].cumpleagnos, uuid])) {
@@ -142,12 +145,47 @@ const borrarUsuario = async (contrasegna, uuid) => {
     try {
         const usuario = await consulta("SELECT * FROM USUARIOS WHERE uuid = $1;", [uuid]);
         if (!usuario[0]) throw { message: "Invalid credentials", code: 401 };
+        console.log(usuario[0].contrasegna, "no");
         const contrasegnaCoincide = await autenticarContrasegnaUsuario(contrasegna, usuario[0].contrasegna);
         if (contrasegnaCoincide) {
-            const resultado = await consulta("DELETE FROM USUARIOS WHERE uuid = $1", [uuid]);
+            //const resultado = await consulta("DELETE FROM USUARIOS WHERE uuid = $1", [uuid]);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            
+            const seguidos = await mongoGet("intermediario", { sujeto: uuid, verbo: "sigue" });
+            console.log("BORR", seguidos);
+
             agnadirLog("backend.log", "User deleted " + uuid);
             agnadirLog("db.log", "User deleted USUARIOS " + uuid);
-            return resultado ? true : false;
+            return true;
         } else {
             throw { message: "Validate password is needed", code: 401 }
         }
@@ -187,6 +225,9 @@ const alterarDisponibilidadUsuario = async (nuevoValor, uuid) => {
 const alterarVisibilidadUsuario = async (nuevoValor, uuid) => {
     try {
         const resultado = await consulta("UPDATE USUARIOS SET nivel_publico = $1 WHERE uuid = $2;", [nuevoValor, uuid]);
+
+        
+
         agnadirLog("backend.log", `User ${uuid} altered its visibility to ${nuevoValor}`);
 
         return resultado ? true : false;

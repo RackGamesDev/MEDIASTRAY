@@ -58,7 +58,7 @@ function FormularioRegister(props) {
       } else {
         const resultado = await register(objetoRegister);
         if (!error && !resultado.error) {
-          lanzarMensaje(TextoTraducido("mensajes", idiomaActual, "registerBien"), 1);
+          lanzarMensaje(TextoTraducido("mensajes", idiomaActual, "registrarMal"), 1);
           navegar("/user/" + resultado.user.nickname);
           reset();
         } else {
@@ -69,12 +69,12 @@ function FormularioRegister(props) {
           } else {
             setErrorFormulario(TextoTraducido("errores", idiomaActual, "noRegister"));
           }
-          lanzarMensaje(TextoTraducido("mensajes", idiomaActual, "registerMal"), 2);
+          lanzarMensaje(TextoTraducido("mensajes", idiomaActual, "registrarMal"), 2);
         }
         resetEstados();
       }
     } else {
-      lanzarMensaje(TextoTraducido("mensajes", idiomaActual, "registerMal"), 2);
+      lanzarMensaje(TextoTraducido("mensajes", idiomaActual, "registrarMal"), 2);
       setErrorFormulario(TextoTraducido("errores", idiomaActual, "noRegister"));
     }
     if (objetoRegister.contrasegna2 !== objetoRegister.contrasegna) setErrorFormulario(TextoTraducido("errores", idiomaActual, "dobleContrasegna"));

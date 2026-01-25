@@ -30,7 +30,7 @@ function VerUsuarioCompleto(props) {
   }
   useEffect(() => {
     cargaInicial();
-  }, []);
+  }, [props.id]);
 
   return (
     <>

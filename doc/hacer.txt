@@ -26,6 +26,7 @@ mejorar interfaz
 
 
 extras:
+verificacion de cuenta con email
 movil
 medallas
 premium
